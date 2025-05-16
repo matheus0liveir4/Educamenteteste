@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico | Educa Mente</title>
+    <link rel="shortcut icon" href="img/faviconeducamente.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/historico.css">
+    
+    <!-- utils.js e icons.js carregados primeiro -->
+    <script src="js/utils.js"></script> 
+    <script src="js/icons.js"></script>
+
+    <style>
+        /* :root com variáveis de cor, incluindo as do solicitacoes.html para consistência */
+        :root {
+          --primary: #0A4275;
+          --secondary: #1575A3; 
+          --switch-bg-unchecked: #ccc;
+          --switch-bg-checked: var(--secondary, #1575A3);
+          --switch-slider-color: white;
+          --white: #FFFFFF;
+          --success: #4CAF50; /* Usando a var de solicitacoes.html */
+          --warning: #FFC107; /* Usando a var de solicitacoes.html */
+          --danger: #F44336;  /* Usando a var de solicitacoes.html */
+          --gray-100: #f8f9fa;
+          --gray-200: #e9ecef; 
+          --gray-300: #dee2e6;
+          --tooltip-default-bg: #555;
+          
+          /* Variáveis para modal/toast, copiadas de solicitacoes.html para garantir consistência */
+          --custom-modal-bg: #ffffff; 
+          --custom-modal-text-color: #333333; 
+          --custom-modal-header-border: var(--gray-300, #dee2e6);
+          --custom-modal-box-shadow: rgba(0, 0, 0, 0.1); 
+          --custom-toast-text-color: #ffffff; 
+          --custom-toast-success-bg: var(--success, #4CAF50);
+          --custom-toast-error-bg: var(--danger, #F44336);
+          --custom-toast-warning-bg: var(--warning, #FFC107);
+          --custom-toast-warning-text: #333333; 
+          --custom-toast-info-bg: var(--secondary, #1575A3);
+          --custom-toast-box-shadow: rgba(0,0,0,0.1); 
+          --custom-toast-icon-spacing: 10px;
+        }
+        body.dark {
+            background-color: #222; 
+            color: #eee; 
+            --tooltip-default-bg: #444;
+            /* Variáveis de dark mode para modal/toast, copiadas de solicitacoes.html */
+            --custom-modal-bg: #3a3a3a; 
+            --custom-modal-text-color: #eeeeee; 
+            --custom-modal-header-border: #555555;
+            --custom-modal-box-shadow: rgba(0, 0, 0, 0.3); 
+            --custom-toast-text-color: #ffffff; 
+            --custom-toast-success-bg: #388E3C; 
+            --custom-toast-error-bg: #C62828;   
+            --custom-toast-warning-bg: #FFA000; 
+            --custom-toast-warning-text: #222222;
+            --custom-toast-info-bg: #105A7F;    
+            --custom-toast-box-shadow: rgba(255,255,255,0.1);
+        }
+
+        /* Estilos da Navbar e controles da direita (COPIADOS de solicitacoes.html) */
+        .navbar-brand { font-family: 'Audiowide', sans-serif; font-size: 1.6rem; color: var(--white, #FFFFFF) !important; text-decoration: none; font-weight: normal; padding: 0.25rem 0; }
+        .navbar { background-color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; border-bottom: 1px solid var(--primary); }
+        body.dark .navbar { background-color: #333; border-bottom-color: #444; }
+        body.dark .navbar-brand { color: var(--white, #FFFFFF) !important; text-shadow: none; }
+
+        .navbar-container { display: flex; justify-content: space-between; align-items: center; height: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        .navbar-menu { list-style: none; display: flex; justify-content: center; align-items: center; flex-grow: 1; margin: 0; padding: 0; gap: 1.5rem; }
+        .navbar-link { color: var(--white, #FFFFFF); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; padding: 8px 0; position: relative; cursor: pointer; transition: color 0.2s; opacity: 0.85; font-size: 0.9rem; }
+        .navbar-link:after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background-color: var(--white, #FFFFFF); transition: width 0.3s ease-in-out; }
+        .navbar-link.active, .navbar-link:hover { color: var(--white, #FFFFFF); opacity: 1; }
+        .navbar-link.active:after { width: 100%; }
+        body.dark .navbar-link { color: #ccc; }
+        body.dark .navbar-link.active, body.dark .navbar-link:hover { color: #fff; }
+        
+        .navbar-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+        .navbar-icon svg, .navbar-icon i { width: 18px; height: 18px; color: var(--white, #FFFFFF); vertical-align: middle; }
+
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; cursor: pointer; vertical-align: middle; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--switch-bg-unchecked); border-radius: 20px; transition: background-color 0.3s; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: var(--switch-slider-color); border-radius: 50%; transition: transform 0.3s; }
+        input:checked + .slider { background-color: var(--switch-bg-checked); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .navbar-right-controls {
+            display: flex;
+            align-items: center;
+            margin-left: auto; 
+        }
+        .dark-mode-toggle-wrapper { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.6rem; 
+        }
+        .dark-mode-toggle-wrapper i { 
+            font-size: 1.4rem; 
+            line-height: 1; 
+            vertical-align: middle; 
+            cursor: pointer;
+            color: var(--white, #FFFFFF); 
+            transition: color 0.3s; 
+        }
+        body.dark .dark-mode-toggle-wrapper i { color: #f0f0f0; }
+        #icon-sun { display: inline-block; } #icon-moon { display: none; }
+        body.dark #icon-sun { display: none; } body.dark #icon-moon { display: inline-block; }
+        .dark-mode-toggle-wrapper .switch { margin: 0; }
+
+        .navbar-logout-button {
+            display: inline-flex; 
+            align-items: center;
+            justify-content: center;
+            color: var(--white, #FFFFFF);
+            font-size: 1.4rem; 
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s ease-in-out, color 0.2s ease-in-out;
+            cursor: pointer; 
+            margin-left: 1rem; 
+        }
+        .navbar-logout-button:hover { opacity: 1; }
+        body.dark .navbar-logout-button { color: #f0f0f0; }
+        body.dark .navbar-logout-button:hover { color: #ffffff; }
+        
+        .no-transitions * { transition: none !important; }
+        body.dark .card { background-color: #333; border-color: #444; } 
+        body.dark .card-header { border-bottom-color: #444; } 
+    </style>
+
+    <!-- ESTILOS PARA TOOLTIP PERSONALIZADO (COPIADO de solicitacoes.html) -->
+    <style>
+        .custom-tooltip-popup {
+            position: absolute;
+            padding: 8px 12px;
+            background-color: var(--tooltip-default-bg, #555);
+            color: white;
+            border-radius: 5px;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            z-index: 1070;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, transform 0.15s ease-out;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            white-space: nowrap;
+            transform: translateY(5px);
+        }
+        .custom-tooltip-popup.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .custom-tooltip-popup::after { content: ''; position: absolute; left: 50%; top: 100%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: var(--tooltip-arrow-color, var(--tooltip-default-bg, #555)) transparent transparent transparent; }
+        .custom-tooltip-popup.arrow-bottom::after { top: auto; bottom: 100%; border-color: transparent transparent var(--tooltip-arrow-color, var(--tooltip-default-bg, #555)) transparent; }
+        .custom-tooltip-popup.type-primary { background-color: var(--primary); --tooltip-arrow-color: var(--primary); }
+        .custom-tooltip-popup.type-danger  { background-color: var(--danger);  --tooltip-arrow-color: var(--danger); }
+        .custom-tooltip-popup.type-warning { background-color: var(--warning); color: #212529; --tooltip-arrow-color: var(--warning); }
+        .custom-tooltip-popup.type-secondary{ background-color: var(--gray-200);color: #333; --tooltip-arrow-color: var(--gray-200); }
+        .custom-tooltip-popup.type-success { background-color: var(--success); --tooltip-arrow-color: var(--success); }
+        .custom-tooltip-popup.type-info    { background-color: var(--secondary); --tooltip-arrow-color: var(--secondary); }
+        .custom-tooltip-popup.type-default { background-color: var(--tooltip-default-bg, #555); --tooltip-arrow-color: var(--tooltip-default-bg, #555); }
+        body.dark .custom-tooltip-popup.type-primary { background-color: var(--primary); --tooltip-arrow-color: var(--primary); }
+        body.dark .custom-tooltip-popup.type-danger  { background-color: var(--danger);  --tooltip-arrow-color: var(--danger); }
+        body.dark .custom-tooltip-popup.type-warning { background-color: var(--custom-toast-warning-bg, #FFA000); color: var(--custom-toast-warning-text, #222); --tooltip-arrow-color: var(--custom-toast-warning-bg, #FFA000); }
+        body.dark .custom-tooltip-popup.type-secondary{ background-color: #5a5a5a; color: var(--custom-modal-text-color, #eee); --tooltip-arrow-color: #5a5a5a; }
+        body.dark .custom-tooltip-popup.type-success { background-color: var(--custom-toast-success-bg, #388E3C); --tooltip-arrow-color: var(--custom-toast-success-bg, #388E3C); }
+        body.dark .custom-tooltip-popup.type-info    { background-color: var(--custom-toast-info-bg, #105A7F); --tooltip-arrow-color: var(--custom-toast-info-bg, #105A7F); }
+        body.dark .custom-tooltip-popup.type-default { background-color: var(--tooltip-default-bg, #444); --tooltip-arrow-color: var(--tooltip-default-bg, #444); }
+    </style>
+    
+    <!-- Estilos de Modal e Toast (COPIADOS DE SOLICITACOES.HTML) -->
+    <style id="custom-modal-toast-styles">
+        .custom-modal { display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto; outline: 0; background-color: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center; }
+        .custom-modal.show { display: flex; }
+        .custom-modal-content { position: relative; display: flex; flex-direction: column; width: 90%; max-width: 500px; pointer-events: auto; background-color: var(--custom-modal-bg); background-clip: padding-box; border: 1px solid var(--custom-modal-header-border); border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem var(--custom-modal-box-shadow); color: var(--custom-modal-text-color); animation: fadeInModal 0.3s ease-out; }
+        @keyframes fadeInModal { from { opacity: 0; transform: scale(0.95) translateY(-10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .custom-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--custom-modal-header-border); border-top-left-radius: calc(0.5rem - 1px); border-top-right-radius: calc(0.5rem - 1px); }
+        .custom-modal-title { margin-bottom: 0; line-height: 1.5; font-size: 1.2rem; font-weight: 500; color: var(--primary); }
+        body.dark .custom-modal-title { color: #5cb9f0; }
+        .custom-modal-close { padding: 0.25rem 0.5rem; margin: -0.5rem -0.75rem -0.5rem auto; background-color: transparent; border: 0; font-size: 1.75rem; font-weight: 700; line-height: 1; color: var(--custom-modal-text-color); opacity: .5; cursor: pointer; transition: opacity 0.15s ease-in-out; }
+        body.dark .custom-modal-close { color: var(--custom-modal-text-color); }
+        .custom-modal-close:hover { opacity: .85; }
+        .custom-modal-body { position: relative; flex: 1 1 auto; padding: 1.25rem; font-size: 0.95rem; line-height: 1.6; }
+        .custom-modal-body p { margin-bottom: 0; color: var(--custom-modal-text-color); }
+        body.dark .custom-modal-body p { color: var(--custom-modal-text-color); }
+        .custom-modal-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 0.5rem; padding: 1rem 1.25rem; background-color: transparent; border-top: 1px solid var(--custom-modal-header-border); border-bottom-right-radius: calc(0.5rem - 1px); border-bottom-left-radius: calc(0.5rem - 1px); }
+        .custom-btn { display: inline-block; font-weight: 500; text-align: center; vertical-align: middle; cursor: pointer; user-select: none; background-color: transparent; border: 1px solid transparent; padding: 0.5rem 1rem; font-size: 0.9rem; line-height: 1.5; border-radius: 0.3rem; transition: all .15s ease-in-out; }
+        .custom-btn-primary { color: #fff; background-color: var(--primary); border-color: var(--primary); }
+        .custom-btn-primary:hover { background-color: #083864; border-color: #073055; }
+        .custom-btn-secondary { color: var(--primary); background-color: var(--gray-200, #e9ecef); border-color: var(--gray-300, #dee2e6); }
+        .custom-btn-secondary:hover { background-color: var(--gray-300, #dee2e6); border-color: #c8ced3; }
+        body.dark .custom-btn-secondary { color: var(--custom-modal-text-color); background-color: #5a5a5a; border-color: #6c757d; }
+        body.dark .custom-btn-secondary:hover { background-color: #656565; border-color: #787878; }
+        .custom-btn-danger { color: #fff; background-color: var(--danger, #F44336); border-color: var(--danger, #F44336); }
+        .custom-btn-danger:hover { background-color: #D32F2F; border-color: #c82333; }
+        .custom-btn-warning { color: #212529; background-color: var(--warning, #FFC107); border-color: var(--warning, #FFC107); }
+        .custom-btn-warning:hover { background-color: #e0a800; border-color: #d39e00; }
+        body.dark .custom-btn-warning { color: var(--custom-toast-warning-text); background-color: var(--custom-toast-warning-bg); border-color: var(--custom-toast-warning-bg); }
+        body.dark .custom-btn-warning:hover { background-color: #df8c00; border-color: #d39e00; }
+        .custom-toast-container { position: fixed; top: 80px; right: 20px; z-index: 1055; width: auto; max-width: 380px; }
+        .custom-toast { color: var(--custom-toast-text-color); padding: 0.85rem 1.35rem; margin-bottom: 1rem; border: none; border-radius: 0.3rem; box-shadow: 0 0.35rem 0.85rem var(--custom-toast-box-shadow); opacity: 0; transform: translateX(110%); transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1); display: flex; align-items: center; font-size: 0.9rem; line-height: 1.4; }
+        .custom-toast.show { opacity: 1; transform: translateX(0); }
+        .custom-toast-icon { margin-right: var(--custom-toast-icon-spacing); font-size: 1.3em; line-height: 1; }
+        .custom-toast-success { background-color: var(--custom-toast-success-bg); }
+        .custom-toast-error { background-color: var(--custom-toast-error-bg); }
+        .custom-toast-warning { background-color: var(--custom-toast-warning-bg); color: var(--custom-toast-warning-text); }
+        .custom-toast-info { background-color: var(--custom-toast-info-bg); }
+        
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+      <div class="container navbar-container">
+        <a href="/painel" class="navbar-brand" data-tooltip="Página Inicial Educa Mente" data-tooltip-type="default">
+          Educa Mente
+        </a>
+        <ul class="navbar-menu">
+          <li class="navbar-item"> 
+            <a href="/painel" class="navbar-link" data-tooltip="Ir para o Painel Principal" data-tooltip-type="info"> 
+              <span class="navbar-icon" id="icon-home"></span> <span>Painel</span> 
+            </a> 
+          </li>
+          <li class="navbar-item"> 
+            <a href="/historico" class="navbar-link active" data-tooltip="Visualizar Histórico de Atendimentos e Alunos" data-tooltip-type="info"> 
+              <span class="navbar-icon" id="icon-history"></span> <span>Histórico</span> 
+            </a> 
+          </li>
+          <li class="navbar-item"> 
+            <a href="/solicitacoes" class="navbar-link" data-tooltip="Gerenciar Solicitações" data-tooltip-type="info"> 
+              <span class="navbar-icon" id="icon-requests"></span> <span>Solicitações</span> 
+            </a> 
+          </li>
+        </ul>
+        
+        <div class="navbar-right-controls">
+            <div class="dark-mode-toggle-wrapper">
+              <i class="fas fa-sun" id="icon-sun" data-tooltip="Alternar para Modo Claro" data-tooltip-type="warning"></i>
+              <i class="fas fa-moon" id="icon-moon" data-tooltip="Alternar para Modo Escuro" data-tooltip-type="info"></i>
+              <label class="switch" data-tooltip="Ativar/Desativar Modo Escuro" data-tooltip-type="default">
+                <input type="checkbox" id="toggle-dark-mode">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <a href="/" class="navbar-logout-button" id="logout-nav-link" data-tooltip="Sair (deslogar)" data-tooltip-type="danger">
+              <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- Conteúdo específico da página Histórico -->
+        <div class="container">
+            <div class="page-header"> <h1 class="page-title">Histórico</h1> <p class="page-subtitle">Visualize os atendimentos anteriores</p> </div>
+            <div class="card">
+                <div class="card-body">
+                    
+
+                    <div class="tab-content active" id="tab-all-history">
+                        <section class="search-filter-section">
+                            <div class="search-bar-container"> 
+                                <i class="fas fa-search"></i> 
+                                <input type="text" id="all-history-search-input" placeholder="Pesquisar em Aluno, Curso ou Tipo..." data-tooltip="Digite para pesquisar nos atendimentos" data-tooltip-type="default"> 
+                            </div>
+                            <div class="filter-buttons-container">
+                                <div class="filter-button-wrapper">
+                                   <button class="filter-button" data-controls="all-history-unidade-dropdown" data-tooltip="Filtrar por unidade" data-tooltip-type="secondary">
+                                    <i class="fas fa-building"></i>
+                                    <span id="all-history-unidade-btn-text">Unidade</span>
+                                    <i class="fas fa-caret-down"></i>
+                                  </button>
+                                     <div class="filter-dropdown" id="all-history-unidade-dropdown">
+                                      <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="all">Mostrar Todas</a>
+                                      <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Lauro de Freitas">Lauro de Freitas</a>
+                                      <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI CIMATEC">CIMATEC</a>
+                                      <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Camaçari">Camaçari</a>
+                                      <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Dendezeiros">Dendezeiros</a>
+                                      <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Alagoinhas">Alagoinhas</a>
+                                       </div>
+                                  </div>
+                                <div class="filter-button-wrapper">
+                                   <button class="filter-button" data-controls="all-history-data-dropdown" data-tooltip="Ordenar por data" data-tooltip-type="secondary">
+                                    <i class="far fa-calendar-alt"></i>
+                                    <span id="all-history-data-btn-text">Data</span>
+                                    <i class="fas fa-caret-down"></i>
+                                  </button> 
+                                  <div class="filter-dropdown" id="all-history-data-dropdown">
+                                    <a href="#" class="sort-option" data-sort-order="desc">Mais recentes</a>
+                                    <a href="#" class="sort-option" data-sort-order="asc">Mais antigos</a>
+                                     </div>
+                                 </div>
+                            </div>
+                        </section>
+                        <div class="loading-spinner" id="history-loading" style="display: none;"></div>
+                        <div id="history-list" class="history-cards-container" style="display: none;">
+                        </div>
+                        <div id="no-history" style="display: none;" class="text-center py-12 text-gray-500"> Nenhum histórico encontrado. </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-student-history">
+                        <section class="search-filter-section">
+                            <div class="search-bar-container"> 
+                                <i class="fas fa-search"></i> 
+                                <input type="text" id="student-search-input" placeholder="Pesquisar nome do aluno..." data-tooltip="Digite o nome do aluno para buscar seu histórico" data-tooltip-type="default"> 
+                            </div>
+                             <div class="filter-buttons-container">
+                                <div class="filter-button-wrapper">
+                                   <button class="filter-button" data-controls="student-history-unidade-dropdown" data-tooltip="Filtrar por unidade (para busca de aluno)" data-tooltip-type="secondary">
+                                    <i class="fas fa-building"></i>
+                                    <span id="student-history-unidade-btn-text">Unidade</span>
+                                    <i class="fas fa-caret-down"></i>
+                                  </button> 
+                                  <div class="filter-dropdown" id="student-history-unidade-dropdown">
+                                     <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="all">Mostrar Todas</a>
+                                    <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Lauro de Freitas">Lauro de Freitas</a>
+                                    <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI CIMATEC">CIMATEC</a>
+                                    <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Camaçari">Camaçari</a>
+                                    <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Dendezeiros">Dendezeiros</a>
+                                    <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Alagoinhas">Alagoinhas</a>
+                                    </div>
+                                  </div>
+                                <div class="filter-button-wrapper">
+                                   <button class="filter-button" data-controls="student-history-data-dropdown" data-tooltip="Ordenar histórico do aluno por data" data-tooltip-type="secondary">
+                                    <i class="far fa-calendar-alt"></i><span id="student-history-data-btn-text">Data</span><i class="fas fa-caret-down"></i></button> <div class="filter-dropdown" id="student-history-data-dropdown"> <a href="#" class="sort-option" data-sort-order="desc">Mais recentes</a> <a href="#" class="sort-option" data-sort-order="asc">Mais antigos</a> </div> </div>
+                             </div>
+                        </section>
+                         <div class="loading-spinner" id="student-history-loading" style="display: none;"></div>
+                         <div id="student-history-list" class="history-cards-container" style="display: none;">
+                         </div>
+                         <div id="no-student-history" style="display: none;" class="text-center py-12 text-gray-500"> Digite o nome do aluno para buscar. </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer"> <div class="container footer-content"> <p class="footer-text">© 2025 Educa Mente - Sistema de Gestão para Psicopedagogos</p> </div> </footer>
+    
+    <script src="js/historico.js"></script> 
+
+    <!-- SCRIPT PARA MODAL E TOAST (COPIADO DE SOLICITACOES.HTML) -->
+    <script>
+    (function() {
+        'use strict';
+        let modalElement, modalTitleElement, modalBodyElement, confirmBtn, cancelBtn, closeBtnModal, currentConfirmCallback, currentCancelCallback, toastContainerElement;
+        
+        function initializeModalDOM() {
+            if (document.getElementById('confirmationModal_generated')) {
+                modalElement = document.getElementById('confirmationModal_generated');
+                if (modalElement) { // Checagem extra
+                    modalTitleElement = document.getElementById('modalTitle_generated'); 
+                    modalBodyElement = document.getElementById('modalBodyText_generated'); 
+                    confirmBtn = document.getElementById('modalConfirmBtn_generated'); 
+                    cancelBtn = document.getElementById('modalCancelBtn_generated'); 
+                    closeBtnModal = document.getElementById('modalCloseBtn_generated');
+                } else { return; } // Se o modal não foi encontrado, não prossiga
+            } else {
+                const modalHTML = `
+                    <div id="confirmationModal_generated" class="custom-modal" aria-modal="true" role="dialog">
+                        <div class="custom-modal-content">
+                            <div class="custom-modal-header">
+                                <h5 class="custom-modal-title" id="modalTitle_generated">Confirmar Ação</h5>
+                                <button type="button" class="custom-modal-close" id="modalCloseBtn_generated" aria-label="Fechar" data-tooltip="Fechar esta caixa de diálogo" data-tooltip-type="secondary">×</button>
+                            </div>
+                            <div class="custom-modal-body" id="modalBodyText_generated"><p>Você tem certeza?</p></div>
+                            <div class="custom-modal-footer">
+                                <button type="button" class="custom-btn custom-btn-secondary" id="modalCancelBtn_generated" data-tooltip="Cancelar ação e fechar">Cancelar</button>
+                                <button type="button" class="custom-btn custom-btn-primary" id="modalConfirmBtn_generated" data-tooltip="Confirmar e executar ação">Confirmar</button>
+                            </div>
+                        </div>
+                    </div>`;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                initializeModalDOM(); // Re-chama para pegar os elementos recém-criados
+                return; 
+            }
+            
+            // Adiciona event listeners apenas se os botões existirem
+            if (confirmBtn) confirmBtn.addEventListener('click', () => { if (currentConfirmCallback) currentConfirmCallback(); hideModal(); });
+            const closeModalActions = () => { if (currentCancelCallback) currentCancelCallback(); hideModal(); };
+            if (cancelBtn) cancelBtn.addEventListener('click', closeModalActions); 
+            if (closeBtnModal) closeBtnModal.addEventListener('click', closeModalActions); 
+            if (modalElement) {
+                 modalElement.addEventListener('click', (event) => { if (event.target === modalElement) closeModalActions(); }); 
+                 document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modalElement.classList.contains('show')) closeModalActions(); });
+            }
+        }
+        function hideModal() { if (!modalElement) return; modalElement.classList.remove('show'); currentConfirmCallback = null; currentCancelCallback = null; }
+        
+        window.showConfirmationModal = function(title, message, confirmCallback, cancelCallback, confirmButtonText = 'Confirmar', confirmButtonClass = 'custom-btn-primary') {
+            if (!modalElement || !modalElement.classList) initializeModalDOM();
+            if (!modalElement || !modalTitleElement || !modalBodyElement || !confirmBtn) { 
+                console.error("Elementos do modal não encontrados ou não inicializados corretamente."); 
+                // Fallback para o confirm nativo se o modal falhar em inicializar
+                if (confirm(message)) { if(confirmCallback) confirmCallback(); } 
+                else { if(cancelCallback) cancelCallback(); }
+                return; 
+            }
+
+            modalTitleElement.textContent = title; 
+            modalBodyElement.innerHTML = `<p>${message.replace(/\n/g, "<br>")}</p>`; 
+            confirmBtn.textContent = confirmButtonText; 
+            confirmBtn.className = `custom-btn ${confirmButtonClass}`;
+            confirmBtn.setAttribute('data-tooltip', `${confirmButtonText} e executar ação`); 
+            
+            currentConfirmCallback = confirmCallback; 
+            currentCancelCallback = cancelCallback; 
+            modalElement.classList.add('show'); 
+            if(confirmBtn) confirmBtn.focus();
+        }
+
+        function initializeToastContainerDOM() {
+             if (document.getElementById('toastContainer_generated')) {
+                 toastContainerElement = document.getElementById('toastContainer_generated');
+             } else {
+                const toastContainerHTML = `<div id="toastContainer_generated" class="custom-toast-container"></div>`;
+                document.body.insertAdjacentHTML('beforeend', toastContainerHTML);
+                initializeToastContainerDOM(); 
+                return;
+            }
+        }
+        window.showToast = function(message, type = 'info', duration = 3500) {
+            if (!toastContainerElement || !toastContainerElement.prepend) initializeToastContainerDOM();
+            if (!toastContainerElement) { console.error("Container de toast não encontrado."); return; }
+
+            const toast = document.createElement('div'); 
+            toast.className = `custom-toast custom-toast-${type}`; 
+            let iconClass = '';
+            switch (type) { 
+                case 'success': iconClass = 'fas fa-check-circle'; break; 
+                case 'error': iconClass = 'fas fa-times-circle'; break; 
+                case 'warning': iconClass = 'fas fa-exclamation-triangle'; break; 
+                case 'info': iconClass = 'fas fa-info-circle'; break; 
+            }
+            toast.innerHTML = (iconClass ? `<i class="${iconClass} custom-toast-icon"></i>` : '') + `<span>${message}</span>`;
+            toastContainerElement.prepend(toast); 
+            requestAnimationFrame(() => { requestAnimationFrame(() => { toast.classList.add('show'); }); });
+            setTimeout(() => { 
+                toast.classList.remove('show'); 
+                toast.addEventListener('transitionend', () => { 
+                    if (toast.parentNode === toastContainerElement) { toastContainerElement.removeChild(toast); } 
+                }, { once: true }); 
+            }, duration);
+        }
+        // Inicializa o DOM do modal e do toast no carregamento inicial do script
+        initializeModalDOM();
+        initializeToastContainerDOM();
+    })();
+
+    // Script unificado para Tooltip, Dark Mode, Logout e outras inicializações da página
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- INICIALIZAÇÃO DE ÍCONES DA NAVBAR ---
+        try {
+            if (typeof icons !== 'undefined' && icons.home && icons.history && icons.requests) {
+                const iconHomeEl = document.getElementById('icon-home');
+                const iconHistoryEl = document.getElementById('icon-history');
+                const iconRequestsEl = document.getElementById('icon-requests');
+                if(iconHomeEl) iconHomeEl.innerHTML = icons.home;
+                if(iconHistoryEl) iconHistoryEl.innerHTML = icons.history;
+                if(iconRequestsEl) iconRequestsEl.innerHTML = icons.requests;
+            } else {
+                console.warn("Objeto 'icons' (de js/icons.js) não definido ou incompleto para a navbar.");
+            }
+        } catch (e) { console.error("Erro ao carregar ícones da navbar:", e); }
+
+        // --- DARK MODE ---
+        const toggleDarkMode = document.getElementById('toggle-dark-mode');
+        if (toggleDarkMode) {
+            const applyDarkModePreference = (isDark) => {
+                document.body.classList.add('no-transitions');
+                document.body.classList.toggle('dark', isDark);
+                const iconSun = document.getElementById('icon-sun');
+                const iconMoon = document.getElementById('icon-moon');
+                if (iconSun && iconMoon) {
+                    iconSun.style.display = isDark ? 'none' : 'inline-block';
+                    iconMoon.style.display = isDark ? 'inline-block' : 'none';
+                }
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        document.body.classList.remove('no-transitions');
+                    });
+                });
+            };
+            const darkModeUserPreference = localStorage.getItem('darkMode') === 'enabled';
+            toggleDarkMode.checked = darkModeUserPreference;
+            applyDarkModePreference(darkModeUserPreference);
+
+            toggleDarkMode.addEventListener('change', function() {
+                const isDarkEnabled = this.checked;
+                applyDarkModePreference(isDarkEnabled);
+                localStorage.setItem('darkMode', isDarkEnabled ? 'enabled' : 'disabled');
+            });
+        } else {
+            console.warn("Elemento #toggle-dark-mode não encontrado.");
+        }
+
+        // --- BOTÃO DE LOGOUT ---
+        const logoutButton = document.getElementById('logout-nav-link');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', function(event) {
+                event.preventDefault(); 
+                const logoutUrl = this.getAttribute('href'); 
+                
+                if (typeof window.showConfirmationModal === 'function') {
+                    window.showConfirmationModal(
+                        'Confirmar Saída', 
+                        'Tem certeza que deseja sair da sua conta e retornar à tela inicial?', 
+                        () => { window.location.href = logoutUrl; },
+                        null, 
+                        'Sim, Sair', 
+                        'custom-btn-danger' 
+                    );
+                } else {
+                    // Este console.warn agora é mais provável de ser visto se o modal não funcionar
+                    console.warn('Função window.showConfirmationModal não definida. Usando confirm padrão do navegador.');
+                    if (confirm('Tem certeza que deseja sair da sua conta e retornar à tela inicial?')) {
+                        window.location.href = logoutUrl;
+                    }
+                }
+            });
+        } else {
+            console.warn("Elemento #logout-nav-link não encontrado.");
+        }
+
+        // --- TOOLTIP PERSONALIZADO ---
+        let tooltipElement;
+        const tooltipOffset = 10; 
+        function createTooltipElement() {
+            if (document.getElementById('global-custom-tooltip')) {
+                tooltipElement = document.getElementById('global-custom-tooltip');
+                return;
+            }
+            tooltipElement = document.createElement('div');
+            tooltipElement.id = 'global-custom-tooltip';
+            tooltipElement.className = 'custom-tooltip-popup';
+            document.body.appendChild(tooltipElement);
+        }
+        createTooltipElement(); 
+        function showTooltip(event) {
+            const target = event.currentTarget;
+            const tooltipText = target.getAttribute('data-tooltip');
+            if (!tooltipText || !tooltipElement) return;
+            tooltipElement.textContent = tooltipText;
+            let tooltipType = target.getAttribute('data-tooltip-type') || 'default';
+            if (tooltipType === 'default') { 
+                const typeRegex = /(?:btn-|custom-btn-)(primary|danger|warning|secondary|success|info)/;
+                let typeFound = false;
+                target.classList.forEach(cls => {
+                    const match = cls.match(typeRegex);
+                    if (match && match[1]) { tooltipType = match[1]; typeFound = true; }
+                });
+                 if (!typeFound) { 
+                    if (target.classList.contains('active') && target.classList.contains('navbar-link')) tooltipType = 'info';
+                    else if (target.classList.contains('filter-button')) tooltipType = 'secondary'; 
+                    else if (target.classList.contains('tab')) tooltipType = 'info'; 
+                 }
+            }
+            tooltipElement.className = 'custom-tooltip-popup visible'; 
+            tooltipElement.classList.add(`type-${tooltipType}`);
+            tooltipElement.style.setProperty('--tooltip-arrow-color', getComputedStyle(tooltipElement).backgroundColor);
+            const targetRect = target.getBoundingClientRect();
+            tooltipElement.style.display = 'block'; 
+            const tooltipRect = tooltipElement.getBoundingClientRect();
+            tooltipElement.style.display = ''; 
+            let top = targetRect.top - tooltipRect.height - tooltipOffset;
+            let left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
+            tooltipElement.classList.remove('arrow-bottom');
+            if (top - window.scrollY < 5) { top = targetRect.bottom + tooltipOffset; tooltipElement.classList.add('arrow-bottom'); }
+            if (left < 5) { left = 5; } 
+            else if (left + tooltipRect.width > window.innerWidth - 5) { left = window.innerWidth - tooltipRect.width - 5; }
+            tooltipElement.style.left = `${left}px`;
+            tooltipElement.style.top = `${top + window.scrollY}px`;
+        }
+        function hideTooltip() {
+            if (tooltipElement) { tooltipElement.className = 'custom-tooltip-popup'; }
+        }
+        document.body.addEventListener('mouseenter', event => {
+            const target = event.target.closest('[data-tooltip]');
+            if (target) {
+                if (target.hasAttribute('title')) { 
+                     target.setAttribute('data-original-title', target.getAttribute('title'));
+                     target.removeAttribute('title');
+                }
+                showTooltip({ currentTarget: target });
+            }
+        }, true);
+        document.body.addEventListener('mouseleave', event => {
+            const target = event.target.closest('[data-tooltip]');
+            if (target) {
+                if (target.hasAttribute('data-original-title')) { 
+                    target.setAttribute('title', target.getAttribute('data-original-title'));
+                    target.removeAttribute('data-original-title');
+                }
+                hideTooltip();
+            }
+        }, true);
+    });
+    </script>
+</body>
+</html>

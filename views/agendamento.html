@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamento - EDUCA MENTE</title>
+    <link rel="shortcut icon" href="img/faviconeducamente.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style_agendamento.css">
+
+    <style>
+        :root {
+            --senai-primary: #0A4275; 
+            --senai-secondary: #1575A3; 
+            --senai-light-blue-bg: #D9E6F2;
+            --senai-form-bg: #F7F9FC; 
+            --white: #fff; 
+            --text-dark: #333; 
+            --text-light: #6c757d;
+            --cal-border: #e0e0e0;
+            --available-green-bg: #e8f5e9; 
+            --available-green-text: #198754; 
+            --available-green-border: #c8e6c9;
+            --unavailable-red-bg: #ffebee; 
+            --unavailable-red-text: #b71c1c;
+            --unavailable-red-detail: #c62828;
+            --today-border: var(--senai-primary); 
+            --today-text: var(--senai-primary);
+            --selected-bg: var(--senai-secondary); 
+            --selected-text: var(--white);
+            --border-radius: 4px; 
+            --transition-speed: 0.2s;
+            --spacing-xs: 0.25rem; 
+            --spacing-sm: 0.5rem; 
+            --spacing-md: 1rem; 
+            --spacing-lg: 1.5rem;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        html, body { height: 100%; overflow: hidden; }
+        body { display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, var(--senai-primary), var(--senai-secondary), var(--senai-light-blue-bg)); padding: var(--spacing-md); line-height: 1.5; font-family: 'Roboto', sans-serif; }
+        .container { display: flex; flex-direction: column; width: 100%; max-width: 1200px; height: calc(100vh - 2 * var(--spacing-md)); max-height: 850px; background-color: var(--white); border-radius: 8px; overflow: hidden; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15); }
+        .header { background-color: var(--senai-primary); color: var(--white); padding: var(--spacing-md) var(--spacing-lg); text-align: center; flex-shrink: 0; }
+        .header h1 { font-size: 1.8rem; font-family: 'Audiowide', cursive; margin: 0; }
+        .form-container { padding: var(--spacing-lg); background-color: var(--senai-form-bg); flex-grow: 1; overflow-y: auto; display: flex; width: 100%; box-sizing: border-box; }
+        .form-container form, .appointment-layout { flex-grow: 1; display: flex; width: 100%; }
+        .appointment-layout { flex-wrap: nowrap; gap: var(--spacing-lg); min-height: 0; }
+        .calendar-column { flex: 1 1 60%; display: flex; flex-direction: column; min-width: 380px; }
+        .details-column { flex: 1 1 35%; display: flex; flex-direction: column; min-width: 280px; }
+        .input-group { margin-bottom: var(--spacing-md); }
+        .input-group label { display: block; font-weight: bold; margin-bottom: var(--spacing-xs); color: var(--senai-primary); font-size: 0.9rem; }
+        .input-group input[type="time"], .input-group textarea { width: 100%; padding: 0.7rem var(--spacing-sm); border: 1px solid #ccc; border-radius: var(--border-radius); background-color: var(--white); color: var(--text-dark); font-size: 0.95rem; transition: border-color var(--transition-speed), box-shadow var(--transition-speed), background-color var(--transition-speed); line-height: 1.5; }
+        .input-group input[type="time"] { cursor: pointer; }
+        .input-group input[type="time"]:disabled { background-color: #e9ecef; cursor: not-allowed; opacity: 0.7; border-color: #ccc; }
+        .input-group input:focus, .input-group input[type="time"]:focus, .input-group textarea:focus { outline: none; border-color: var(--senai-secondary); box-shadow: 0 0 0 2px rgba(21, 117, 163, 0.2); }
+        .calendar-column .input-group { margin-bottom: 0; flex-grow: 1; display: flex; flex-direction: column; }
+        .details-column .input-group.observations-group { flex-grow: 1; display: flex; flex-direction: column; }
+        .details-column .input-group textarea { flex-grow: 1; min-height: 100px; resize: none; cursor: text; }
+        
+        .btn-primary { width: 100%; padding: 0.9rem; background-color: var(--senai-secondary); color: var(--white); border: none; border-radius: var(--border-radius); font-size: 1rem; font-weight: bold; cursor: pointer; transition: background-color 0.3s; margin-top: var(--spacing-lg); text-align: center; display: block; flex-shrink: 0; }
+        .btn-primary:hover { background-color: var(--senai-primary); }
+        
+        .link-voltar {
+            display: block; 
+            text-align: center;
+            margin-top: var(--spacing-md); 
+            color: var(--senai-secondary); 
+            text-decoration: none; 
+            font-size: 0.9rem; 
+            padding: var(--spacing-xs) 0; 
+        }
+        .link-voltar:hover {
+            text-decoration: underline; 
+            color: var(--senai-primary); 
+        }
+
+        .calendar-wrapper { flex-grow: 1; display: flex; flex-direction: column; min-height: 0; margin-bottom: 0; }
+        .calendar-custom-wrapper { border: 1px solid var(--cal-border); border-radius: var(--border-radius); background-color: var(--white); overflow: hidden; display: flex; flex-direction: column; flex-grow: 1; }
+        .calendar-header { display: flex; align-items: center; justify-content: space-between; padding: var(--spacing-sm) var(--spacing-md); background-color: #f8f9fa; border-bottom: 1px solid var(--cal-border); flex-shrink: 0; }
+        .calendar-header .month-year { font-size: 1.1rem; font-weight: bold; color: var(--senai-primary); }
+        .calendar-header button { background: none; border: none; padding: var(--spacing-xs) var(--spacing-sm); cursor: pointer; color: var(--senai-secondary); transition: color var(--transition-speed); font-size: 1rem; }
+        .calendar-header button:hover { color: var(--senai-primary); }
+        .calendar-header button:disabled { color: #ccc; cursor: not-allowed; }
+        .calendar-body { padding: var(--spacing-sm); flex-grow: 1; display: flex; flex-direction: column; min-height: 0;}
+        .weekdays { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; margin-bottom: var(--spacing-xs); padding-bottom: var(--spacing-xs); border-bottom: 1px solid var(--cal-border); flex-shrink: 0; }
+        .weekdays div { font-size: 0.75rem; font-weight: bold; color: var(--senai-secondary); text-transform: uppercase; padding: var(--spacing-xs) 0; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: minmax(50px, auto); gap: 4px; flex-grow: 1; width: 100%; align-content: stretch; }
+        .calendar-day { border: 1px solid #eee; border-radius: var(--border-radius); display: flex; flex-direction: column; justify-content: flex-start; align-items: center; font-weight: 400; cursor: pointer; transition: background-color var(--transition-speed), border-color var(--transition-speed), color var(--transition-speed); background-color: #fdfdfd; color: var(--text-dark); padding: var(--spacing-xs); text-align: center; min-height: 50px; overflow: hidden; position: relative; }
+        .day-number { font-size: 0.85rem; line-height: 1.2; padding: 2px 4px; border-radius: 50%; min-width: 1.6em; text-align: center; display: inline-block; margin-top: 2px; }
+        .appointment-details { font-size: 0.7rem; line-height: 1.1; color: var(--unavailable-red-detail); display: block; width: 100%; text-align: center; margin-top: auto; padding: 2px 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; position: absolute; bottom: 3px; left: 0; right: 0; }
+        .calendar-day.other-month { color: #ccc; cursor: default; background-color: #fafafa; border-color: #f0f0f0; }
+        .calendar-day.available { background-color: var(--available-green-bg); color: var(--available-green-text); border: 1px solid var(--available-green-border); }
+        .calendar-day.available .day-number { color: var(--available-green-text); font-weight: 500;}
+        .calendar-day.available:hover { background-color: #d4edd5; border-color: #b2d8b5; }
+        .calendar-day.unavailable { background-color: var(--unavailable-red-bg); color: var(--unavailable-red-text) !important; cursor: default; border: 1px solid #fcc2c7; }
+        .calendar-day.unavailable .day-number { color: var(--unavailable-red-text) !important; opacity: 0.7; }
+        .calendar-day.past-day { background-color: #f5f5f5; color: #aaa; border-color: #eee;}
+        .calendar-day.past-day .day-number { text-decoration: line-through; color: #bbb; }
+        .calendar-day.today .day-number { background-color: transparent; border: 1px solid var(--today-border); color: var(--today-text); font-weight: bold; }
+        .calendar-day.selected { background-color: var(--selected-bg) !important; border-color: var(--selected-bg) !important; box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+        .calendar-day.selected .day-number { color: var(--selected-text) !important; background-color: transparent; border: none; font-weight: bold; }
+        .calendar-day.selected .appointment-details { color: rgba(255,255,255,0.8); background: none; }
+        @media (max-width: 880px) { html, body { height: auto; overflow: auto; } body { padding: var(--spacing-md); align-items: flex-start; } .container { width: 95%; max-width: 95%; height: auto; max-height: none; margin: var(--spacing-md) auto; overflow: visible;} .form-container { overflow-y: visible; } .appointment-layout { flex-direction: column; gap: var(--spacing-lg); min-height: unset;} .calendar-column, .details-column { flex-basis: auto; width: 100%; min-width: unset;} .calendar-wrapper { flex-grow: 0; min-height: 380px;} .calendar-grid { grid-auto-rows: minmax(40px, auto); } .btn-primary { margin-top: var(--spacing-lg); } }
+        @media (max-width: 768px) { .header h1 { font-size: 1.8rem; } .form-container { padding: var(--spacing-lg); } .btn-primary { padding: 0.9rem; font-size: 0.95rem; } .link-voltar {font-size: 0.85rem; margin-top: var(--spacing-sm);} .calendar-day { min-height: 45px; } .day-number { font-size: 0.8rem; } .appointment-details { font-size: 0.65rem; } }
+        @media (max-width: 480px) { body { padding: var(--spacing-sm); } .container { width: 100%; border-radius: 0; margin: 0; min-height: 100vh; max-width: 100%; height: auto;} .header { padding: var(--spacing-md); } .header h1 { font-size: 1.6rem; } .form-container { padding: var(--spacing-sm); } .input-group label { font-size: 0.85rem; } .input-group input[type="time"], .input-group textarea { padding: 0.7rem var(--spacing-sm); font-size: 0.9rem; } .btn-primary { padding: 0.8rem; font-size: 0.9rem; margin-top: var(--spacing-md); } .link-voltar {font-size: 0.8rem; margin-top: var(--spacing-xs);} .calendar-header { padding: var(--spacing-xs) var(--spacing-sm); } .calendar-header .month-year { font-size: 1rem; } .weekdays div { font-size: 0.7rem; } .calendar-grid { gap: 2px; grid-auto-rows: minmax(40px, auto); } .day-number { font-size: 0.75rem; } .appointment-details { font-size: 0.6rem; bottom: 2px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Agendamento</h1>
+        </header>
+        <main class="form-container">
+            <form id="agendamentoForm">
+                <input type="hidden" id="solicitacao_id_hidden_field" name="solicitacoes_id" value="">
+                <input type="hidden" id="calendar-value" name="calendar" required>
+                <div class="appointment-layout">
+                    <div class="calendar-column">
+                        <div class="calendar-wrapper input-group">
+                            <label>Escolha uma data disponível:</label>
+                            <div class="calendar-custom-wrapper">
+                                <div class="calendar-header">
+                                    <button type="button" id="prev-month" title="Mês anterior"><i class="fas fa-chevron-left"></i></button>
+                                    <span class="month-year" id="month-year-display"></span>
+                                    <button type="button" id="next-month" title="Próximo mês"><i class="fas fa-chevron-right"></i></button>
+                                </div>
+                                <div class="calendar-body">
+                                    <div class="weekdays">
+                                        <div>Dom</div> <div>Seg</div> <div>Ter</div> <div>Qua</div> <div>Qui</div> <div>Sex</div> <div>Sáb</div>
+                                    </div>
+                                    <div class="calendar-grid" id="calendar-grid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="details-column">
+                        <div class="input-group">
+                            <label for="time">Escolha um horário:</label>
+                            <input type="time" id="time" name="time" required disabled>
+                        </div>
+                        <div class="input-group observations-group">
+                            <label for="observations">Observações:</label>
+                            <textarea id="observations" name="observations" rows="3" placeholder="Escreva observações, se necessário."></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">Confirmar Agendamento</button>
+                        <a href="/solicitacoes" class="link-voltar"><strong>Voltar para Solicitações</strong></a>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+       <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const solicitacaoId = urlParams.get('id');
+            const alunoNome = decodeURIComponent(urlParams.get('aluno') || 'Aluno não especificado');
+            const solicitacaoIdInputHidden = document.getElementById('solicitacao_id_hidden_field');
+
+            if (solicitacaoId && solicitacaoIdInputHidden) {
+                solicitacaoIdInputHidden.value = solicitacaoId;
+                console.log('[Agendamento] ID da Solicitação preenchido:', solicitacaoId);
+            } else {
+                console.warn('[Agendamento] ID da Solicitação não encontrado na URL ou campo hidden não encontrado.');
+                const submitButton = document.querySelector('#agendamentoForm button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Erro: Dados da Solicitação Incompletos';
+                }
+                alert('Erro crítico: ID da solicitação não encontrado. Não é possível prosseguir.');
+                return;
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            let appointmentsMap = new Map(); // Mapa de data (YYYY-MM-DD) para array de horários ocupados [ "HH:MM", "HH:MM" ]
+
+            async function fetchCalendarData(year, month) {
+                console.log(`Buscando dados do calendário para ${year}-${String(month + 1).padStart(2, '0')}`);
+                if(calendarGrid) calendarGrid.innerHTML = '<div class="calendar-loading-indicator" style="text-align:center; padding:20px; grid-column: 1 / -1;">Carregando datas...</div>';
+                try {
+                    const response = await fetch(`/api/calendario/disponibilidade?ano=${year}&mes=${month + 1}`);
+                    if (!response.ok) {
+                        throw new Error(`Falha ao buscar dados do calendário (status: ${response.status})`);
+                    }
+                    const data = await response.json();
+                    appointmentsMap.clear();
+                    if (data.agendamentos) {
+                        for (const dateKey in data.agendamentos) {
+                            if (data.agendamentos.hasOwnProperty(dateKey)) {
+                                // Armazena um array de horários (strings HH:MM) para cada data
+                                appointmentsMap.set(dateKey, data.agendamentos[dateKey].map(app => app.time));
+                            }
+                        }
+                    }
+                    console.log("AppointmentsMap atualizado:", appointmentsMap);
+                } catch (error) {
+                    console.error("Erro ao buscar dados de agendamentos:", error);
+                    appointmentsMap.clear();
+                    if(calendarGrid) calendarGrid.innerHTML = '<div class="calendar-error-indicator" style="text-align:center; color:red; padding:20px; grid-column: 1 / -1;">Erro ao carregar datas.</div>';
+                } finally {
+                    renderCalendar(currentMonth, currentYear);
+                }
+            }
+
+            let currentMonth = today.getMonth();
+            let currentYear = today.getFullYear();
+            let selectedDateStr = null;
+
+            const calendarGrid = document.getElementById('calendar-grid');
+            const monthYearDisplay = document.getElementById('month-year-display');
+            const prevMonthBtn = document.getElementById('prev-month');
+            const nextMonthBtn = document.getElementById('next-month');
+            const calendarValueInput = document.getElementById('calendar-value');
+            const timeSelect = document.getElementById('time');
+
+            if (!calendarGrid || !monthYearDisplay || !prevMonthBtn || !nextMonthBtn || !calendarValueInput || !timeSelect) {
+                 console.error("Erro Crítico: Elementos essenciais do calendário não encontrados no DOM.");
+                 throw new Error("Elementos do calendário faltando.");
+            }
+
+            if (timeSelect) {
+                timeSelect.addEventListener('click', function(event) {
+                    if (!this.disabled) { try { this.showPicker(); } catch (error) { this.focus(); } }
+                });
+                timeSelect.addEventListener('change', function(event) {
+                     if (this.value) { this.blur(); }
+                });
+            }
+
+            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+            function renderCalendar(month, year) {
+                if (!calendarGrid || !monthYearDisplay) return;
+                calendarGrid.innerHTML = '';
+                monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    const emptyCell = document.createElement('div');
+                    emptyCell.classList.add('calendar-day', 'other-month');
+                    calendarGrid.appendChild(emptyCell);
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayCell = document.createElement('div');
+                    dayCell.classList.add('calendar-day');
+                    const dayNumberSpan = document.createElement('span');
+                    dayNumberSpan.className = 'day-number';
+                    dayNumberSpan.textContent = day;
+                    dayCell.appendChild(dayNumberSpan);
+
+                    const currentDate = new Date(year, month, day);
+                    currentDate.setHours(0,0,0,0);
+                    const currentDateStr = formatDate(currentDate);
+                    dayCell.dataset.date = currentDateStr;
+
+                    let cellTitle = `Clique para agendar em ${currentDateStr}`;
+
+                    if (currentDate < today) {
+                        dayCell.classList.add('unavailable', 'past-day'); // Marca como indisponível e passado
+                        dayCell.setAttribute('title', "Data passada");
+                    } else {
+                        // DIA NÃO É PASSADO - PODE SER CLICADO
+                        dayCell.classList.add('available'); // Torna o dia clicável por padrão
+                        dayCell.addEventListener('click', handleDayClick);
+
+                        // Mostra quantos agendamentos existem, mas NÃO impede o clique
+                        if (appointmentsMap.has(currentDateStr) && appointmentsMap.get(currentDateStr).length > 0) {
+                            const horariosAgendados = appointmentsMap.get(currentDateStr);
+                            const detailsSpan = document.createElement('span');
+                            detailsSpan.className = 'appointment-details';
+                            detailsSpan.textContent = `${horariosAgendados.length} Agend.`;
+                            dayCell.appendChild(detailsSpan);
+                            cellTitle += `\nHorários já ocupados: ${horariosAgendados.join(', ')}`;
+                            // Poderia adicionar uma classe visual diferente se quisesse, ex: 'partially-booked'
+                            // dayCell.classList.add('partially-booked');
+                        } else {
+                             cellTitle += `\nNenhum horário agendado neste dia.`;
+                        }
+                        dayCell.setAttribute('title', cellTitle.trim());
+                    }
+
+                    if (currentDate.getTime() === today.getTime()) { dayCell.classList.add('today'); }
+                    if (currentDateStr === selectedDateStr) { dayCell.classList.add('selected'); }
+                    calendarGrid.appendChild(dayCell);
+                }
+                if (prevMonthBtn) {
+                    const isCurrentMonthAndYear = (year === today.getFullYear() && month === today.getMonth());
+                    prevMonthBtn.disabled = isCurrentMonthAndYear;
+                }
+            }
+
+            function formatDate(date) {
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            }
+
+            function handleDayClick(event) {
+                const selectedDay = event.target.closest('.calendar-day');
+                // Permite clicar mesmo que tenha 'appointment-details', desde que não seja 'past-day' ou explicitamente 'unavailable'
+                if (!selectedDay || selectedDay.classList.contains('past-day') || selectedDay.classList.contains('other-month')) return;
+
+                const previouslySelected = calendarGrid.querySelector('.selected');
+                if (previouslySelected) { previouslySelected.classList.remove('selected'); }
+
+                selectedDay.classList.add('selected');
+                selectedDateStr = selectedDay.dataset.date;
+                calendarValueInput.value = selectedDateStr;
+                console.log("Data selecionada no calendário:", selectedDateStr);
+
+                if(timeSelect) {
+                    timeSelect.disabled = false;
+                    timeSelect.value = '';
+                    timeSelect.style.borderColor = 'var(--senai-secondary)';
+                    timeSelect.style.backgroundColor = '#e7f3f8';
+                    timeSelect.style.fontWeight = 'bold';
+
+                    // Opcional: Informar horários já ocupados para este dia
+                    // Você poderia popular uma pequena lista abaixo do seletor de horário
+                    // ou tentar desabilitar <option> no <select> se você gerasse horários.
+                    // Como é type="time", a validação final será no backend.
+                    if (appointmentsMap.has(selectedDateStr)) {
+                        const horariosOcupados = appointmentsMap.get(selectedDateStr);
+                        console.log(`Horários já ocupados para ${selectedDateStr}: ${horariosOcupados.join(', ')}`);
+                        // Aqui você poderia atualizar uma div com essa informação
+                        // Ex: document.getElementById('horarios-ocupados-info').textContent = `Ocupados: ${horariosOcupados.join(', ')}`;
+                    } else {
+                        // Ex: document.getElementById('horarios-ocupados-info').textContent = '';
+                    }
+                }
+            }
+
+            if(prevMonthBtn) prevMonthBtn.addEventListener('click', () => {
+                currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+                fetchCalendarData(currentYear, currentMonth);
+            });
+            if(nextMonthBtn) nextMonthBtn.addEventListener('click', () => {
+                currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+                fetchCalendarData(currentYear, currentMonth);
+            });
+
+            fetchCalendarData(currentYear, currentMonth);
+
+            if (!calendarValueInput.value && timeSelect) {
+                timeSelect.disabled = true;
+                timeSelect.style.borderColor = '';
+                timeSelect.style.backgroundColor = '';
+                timeSelect.style.fontWeight = '';
+            }
+
+            const agendamentoForm = document.getElementById('agendamentoForm');
+            const confirmarBtn = agendamentoForm ? agendamentoForm.querySelector('button[type="submit"]') : null;
+
+            if (agendamentoForm && confirmarBtn) {
+                agendamentoForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    const solicitacaoIdAtual = solicitacaoIdInputHidden.value;
+                    if (!solicitacaoIdAtual) { alert('Erro: ID da solicitação não está definido.'); return; }
+                    confirmarBtn.disabled = true;
+                    const originalButtonText = confirmarBtn.textContent;
+                    confirmarBtn.textContent = 'Processando...';
+                    const dataAgendamento = calendarValueInput.value;
+                    const horaAgendamento = timeSelect.value;
+                    const observacoesTextarea = document.getElementById('observations');
+                    const observacoesParaEnvio = observacoesTextarea ? observacoesTextarea.value : '';
+
+                    if (!dataAgendamento || dataAgendamento === "") { alert('Por favor, selecione uma data no calendário.'); confirmarBtn.disabled = false; confirmarBtn.textContent = originalButtonText; return; }
+                    if (!horaAgendamento) { alert('Por favor, preencha a hora do agendamento.'); confirmarBtn.disabled = false; confirmarBtn.textContent = originalButtonText; return; }
+
+                    const dadosParaBackend = {
+                        solicitacaoId: parseInt(solicitacaoIdAtual),
+                        data: dataAgendamento,
+                        hora: horaAgendamento,
+                        observacoes: observacoesParaEnvio
+                    };
+
+                    console.log('[Agendamento] Enviando dados para o backend:', JSON.stringify(dadosParaBackend));
+                    try {
+                        const response = await fetch('/api/agendar', { // URL da API já estava correta
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', },
+                            body: JSON.stringify(dadosParaBackend)
+                        });
+
+                        if (!response.ok) {
+                            let errorMsg = `Falha ao confirmar o agendamento. Status: ${response.status}`;
+                            let errorDetail = '';
+                            try {
+                                const errJson = await response.json();
+                                errorDetail = errJson.message || errJson.error || JSON.stringify(errJson);
+                            } catch (e) {
+                                errorDetail = await response.text();
+                            }
+                            if (errorDetail) errorMsg += ` Detalhe: ${errorDetail.substring(0, 200)}`;
+                            // Specific check for 409 (Conflict)
+                            if (response.status === 409 && errorDetail.toLowerCase().includes("ocupado")) {
+                                errorMsg = `Conflito: ${errorDetail}`; // Usa a mensagem do backend diretamente
+                            }
+                            throw new Error(errorMsg);
+                        }
+
+                        const responseData = await response.json();
+                        const partesData = dataAgendamento.split('-');
+                        const dataObj = new Date(Date.UTC(parseInt(partesData[0]), parseInt(partesData[1]) - 1, parseInt(partesData[2])));
+                        const dataFormatada = dataObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+                        const mensagemToast = responseData.message || `Agendamento para ${alunoNome} confirmado para ${dataFormatada} às ${horaAgendamento}.`;
+
+                        sessionStorage.setItem('toastOnNextLoad_message', mensagemToast);
+                        sessionStorage.setItem('toastOnNextLoad_type', 'success');
+                        sessionStorage.setItem('focusTabOnLoad', 'upcoming');
+                        window.location.href = '/solicitacoes';
+                    } catch (error) {
+                        console.error('[Agendamento] Erro no processo de agendamento:', error);
+                        alert(`${error.message}`);
+                        confirmarBtn.disabled = false;
+                        confirmarBtn.textContent = originalButtonText;
+                    }
+                });
+            } else { console.error('[Agendamento] Formulário ou botão de submit não encontrado.'); }
+        } catch (error) {
+            console.error("Erro crítico durante a inicialização da página de Agendamento:", error);
+            const errorDisplayContainer = document.querySelector('.form-container') || document.body;
+            if (errorDisplayContainer) {
+                errorDisplayContainer.innerHTML = `<p style="color:red; background:white; padding:1em; border:2px solid red; text-align:center; font-weight:bold;">ERRO CRÍTICO AO CARREGAR A PÁGINA DE AGENDAMENTO.<br>${error.message}<br>Verifique o console (F12).</p>`;
+            }
+        }
+    });
+    </script>
+</body>
+</html>

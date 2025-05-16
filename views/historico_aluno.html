@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico do Aluno | Educa Mente</title>
+    <link rel="shortcut icon" href="img/faviconeducamente.ico" type="image/x-icon"> <!-- Corrigido favicon -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/historico_aluno.css"> 
+    
+    <script src="js/utils.js"></script>
+    <script src="js/icons.js"></script>
+
+    <style>
+        /* Variáveis de cor alinhadas com os outros HTMLs */
+        :root {
+          --primary: #0A4275;
+          --secondary: #1575A3; 
+          --switch-bg-unchecked: #ccc;
+          --switch-bg-checked: var(--secondary, #1575A3);
+          --white: #FFFFFF;
+          --success: #4CAF50; 
+          --warning: #FFC107; 
+          --danger: #F44336;  
+          --gray-100: #f8f9fa;
+          --gray-200: #e9ecef; 
+          --gray-300: #dee2e6;
+          --tooltip-default-bg: #555; /* Padrão para tooltips */
+          --tooltip-navbar-bg: var(--secondary); /* Específico para navbar-link, se necessário */
+          --tooltip-navbar-text: white;
+
+          /* Variáveis para modal/toast (logout e outros) */
+          --custom-modal-bg: #ffffff; 
+          --custom-modal-text-color: #333333; 
+          --custom-modal-header-border: var(--gray-300, #dee2e6);
+          --custom-modal-box-shadow: rgba(0, 0, 0, 0.1); 
+          --custom-toast-text-color: #ffffff; 
+          --custom-toast-success-bg: var(--success, #4CAF50);
+          --custom-toast-error-bg: var(--danger, #F44336);
+          --custom-toast-warning-bg: var(--warning, #FFC107);
+          --custom-toast-warning-text: #333333; 
+          --custom-toast-info-bg: var(--secondary, #1575A3);
+          --custom-toast-box-shadow: rgba(0,0,0,0.1); 
+          --custom-toast-icon-spacing: 10px;
+        }
+        body.dark {
+            background-color: #222; 
+            color: #eee; 
+            --tooltip-default-bg: #444;
+            --tooltip-navbar-bg: #107686; /* Ajuste para dark mode se necessário */
+            
+            /* Variáveis de dark mode para modal/toast */
+            --custom-modal-bg: #3a3a3a; 
+            --custom-modal-text-color: #eeeeee; 
+            --custom-modal-header-border: #555555;
+            --custom-modal-box-shadow: rgba(0, 0, 0, 0.3); 
+            --custom-toast-text-color: #ffffff; 
+            --custom-toast-success-bg: #388E3C; 
+            --custom-toast-error-bg: #C62828;   
+            --custom-toast-warning-bg: #FFA000; 
+            --custom-toast-warning-text: #222222;
+            --custom-toast-info-bg: #105A7F;    
+            --custom-toast-box-shadow: rgba(255,255,255,0.1);
+
+            /* Ajustes para elementos da página no dark mode */
+            --gray-100: #3a3a3a; 
+            --gray-200: #4a4a4a; /* Ajustado para melhor contraste */   
+            --gray-300: #555555; /* Ajustado para melhor contraste */
+        }
+
+        /* Estilos da Navbar e controles da direita (COPIADOS/ALINHADOS) */
+        .navbar-brand { font-family: 'Audiowide', sans-serif; font-size: 1.6rem; color: var(--white, #FFFFFF) !important; text-decoration: none; font-weight: normal; padding: 0.25rem 0; }
+        .navbar { background-color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; border-bottom: 1px solid var(--primary); }
+        body.dark .navbar { background-color: #333; border-bottom-color: #444; }
+        body.dark .navbar-brand { color: var(--white, #FFFFFF) !important; text-shadow: none; }
+
+        .navbar-container { display: flex; justify-content: space-between; align-items: center; height: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        .navbar-menu { list-style: none; display: flex; justify-content: center; align-items: center; flex-grow: 1; margin: 0; padding: 0; gap: 1.5rem; }
+        .navbar-link { color: var(--white, #FFFFFF); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; padding: 8px 0; position: relative; cursor: pointer; transition: color 0.2s; opacity: 0.85; font-size: 0.9rem; }
+        .navbar-link:after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background-color: var(--white, #FFFFFF); transition: width 0.3s ease-in-out; }
+        .navbar-link.active, .navbar-link:hover { color: var(--white, #FFFFFF); opacity: 1; }
+        .navbar-link.active:after { width: 100%; }
+        body.dark .navbar-link { color: #ccc; }
+        body.dark .navbar-link.active, body.dark .navbar-link:hover { color: #fff; }
+        
+        .navbar-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+        .navbar-icon svg, .navbar-icon i { width: 18px; height: 18px; color: var(--white, #FFFFFF); vertical-align: middle; }
+
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; cursor: pointer; vertical-align: middle; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--switch-bg-unchecked); border-radius: 20px; transition: background-color 0.3s; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: var(--switch-slider-color); border-radius: 50%; transition: transform 0.3s; }
+        input:checked + .slider { background-color: var(--switch-bg-checked); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .navbar-right-controls { display: flex; align-items: center; margin-left: auto; }
+        .dark-mode-toggle-wrapper { display: flex; align-items: center; gap: 0.6rem; }
+        .dark-mode-toggle-wrapper i { font-size: 1.4rem; line-height: 1; vertical-align: middle; cursor: pointer; color: var(--white, #FFFFFF); transition: color 0.3s; }
+        body.dark .dark-mode-toggle-wrapper i { color: #f0f0f0; }
+        #icon-sun { display: inline-block; } #icon-moon { display: none; }
+        body.dark #icon-sun { display: none; } body.dark #icon-moon { display: inline-block; }
+        .dark-mode-toggle-wrapper .switch { margin: 0; }
+
+        .navbar-logout-button { display: inline-flex; align-items: center; justify-content: center; color: var(--white, #FFFFFF); font-size: 1.4rem; text-decoration: none; opacity: 0.85; transition: opacity 0.2s ease-in-out, color 0.2s ease-in-out; cursor: pointer; margin-left: 1rem; }
+        .navbar-logout-button:hover { opacity: 1; }
+        body.dark .navbar-logout-button { color: #f0f0f0; }
+        body.dark .navbar-logout-button:hover { color: #ffffff; }
+        
+        .no-transitions * { transition: none !important; }
+
+        /* Estilos para o Modal e seu conteúdo (mantidos e verificados) */
+        .modal-overlay { display: flex; align-items: center; justify-content: center; /* ... */ }
+        .modal-content { max-height: 90vh; display: flex; flex-direction: column; /* ... */ }
+        .modal-body { overflow-y: auto; flex-grow: 1; padding: 15px 20px; font-size: 0.9rem; }
+        .modal-body p { margin-bottom: 0.5rem; line-height: 1.4; }
+        .modal-body strong { font-weight: 500; }
+        .modal-body hr { border: none; border-top: 1px solid var(--gray-300); margin: 10px 0; }
+        .notes-section { margin-top: 8px; margin-bottom: 8px; }
+        .notes-section p strong { display: block; margin-bottom: 3px; font-size: 0.95em; }
+        .notes-content { background-color: var(--gray-100); padding: 6px 10px; border-radius: 4px; font-size: 0.85em; border: 1px solid var(--gray-200); max-height: 100px; overflow-y: auto; line-height: 1.4; }
+        .notes-content::-webkit-scrollbar { width: 6px; }
+        .notes-content::-webkit-scrollbar-thumb { background-color: #ccc; border-radius: 3px; }
+        body.dark .notes-content::-webkit-scrollbar-thumb { background-color: #555; }
+        body.dark .card { background-color: #333; border-color: #444; } 
+        body.dark .card-header { border-bottom-color: #444; }
+    </style>
+
+    <!-- ESTILOS PARA TOOLTIP PERSONALIZADO (ALINHADO COM OS OUTROS ARQUIVOS) -->
+    <style>
+        .custom-tooltip-popup {
+            position: absolute; padding: 8px 12px; background-color: var(--tooltip-default-bg); color: white;
+            border-radius: 5px; font-size: 0.875rem; line-height: 1.4; z-index: 1070; opacity: 0; visibility: hidden;
+            transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, transform 0.15s ease-out;
+            pointer-events: none; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); white-space: nowrap; transform: translateY(5px);
+        }
+        .custom-tooltip-popup.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .custom-tooltip-popup::after { content: ''; position: absolute; left: 50%; top: 100%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: var(--tooltip-arrow-color, var(--tooltip-default-bg)) transparent transparent transparent; }
+        .custom-tooltip-popup.arrow-bottom::after { top: auto; bottom: 100%; border-color: transparent transparent var(--tooltip-arrow-color, var(--tooltip-default-bg)) transparent; }
+
+        /* Tipos de tooltip, incluindo navbar-link e os padrões */
+        .custom-tooltip-popup.type-navbar-link { background-color: var(--tooltip-navbar-bg); color: var(--tooltip-navbar-text); --tooltip-arrow-color: var(--tooltip-navbar-bg); }
+        .custom-tooltip-popup.type-primary { background-color: var(--primary); --tooltip-arrow-color: var(--primary); }
+        .custom-tooltip-popup.type-danger  { background-color: var(--danger);  --tooltip-arrow-color: var(--danger); }
+        .custom-tooltip-popup.type-warning { background-color: var(--warning); color: #212529; --tooltip-arrow-color: var(--warning); }
+        .custom-tooltip-popup.type-secondary{ background-color: var(--gray-200);color: #333; --tooltip-arrow-color: var(--gray-200); }
+        .custom-tooltip-popup.type-success { background-color: var(--success); --tooltip-arrow-color: var(--success); }
+        .custom-tooltip-popup.type-info    { background-color: var(--secondary); --tooltip-arrow-color: var(--secondary); }
+        .custom-tooltip-popup.type-default { background-color: var(--tooltip-default-bg, #555); --tooltip-arrow-color: var(--tooltip-default-bg, #555); }
+
+        body.dark .custom-tooltip-popup.type-navbar-link { background-color: var(--tooltip-navbar-bg); color: var(--tooltip-navbar-text); --tooltip-arrow-color: var(--tooltip-navbar-bg); }
+        body.dark .custom-tooltip-popup.type-primary { background-color: var(--primary); --tooltip-arrow-color: var(--primary); }
+        body.dark .custom-tooltip-popup.type-danger  { background-color: var(--danger);  --tooltip-arrow-color: var(--danger); }
+        body.dark .custom-tooltip-popup.type-warning { background-color: var(--custom-toast-warning-bg, #FFA000); color: var(--custom-toast-warning-text, #222); --tooltip-arrow-color: var(--custom-toast-warning-bg, #FFA000); }
+        body.dark .custom-tooltip-popup.type-secondary{ background-color: #5a5a5a; color: var(--custom-modal-text-color, #eee); --tooltip-arrow-color: #5a5a5a; }
+        body.dark .custom-tooltip-popup.type-success { background-color: var(--custom-toast-success-bg, #388E3C); --tooltip-arrow-color: var(--custom-toast-success-bg, #388E3C); }
+        body.dark .custom-tooltip-popup.type-info    { background-color: var(--custom-toast-info-bg, #105A7F); --tooltip-arrow-color: var(--custom-toast-info-bg, #105A7F); }
+        body.dark .custom-tooltip-popup.type-default { background-color: var(--tooltip-default-bg, #444); --tooltip-arrow-color: var(--tooltip-default-bg, #444); }
+    </style>
+     <!-- Estilos de Modal e Toast (Logout e outros) -->
+    <style id="custom-modal-toast-styles">
+        .custom-modal { display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto; outline: 0; background-color: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center; }
+        .custom-modal.show { display: flex; }
+        .custom-modal-content { position: relative; display: flex; flex-direction: column; width: 90%; max-width: 500px; pointer-events: auto; background-color: var(--custom-modal-bg); background-clip: padding-box; border: 1px solid var(--custom-modal-header-border); border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem var(--custom-modal-box-shadow); color: var(--custom-modal-text-color); animation: fadeInModal 0.3s ease-out; }
+        @keyframes fadeInModal { from { opacity: 0; transform: scale(0.95) translateY(-10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .custom-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--custom-modal-header-border); border-top-left-radius: calc(0.5rem - 1px); border-top-right-radius: calc(0.5rem - 1px); }
+        .custom-modal-title { margin-bottom: 0; line-height: 1.5; font-size: 1.2rem; font-weight: 500; color: var(--primary); }
+        body.dark .custom-modal-title { color: #5cb9f0; }
+        .custom-modal-close { padding: 0.25rem 0.5rem; margin: -0.5rem -0.75rem -0.5rem auto; background-color: transparent; border: 0; font-size: 1.75rem; font-weight: 700; line-height: 1; color: var(--custom-modal-text-color); opacity: .5; cursor: pointer; transition: opacity 0.15s ease-in-out; }
+        body.dark .custom-modal-close { color: var(--custom-modal-text-color); }
+        .custom-modal-close:hover { opacity: .85; }
+        .custom-modal-body { position: relative; flex: 1 1 auto; padding: 1.25rem; font-size: 0.95rem; line-height: 1.6; }
+        .custom-modal-body p { margin-bottom: 0; color: var(--custom-modal-text-color); }
+        body.dark .custom-modal-body p { color: var(--custom-modal-text-color); }
+        .custom-modal-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 0.5rem; padding: 1rem 1.25rem; background-color: transparent; border-top: 1px solid var(--custom-modal-header-border); border-bottom-right-radius: calc(0.5rem - 1px); border-bottom-left-radius: calc(0.5rem - 1px); }
+        .custom-btn { display: inline-block; font-weight: 500; text-align: center; vertical-align: middle; cursor: pointer; user-select: none; background-color: transparent; border: 1px solid transparent; padding: 0.5rem 1rem; font-size: 0.9rem; line-height: 1.5; border-radius: 0.3rem; transition: all .15s ease-in-out; }
+        .custom-btn-primary { color: #fff; background-color: var(--primary); border-color: var(--primary); }
+        .custom-btn-primary:hover { background-color: #083864; border-color: #073055; }
+        .custom-btn-secondary { color: var(--primary); background-color: var(--gray-200, #e9ecef); border-color: var(--gray-300, #dee2e6); }
+        .custom-btn-secondary:hover { background-color: var(--gray-300, #dee2e6); border-color: #c8ced3; }
+        body.dark .custom-btn-secondary { color: var(--custom-modal-text-color); background-color: #5a5a5a; border-color: #6c757d; }
+        body.dark .custom-btn-secondary:hover { background-color: #656565; border-color: #787878; }
+        .custom-btn-danger { color: #fff; background-color: var(--danger, #F44336); border-color: var(--danger, #F44336); }
+        .custom-btn-danger:hover { background-color: #D32F2F; border-color: #c82333; }
+        .custom-btn-warning { color: #212529; background-color: var(--warning, #FFC107); border-color: var(--warning, #FFC107); }
+        .custom-btn-warning:hover { background-color: #e0a800; border-color: #d39e00; }
+        body.dark .custom-btn-warning { color: var(--custom-toast-warning-text); background-color: var(--custom-toast-warning-bg); border-color: var(--custom-toast-warning-bg); }
+        body.dark .custom-btn-warning:hover { background-color: #df8c00; border-color: #d39e00; }
+        .custom-toast-container { position: fixed; top: 80px; right: 20px; z-index: 1055; width: auto; max-width: 380px; }
+        .custom-toast { color: var(--custom-toast-text-color); padding: 0.85rem 1.35rem; margin-bottom: 1rem; border: none; border-radius: 0.3rem; box-shadow: 0 0.35rem 0.85rem var(--custom-toast-box-shadow); opacity: 0; transform: translateX(110%); transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1); display: flex; align-items: center; font-size: 0.9rem; line-height: 1.4; }
+        .custom-toast.show { opacity: 1; transform: translateX(0); }
+        .custom-toast-icon { margin-right: var(--custom-toast-icon-spacing); font-size: 1.3em; line-height: 1; }
+        .custom-toast-success { background-color: var(--custom-toast-success-bg); }
+        .custom-toast-error { background-color: var(--custom-toast-error-bg); }
+        .custom-toast-warning { background-color: var(--custom-toast-warning-bg); color: var(--custom-toast-warning-text); }
+        .custom-toast-info { background-color: var(--custom-toast-info-bg); }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+      <div class="container navbar-container">
+        <a href="/painel" class="navbar-brand" data-tooltip="Página Inicial Educa Mente" data-tooltip-type="default">
+          Educa Mente
+        </a>
+        <ul class="navbar-menu">
+          <li class="navbar-item"> 
+            <a href="/painel" class="navbar-link" 
+               data-tooltip="Ir para o Painel Principal" 
+               data-tooltip-type="navbar-link"> <!-- Mantido tipo navbar-link -->
+              <span class="navbar-icon" id="icon-home"></span> <span>Painel</span> 
+            </a> 
+          </li>
+          <li class="navbar-item"> 
+            <a href="/historico" class="navbar-link active"
+               data-tooltip="Visualizar Histórico de Atendimentos" 
+               data-tooltip-type="navbar-link"> <!-- Mantido tipo navbar-link e active -->
+              <span class="navbar-icon" id="icon-history"></span> <span>Histórico</span> 
+            </a> 
+          </li>
+          <li class="navbar-item"> 
+            <a href="/solicitacoes" class="navbar-link"
+               data-tooltip="Gerenciar Solicitações de Atendimento" 
+               data-tooltip-type="navbar-link"> <!-- Mantido tipo navbar-link -->
+              <span class="navbar-icon" id="icon-requests"></span> <span>Solicitações</span> 
+            </a> 
+          </li>
+        </ul>
+        <!-- Controles da Direita (Dark Mode e Logout) -->
+        <div class="navbar-right-controls">
+            <div class="dark-mode-toggle-wrapper">
+              <i class="fas fa-sun" id="icon-sun" data-tooltip="Alternar para Modo Claro" data-tooltip-type="warning"></i>
+              <i class="fas fa-moon" id="icon-moon" data-tooltip="Alternar para Modo Escuro" data-tooltip-type="info"></i>
+              <label class="switch" data-tooltip="Ativar/Desativar Modo Escuro" data-tooltip-type="default">
+                <input type="checkbox" id="toggle-dark-mode">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <a href="/" class="navbar-logout-button" id="logout-nav-link" data-tooltip="Sair (deslogar)" data-tooltip-type="danger">
+              <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+             <div class="page-header"> <h1 class="page-title" id="page-title">Histórico do Aluno</h1> <p class="page-subtitle" id="page-subtitle">Carregando...</p> </div>
+             <div class="card" id="student-info-card" style="display: none;">
+                 <div class="card-header"> <h2 class="card-title">Informações do Aluno</h2> </div>
+                 <div class="card-body"> <div class="student-info-grid"> <div class="info-item"> <span class="info-item-label">Nome</span> <span class="info-item-value" id="student-name"><i class="fas fa-user"></i><span>-</span></span> </div> <div class="info-item"> <span class="info-item-label">Idade</span> <span class="info-item-value" id="student-age"><i class="fas fa-birthday-cake"></i><span>-</span></span> </div> <div class="info-item"> <span class="info-item-label">Turma</span> <span class="info-item-value" id="student-grade"><i class="fas fa-graduation-cap"></i><span>-</span></span> </div> <div class="info-item"> <span class="info-item-label">Curso</span> <span class="info-item-value" id="student-course"><i class="fas fa-book"></i><span>-</span></span> </div> <div class="info-item"> <span class="info-item-label">Unidade</span> <span class="info-item-value" id="student-unit"><i class="fas fa-building"></i><span>-</span></span> </div> <div class="info-item"> <span class="info-item-label">Telefone</span> <span class="info-item-value" id="student-phone"><i class="fas fa-phone"></i><span>-</span></span> </div> </div> </div>
+             </div>
+
+            <div class="card" id="appointment-history-card" style="display: none;">
+                 <div class="card-header"> <h2 class="card-title">Registros de Atendimento</h2> </div>
+                 <div class="card-body">
+                     <div class="loading-spinner" id="history-loading" style="display: block;"></div>
+                     <div id="student-appointment-list" style="display: none;"> </div>
+                     <div id="no-appointments-message" style="display: none;" class="text-center py-12 text-gray-500"> Nenhum registro encontrado. </div>
+                     <div id="student-not-found-message" style="display: none;" class="text-center py-12 text-gray-500"> Aluno não encontrado. </div>
+                 </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content"><p class="footer-text">© 2025 Educa Mente</p></div>
+    </footer>
+
+    <div class="modal-overlay" id="appointment-details-modal-overlay">
+         <div class="modal-content" id="appointment-details-modal-content" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+            <div class="modal-header"> 
+                <h3 class="modal-title" id="modal-title">Detalhes</h3> 
+                <button class="modal-close-btn" id="modal-close-button" aria-label="Fechar" data-tooltip="Fechar esta janela" data-tooltip-type="secondary">×</button> <!-- Adicionado tooltip -->
+            </div>
+            <div class="modal-body" id="modal-body-content"> <p>Carregando...</p> </div>
+        </div>
+    </div>
+
+    <script>
+        // Variaveis globais 
+        let currentStudentName = ''; 
+        let modalOverlay, modalContent, modalTitle, modalBody, modalCloseBtn; 
+        window.historicoAlunoData = null; 
+
+        document.addEventListener('DOMContentLoaded', function() {
+          try {
+            console.log("DEBUG: DOMContentLoaded - Iniciando setup historico_aluno...");
+            if (typeof utils === 'undefined') { console.warn("AVISO: utils.js não carregado."); }
+            if (typeof window.icons === 'undefined') { console.warn("AVISO: icons.js não carregado ou window.icons não definido."); }
+
+            setupNavbarIcons(); 
+            setupDarkModeToggle(); 
+            setupLogoutButton(); // Adicionado para configurar o botão de logout
+            
+            if (!setupModalElements()) { throw new Error("Falha ao configurar modal."); }
+            if (!setupCardActionListeners()) { throw new Error("Falha ao configurar listeners dos cards."); }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const solicitacaoId = urlParams.get('id'); 
+
+            if (!solicitacaoId) {
+                handleError("ID da Solicitação Ausente", "Não foi possível carregar o histórico: ID da solicitação não fornecido na URL.");
+                return;
+            }
+
+            fetch(`/api/historico_por_id/${solicitacaoId}`)
+              .then(res => {
+                  if (!res.ok) {
+                      return res.text().then(text => { throw new Error(`Erro ${res.status}: ${text || res.statusText}`) });
+                  }
+                  return res.json();
+              })
+              .then(data => {
+                console.log("Dados recebidos da API:", data);
+                window.historicoAlunoData = data; 
+                if (!data || !data.aluno) {
+                  document.getElementById('student-not-found-message').textContent = data.error || 'Aluno ou histórico não encontrado.';
+                  document.getElementById('student-not-found-message').style.display = 'block';
+                  document.getElementById('history-loading').style.display = 'none';
+                  return;
+                }
+                preencherCabecalho(data.aluno);
+                preencherRegistros(data.appointmentHistory); 
+                document.getElementById('appointment-history-card').style.display = 'block';
+                document.getElementById('history-loading').style.display = 'none';
+                if (localStorage.getItem('darkMode') === 'enabled') {
+                    applyDarkModeToDynamicElements(true);
+                }
+              })
+              .catch(err => {
+                console.error('Erro ao buscar dados:', err);
+                handleError("Erro ao carregar dados", `Ocorreu um erro ao buscar os dados: ${err.message}`);
+              });
+
+            function preencherCabecalho(aluno) {
+              if (!aluno) { return; }
+              const iconsGlobal = window.icons || {};
+              const formatPhone = typeof utils !== 'undefined' && utils?.formatPhone ? utils.formatPhone : p => p || 'Não informado';
+              const calcularIdade = (dataNasc) => { 
+                  if (!dataNasc) return '-';
+                  try { 
+                      const nasc = new Date(dataNasc); 
+                      const hoje = new Date(); 
+                      let idade = hoje.getFullYear() - nasc.getFullYear(); 
+                      const m = hoje.getMonth() - nasc.getMonth(); 
+                      if (m < 0 || (m === 0 && hoje.getDate() < nasc.getDate())) idade--; 
+                      return isNaN(idade) ? '-' : idade; 
+                  } catch(e) { return '-'; }
+              };
+              const age = calcularIdade(aluno.studentAge);
+
+              setTextContent('student-name', aluno.studentName, iconsGlobal.user);
+              setTextContent('student-age', `${age} anos`, iconsGlobal.birthdayCake);
+              setTextContent('student-grade', aluno.grade, iconsGlobal.graduationCap);
+              setTextContent('student-course', aluno.curso, iconsGlobal.course || iconsGlobal.book); 
+              setTextContent('student-unit', aluno.unit, iconsGlobal.building);
+              setTextContent('student-phone', formatPhone(aluno.phone), iconsGlobal.phone);
+
+              document.getElementById('page-title').textContent = `Histórico de ${aluno.studentName || 'Aluno'}`;
+              document.getElementById('page-subtitle').textContent = `Detalhes e registros de atendimento`;
+              const infoCard = document.getElementById('student-info-card');
+              if (infoCard) infoCard.style.display = 'block';
+            }
+
+            function setTextContent(elementId, value, iconHtml) {
+              const element = document.getElementById(elementId); 
+              if (element) {
+                let content = '';
+                const defaultIcon = ''; 
+                const actualIconHtml = iconHtml || defaultIcon;
+                if (actualIconHtml) { content += actualIconHtml + ' '; }
+                content += `<span>${value ?? '-'}</span>`;
+                element.innerHTML = content; 
+              }
+            }
+
+            function preencherRegistros(registros) {
+              const lista = document.getElementById('student-appointment-list');
+              lista.innerHTML = '';
+              if (!registros || !registros.length) {
+                document.getElementById('no-appointments-message').style.display = 'block';
+                lista.style.display = 'none'; return;
+              }
+              lista.style.display = 'block';
+
+              registros.forEach(appointment => {
+                const iconsGlobal = window.icons || {};
+                const calendarIcon = iconsGlobal.calendar || '<i class="far fa-calendar-alt"></i>';
+                const clockIcon = iconsGlobal.clock || '<i class="far fa-clock"></i>';
+                const typeIcon = iconsGlobal.tag || '<i class="fas fa-tag"></i>';
+                
+                const notesIcon = iconsGlobal.notes || '<i class="fas fa-sticky-note"></i>';
+                const viewIcon = iconsGlobal.eye || '<i class="fas fa-eye"></i>';
+                const editIcon = iconsGlobal.edit || '<i class="fas fa-edit"></i>';
+                const addIcon = iconsGlobal.add || '<i class="fas fa-plus"></i>';
+                const saveIcon = iconsGlobal.save || '<i class="fas fa-save"></i>';
+                const cancelIcon = iconsGlobal.cancel || '<i class="fas fa-times"></i>';
+                
+                const userIcon = iconsGlobal.user || '<i class="fas fa-user"></i>'; 
+                const courseIcon = iconsGlobal.course || '<i class="fas fa-book"></i>'; 
+                const unitIcon = iconsGlobal.building || '<i class="fas fa-building"></i>'; 
+                
+                const appType = window.historicoAlunoData?.aluno?.curso || 'Sessão'; 
+                
+                const appDate = appointment.date ?? null;
+                const appTime = appointment.horario ?? null;
+                
+                const currentNotes = appointment.observacao ?? ''; 
+                const hasNotes = currentNotes.trim() !== '';
+                const notesDisplayHTML = hasNotes ? `<div>${currentNotes.replace(/\n/g, '<br>')}</div>` : `<div class="no-notes">(Nenhuma observação registrada)</div>`;
+                const editButtonText = hasNotes ? 'Editar Nota' : 'Adicionar Nota';
+                const editButtonIcon = hasNotes ? editIcon : addIcon;
+
+                const div = document.createElement('div');
+                div.className = 'appointment-entry';
+                div.dataset.appointmentId = appointment.id; 
+                applyDarkModeClass(div); 
+
+                div.innerHTML = `
+                  <div class="appointment-entry-header">
+                    <span class="appointment-date-time">
+                      ${calendarIcon} ${formatarData(appDate)}    <!-- Aumentado espaço -->
+                      ${clockIcon} ${appTime ? appTime.slice(0,5) : '--:--'}
+                    </span>
+                    <div class="appointment-header-right">
+                      <span class="appointment-type" title="Curso/Motivo da Solicitação Original">${typeIcon} ${appType}</span>
+                      <span class="appointment-action-icon" 
+                            title="Ver detalhes deste atendimento"
+                            data-tooltip="Ver detalhes do atendimento de ${formatarData(appDate)}"
+                            data-tooltip-type="info"> 
+                            ${viewIcon}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="appointment-notes-section">
+                    <div class="appointment-notes-display">
+                      <strong>${notesIcon} Observações do Atendimento:</strong>
+                      ${notesDisplayHTML}
+                    </div>
+                    <div class="appointment-notes-controls">
+                      <button class="btn btn-sm btn-outline-secondary btn-edit-note" 
+                              title="${hasNotes ? 'Editar esta nota' : 'Adicionar uma nota para este atendimento'}"
+                              data-tooltip="${hasNotes ? 'Editar esta nota' : 'Adicionar uma nota'}"
+                              data-tooltip-type="secondary">
+                        ${editButtonIcon} ${editButtonText}
+                      </button>
+                    </div>
+                    <div class="appointment-notes-edit-form" style="display: none;">
+                      <textarea placeholder="Digite a observação aqui...">${currentNotes}</textarea>
+                      <div class="edit-actions">
+                        <span class="edit-feedback"></span>
+                        <button class="btn btn-sm btn-secondary btn-cancel-note" title="Cancelar edição da nota" data-tooltip="Cancelar" data-tooltip-type="default">
+                          ${cancelIcon} Cancelar
+                        </button>
+                        <button class="btn btn-sm btn-primary btn-save-note" title="Salvar alterações na nota" data-tooltip="Salvar Nota" data-tooltip-type="success">
+                          ${saveIcon} Salvar
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                `;
+
+                const textarea = div.querySelector("textarea");
+                const editForm = div.querySelector(".appointment-notes-edit-form");
+                const editButton = div.querySelector(".btn-edit-note");
+                const cancelButton = div.querySelector(".btn-cancel-note");
+                const saveButton = div.querySelector(".btn-save-note");
+                const feedback = div.querySelector(".edit-feedback");
+
+                editButton.addEventListener("click", () => { editForm.style.display = "block"; feedback.textContent = ''; });
+                cancelButton.addEventListener("click", () => { editForm.style.display = "none"; feedback.textContent = ''; });
+                saveButton.addEventListener("click", async () => {
+                  const texto = textarea.value.trim();
+                  try {
+                    const response = await fetch("/api/observacoes", { 
+                      method: "POST", headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ agendamentos_id: appointment.id, texto: texto })
+                    });
+                    if (!response.ok) throw new Error(`Erro ao salvar: ${response.statusText}`);
+                                    
+                    const globalAppointment = window.historicoAlunoData.appointmentHistory.find(a => String(a.id) === String(appointment.id));
+                     if (globalAppointment) { globalAppointment.observacao = texto; }
+
+                    feedback.textContent = "Salvo!"; feedback.style.color = "green";
+                    setTimeout(() => { editForm.style.display = "none"; feedback.textContent = '';}, 1500);
+                    const displayDiv = div.querySelector(".appointment-notes-display");
+                    const newHasNotes = texto.trim() !== '';
+                    displayDiv.innerHTML = `<strong>${notesIcon} Observações do Atendimento:</strong>${newHasNotes ? `<div>${texto.replace(/\n/g, '<br>')}</div>` : `<div class="no-notes">(Nenhuma observação registrada)</div>`}`;
+                    editButton.innerHTML = `${newHasNotes ? editIcon : addIcon} ${newHasNotes ? 'Editar Nota' : 'Adicionar Nota'}`;
+                    editButton.setAttribute('title', newHasNotes ? 'Editar esta nota' : 'Adicionar uma nota para este atendimento'); 
+                    editButton.setAttribute('data-tooltip', newHasNotes ? 'Editar esta nota' : 'Adicionar uma nota');
+                  } catch (err) {
+                    feedback.textContent = "Erro ao salvar."; feedback.style.color = "red"; console.error(err);
+                  }
+                });
+                lista.appendChild(div);
+              });
+            }
+
+            function formatarData(data) { 
+              if (!data) return 'N/A';
+              const parts = data.split('-');
+              if (parts.length === 3) {
+                  const d = new Date(Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])));
+                  return !isNaN(d.getTime()) ? d.toLocaleDateString('pt-BR', {timeZone: 'UTC'}) : 'Data inválida';
+              }
+              return 'Data inválida';
+            }
+
+            function handleError(subtitleMsg, fullErrorMsg) { 
+                console.error("handleError:", fullErrorMsg); 
+                const pageSubtitle = document.getElementById('page-subtitle'); if(pageSubtitle) pageSubtitle.textContent = subtitleMsg; 
+                const spinner = document.getElementById('history-loading'); if(spinner) spinner.style.display = 'none'; 
+                const errorMsgElement = document.getElementById('student-not-found-message'); 
+                if(errorMsgElement){ 
+                    errorMsgElement.textContent = fullErrorMsg; 
+                    errorMsgElement.style.display = 'block'; 
+                } 
+                const historyCard = document.getElementById('appointment-history-card'); if(historyCard) historyCard.style.display = 'block';
+                const infoCard = document.getElementById('student-info-card'); if(infoCard) infoCard.style.display = 'none';
+            }
+          } catch (err) {
+                console.error("Erro inesperado no setup:", err);
+                const bodyEl = document.querySelector('body');
+                if(bodyEl) bodyEl.innerHTML = `<p style="color:red; font-size:1.2em; padding:20px; text-align:center;">Erro Crítico ao Carregar a Página: ${err.message}. Verifique o console (F12).</p>`;
+          }
+        });
+
+        function setupNavbarIcons() { 
+            try { 
+                if(typeof window.icons !== 'undefined' && window.icons){
+                    const homeIconEl = document.getElementById('icon-home');
+                    const historyIconEl = document.getElementById('icon-history');
+                    const requestsIconEl = document.getElementById('icon-requests');
+                    if (homeIconEl && icons.home) homeIconEl.innerHTML = icons.home;
+                    if (historyIconEl && icons.history) historyIconEl.innerHTML = icons.history;
+                    if (requestsIconEl && icons.requests) requestsIconEl.innerHTML = icons.requests;
+                }
+            } catch(e) { console.error("Erro ao configurar ícones da Navbar:", e); } 
+        }
+
+        function setupDarkModeToggle() { 
+            const toggle = document.getElementById('toggle-dark-mode');
+            const iconSun = document.getElementById('icon-sun');
+            const iconMoon = document.getElementById('icon-moon');
+
+            if (!toggle || !iconSun || !iconMoon) { 
+                console.warn("Elementos do dark mode (toggle, sol ou lua) não encontrados.");
+                return; 
+            }
+            const applyDarkModeUI = (isDark, initialLoad = false) => {
+                if (!initialLoad) document.body.classList.add('no-transitions');
+                document.body.classList.toggle('dark', isDark);
+                iconSun.style.display = isDark ? 'none' : 'inline-block';
+                iconMoon.style.display = isDark ? 'inline-block' : 'none';
+                applyDarkModeToDynamicElements(isDark); 
+                if (!initialLoad) {
+                     requestAnimationFrame(() => {
+                         requestAnimationFrame(() => { document.body.classList.remove('no-transitions'); });
+                     });
+                 }
+            };
+            const darkModePref = localStorage.getItem('darkMode') === 'enabled';
+            toggle.checked = darkModePref;
+            applyDarkModeUI(darkModePref, true); 
+            toggle.addEventListener('change', function() {
+                const isChecked = this.checked;
+                applyDarkModeUI(isChecked); 
+                localStorage.setItem('darkMode', isChecked ? 'enabled' : 'disabled');
+            });
+        }
+
+        function setupLogoutButton() {
+            const logoutButton = document.getElementById('logout-nav-link');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function(event) {
+                    event.preventDefault(); 
+                    const logoutUrl = this.getAttribute('href'); 
+                    if (typeof window.showConfirmationModal === 'function') {
+                        window.showConfirmationModal(
+                            'Confirmar Saída', 
+                            'Tem certeza que deseja sair da sua conta e retornar à tela inicial?', 
+                            () => { window.location.href = logoutUrl; },
+                            null, 'Sim, Sair', 'custom-btn-danger' 
+                        );
+                    } else {
+                        console.warn('Função window.showConfirmationModal não definida. Usando confirm padrão.');
+                        if (confirm('Tem certeza que deseja sair?')) window.location.href = logoutUrl;
+                    }
+                });
+            } else {
+                console.warn("Botão de logout (logout-nav-link) não encontrado.");
+            }
+        }
+
+        function setupModalElements() { 
+            modalOverlay = document.getElementById('appointment-details-modal-overlay'); 
+            modalContent = document.getElementById('appointment-details-modal-content'); 
+            modalTitle = document.getElementById('modal-title'); 
+            modalBody = document.getElementById('modal-body-content'); 
+            modalCloseBtn = document.getElementById('modal-close-button'); 
+            if (!modalOverlay || !modalContent || !modalTitle || !modalBody || !modalCloseBtn) { 
+                console.error("Falha ao encontrar elementos do modal no DOM.");
+                return false; 
+            } 
+            modalCloseBtn.addEventListener('click', closeModal); 
+            modalOverlay.addEventListener('click', (event) => { if (event.target === modalOverlay) closeModal(); }); 
+            document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modalOverlay?.classList.contains('active')) closeModal(); }); 
+            return true; 
+        }
+
+        function setupCardActionListeners() {
+            const historyListContainer = document.getElementById('student-appointment-list');
+            if (!historyListContainer) { 
+                console.error("Container da lista de histórico de atendimentos não encontrado.");
+                return false; 
+            }
+            historyListContainer.addEventListener('click', handleCardAction);
+            return true;
+        }
+
+        function handleCardAction(event) {
+             try {
+                const target = event.target;
+                const entryElement = target.closest('.appointment-entry');
+                if (!entryElement) return; 
+                const appointmentId = entryElement.dataset.appointmentId;
+                if (!appointmentId) { console.warn("ID do agendamento não encontrado no elemento .appointment-entry"); return; }
+                const iconClicked = target.closest('.appointment-action-icon');
+                if (iconClicked) { openAppointmentDetailsModal(appointmentId); return; }
+             } catch (error) { console.error("Erro em handleCardAction:", error); }
+        }
+        
+        function applyDarkModeClass(element) { if (element && localStorage.getItem('darkMode') === 'enabled') { element.classList.add('dark'); } }
+        function applyDarkModeToDynamicElements(isDark) {
+            const dynamicSelectors = [ 
+                '.appointment-entry', '.modal-content', '.appointment-entry-header', 
+                '.appointment-student-info p', '.appointment-notes-display', 
+                '.appointment-notes-edit-form textarea', '.btn-outline-secondary', 
+                '.modal-header', '.modal-title', '.modal-body', '.modal-body p', 
+                '.notes-section', '.notes-content', '.card', '.info-item', '.info-item-value', '.page-header'
+            ];
+            document.querySelectorAll(dynamicSelectors.join(', ')).forEach(el => el.classList.toggle('dark', isDark));
+            if (modalOverlay && modalOverlay.classList.contains('active')) { 
+                modalOverlay.classList.toggle('dark', isDark); 
+            }
+        }
+        function openAppointmentDetailsModal(appointmentId) {
+            if (!modalOverlay || !modalBody || !modalTitle || !window.historicoAlunoData || !window.historicoAlunoData.aluno || !window.historicoAlunoData.appointmentHistory) {
+                console.error("Erro ao abrir modal: Elementos do modal ou dados do aluno/histórico não encontrados.", {modalOverlay, modalBody, modalTitle, data: window.historicoAlunoData});
+                if(modalBody) modalBody.innerHTML = '<p style="color: red;">Erro ao carregar detalhes: Dados essenciais ausentes.</p>';
+                if(modalTitle) modalTitle.textContent = "Erro";
+                if(modalOverlay) modalOverlay.classList.add('active');
+                return;
+            }
+
+            const appointment = window.historicoAlunoData.appointmentHistory.find(app => app && String(app.id) === String(appointmentId));
+            const alunoInfo = window.historicoAlunoData.aluno;
+
+            if (!appointment) { 
+                modalBody.innerHTML = `<p>Detalhes do agendamento específico (ID: ${appointmentId}) não encontrados.</p>`;
+                modalTitle.textContent = "Erro no Agendamento";
+            } else {
+                const iconsGlobal = window.icons || {};
+                const utilsGlobal = window.utils || { formatPhone: p => p || 'N/A' };
+
+                const calcularIdadeModal = (dataNascString) => {
+                     if (!dataNascString) return 'N/A';
+                     try { 
+                         const parts = dataNascString.split('-');
+                         if (parts.length !== 3) return 'Data inválida';
+                         const nasc = new Date(Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])));
+                         const hoje = new Date(); 
+                         let idade = hoje.getUTCFullYear() - nasc.getUTCFullYear(); 
+                         const m = hoje.getUTCMonth() - nasc.getUTCMonth(); 
+                         if (m < 0 || (m === 0 && hoje.getUTCDate() < nasc.getUTCDate())) idade--; 
+                         return isNaN(idade) ? 'N/A' : `${idade} anos`; 
+                     } catch(e) { 
+                         console.error("Erro ao calcular idade:", e, "Data recebida:", dataNascString);
+                         return 'N/A'; 
+                     }
+                 };
+                
+                const formatarDataModal = (data) => {
+                  if (!data) return 'N/A';
+                  const parts = data.split('-');
+                  if (parts.length === 3) {
+                      const d = new Date(Date.UTC(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])));
+                      return !isNaN(d.getTime()) ? d.toLocaleDateString('pt-BR', {timeZone: 'UTC'}) : 'Data inválida';
+                  }
+                  return 'Data inválida';
+                };
+
+                const formatarHoraModal = (horario) => {
+                    return horario ? horario.substring(0, 5) : 'N/A';
+                };
+                
+                const dataAgendamentoFormatada = formatarDataModal(appointment.date);
+                const horaAgendamentoFormatada = formatarHoraModal(appointment.horario);
+
+                let modalHTML = `
+                    <p><strong>${iconsGlobal.user || '<i class="fas fa-user"></i>'} Aluno:</strong> ${alunoInfo.studentName || 'N/A'}</p>
+                    <p><strong>${iconsGlobal.birthdayCake || '<i class="fas fa-birthday-cake"></i>'} Idade:</strong> ${calcularIdadeModal(alunoInfo.studentAge)}</p>
+                    <p><strong>${iconsGlobal.graduationCap || '<i class="fas fa-graduation-cap"></i>'} Turma:</strong> ${alunoInfo.grade || 'N/A'}</p>
+                    <p><strong>${iconsGlobal.course || '<i class="fas fa-book"></i>'} Curso/Motivo (Solicitação):</strong> ${alunoInfo.curso || 'N/A'}</p>
+                    <p><strong>${iconsGlobal.building || '<i class="fas fa-building"></i>'} Unidade (Solicitação):</strong> ${alunoInfo.unit || 'N/A'}</p>
+                    <p><strong>${iconsGlobal.phone || '<i class="fas fa-phone"></i>'} Telefone (Solicitação):</strong> ${utilsGlobal.formatPhone(alunoInfo.phone)}</p>
+                `;
+
+                if (alunoInfo.initialObservations && alunoInfo.initialObservations.trim() !== '') {
+                    modalHTML += `<div class="notes-section"> <p><strong><i class="fas fa-comment-dots"></i> Observações Iniciais da Solicitação:</strong></p> <div class="notes-content">${alunoInfo.initialObservations.replace(/\n/g, '<br>')}</div> </div>`;
+                }
+
+                 if (alunoInfo.laudoPath) {
+                    if (alunoInfo.initialObservations && alunoInfo.initialObservations.trim() !== '') {
+                         modalHTML += `<div style="margin-top: 10px;"></div>`;
+                    }
+                    modalHTML += `<p><strong><i class="fas fa-file-medical"></i> Laudo da Solicitação:</strong> <a href="${alunoInfo.laudoPath}" target="_blank" class="laudo-link" data-tooltip="Abrir laudo em nova aba" data-tooltip-type="info">Visualizar Laudo <i class="fas fa-external-link-alt fa-xs"></i></a></p>`;
+                }
+
+                if ((alunoInfo.initialObservations && alunoInfo.initialObservations.trim() !== '') || alunoInfo.laudoPath) {
+                    modalHTML += `<hr>`;
+                }
+                
+                modalHTML += `
+                    <p><strong>${iconsGlobal.calendar || '<i class="far fa-calendar-alt"></i>'} Data do Atendimento:</strong> ${dataAgendamentoFormatada}</p>
+                    <p><strong>${iconsGlobal.clock || '<i class="far fa-clock"></i>'} Hora do Atendimento:</strong> ${horaAgendamentoFormatada}</p>
+                `;
+                
+                if (appointment.observacao && appointment.observacao.trim() !== '') {
+                     modalHTML += `<div class="notes-section"> <p><strong>${iconsGlobal.notes || '<i class="fas fa-sticky-note"></i>'} Observações deste Atendimento:</strong></p> <div class="notes-content">${appointment.observacao.replace(/\n/g, '<br>')}</div> </div>`;
+                 } else {
+                     modalHTML += `<p><strong>${iconsGlobal.notes || '<i class="fas fa-sticky-note"></i>'} Observações deste Atendimento:</strong> (Nenhuma nota registrada para este atendimento específico)</p>`;
+                 }
+
+                modalBody.innerHTML = modalHTML;
+                modalTitle.textContent = `Detalhes: Atendimento de ${alunoInfo.studentName || 'Aluno'} (${dataAgendamentoFormatada})`; 
+            }
+            applyDarkModeToDynamicElements(localStorage.getItem('darkMode') === 'enabled');
+            modalOverlay.classList.add('active'); 
+        }
+        function closeModal() { if (modalOverlay) { modalOverlay.classList.remove('active'); } }
+    </script>
+
+    <!-- SCRIPT PARA MODAL DE CONFIRMAÇÃO E TOAST (Logout e outros) -->
+    <script>
+    (function() {
+        'use strict';
+        let modalElement, modalTitleElement, modalBodyElement, confirmBtn, cancelBtn, closeBtnModal, currentConfirmCallback, currentCancelCallback, toastContainerElement;
+        
+        function initializeModalDOM() {
+            if (document.getElementById('confirmationModal_generated')) return;
+            const modalHTML = `
+                <div id="confirmationModal_generated" class="custom-modal" aria-modal="true" role="dialog">
+                    <div class="custom-modal-content">
+                        <div class="custom-modal-header">
+                            <h5 class="custom-modal-title" id="modalTitle_generated">Confirmar Ação</h5>
+                            <button type="button" class="custom-modal-close" id="modalCloseBtn_generated" aria-label="Fechar" data-tooltip="Fechar esta caixa de diálogo" data-tooltip-type="secondary">×</button>
+                        </div>
+                        <div class="custom-modal-body" id="modalBodyText_generated"><p>Você tem certeza?</p></div>
+                        <div class="custom-modal-footer">
+                            <button type="button" class="custom-btn custom-btn-secondary" id="modalCancelBtn_generated" data-tooltip="Cancelar ação e fechar">Cancelar</button>
+                            <button type="button" class="custom-btn custom-btn-primary" id="modalConfirmBtn_generated" data-tooltip="Confirmar e executar ação">Confirmar</button>
+                        </div>
+                    </div>
+                </div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            modalElement = document.getElementById('confirmationModal_generated'); 
+            modalTitleElement = document.getElementById('modalTitle_generated'); 
+            modalBodyElement = document.getElementById('modalBodyText_generated'); 
+            confirmBtn = document.getElementById('modalConfirmBtn_generated'); 
+            cancelBtn = document.getElementById('modalCancelBtn_generated'); 
+            closeBtnModal = document.getElementById('modalCloseBtn_generated');
+            
+            confirmBtn.addEventListener('click', () => { if (currentConfirmCallback) currentConfirmCallback(); hideModal(); });
+            const closeModalActions = () => { if (currentCancelCallback) currentCancelCallback(); hideModal(); };
+            cancelBtn.addEventListener('click', closeModalActions); 
+            closeBtnModal.addEventListener('click', closeModalActions); 
+            modalElement.addEventListener('click', (event) => { if (event.target === modalElement) closeModalActions(); }); 
+            document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modalElement && modalElement.classList.contains('show')) closeModalActions(); });
+        }
+        function hideModal() { if (!modalElement) return; modalElement.classList.remove('show'); currentConfirmCallback = null; currentCancelCallback = null; }
+        
+        window.showConfirmationModal = function(title, message, confirmCallback, cancelCallback, confirmButtonText = 'Confirmar', confirmButtonClass = 'custom-btn-primary') {
+            if (!modalElement) initializeModalDOM();
+            modalTitleElement.textContent = title; 
+            modalBodyElement.innerHTML = `<p>${message.replace(/\n/g, "<br>")}</p>`; 
+            confirmBtn.textContent = confirmButtonText; 
+            confirmBtn.className = `custom-btn ${confirmButtonClass}`;
+            confirmBtn.setAttribute('data-tooltip', `${confirmButtonText} e executar ação`); 
+            
+            currentConfirmCallback = confirmCallback; 
+            currentCancelCallback = cancelCallback; 
+            modalElement.classList.add('show'); 
+            if(confirmBtn) confirmBtn.focus();
+        }
+
+        function initializeToastContainerDOM() {
+            if (document.getElementById('toastContainer_generated')) return;
+            const toastContainerHTML = `<div id="toastContainer_generated" class="custom-toast-container"></div>`;
+            document.body.insertAdjacentHTML('beforeend', toastContainerHTML); 
+            toastContainerElement = document.getElementById('toastContainer_generated');
+        }
+        window.showToast = function(message, type = 'info', duration = 3500) {
+            if (!toastContainerElement) initializeToastContainerDOM();
+            const toast = document.createElement('div'); 
+            toast.className = `custom-toast custom-toast-${type}`; 
+            let iconClass = '';
+            switch (type) { 
+                case 'success': iconClass = 'fas fa-check-circle'; break; 
+                case 'error': iconClass = 'fas fa-times-circle'; break; 
+                case 'warning': iconClass = 'fas fa-exclamation-triangle'; break; 
+                case 'info': iconClass = 'fas fa-info-circle'; break; 
+            }
+            toast.innerHTML = (iconClass ? `<i class="${iconClass} custom-toast-icon"></i>` : '') + `<span>${message}</span>`;
+            toastContainerElement.prepend(toast); 
+            requestAnimationFrame(() => { requestAnimationFrame(() => { toast.classList.add('show'); }); });
+            setTimeout(() => { 
+                toast.classList.remove('show'); 
+                toast.addEventListener('transitionend', () => { 
+                    if (toast.parentNode === toastContainerElement) { toastContainerElement.removeChild(toast); } 
+                }, { once: true }); 
+            }, duration);
+        }
+    })();
+    </script>
+
+    <!-- SCRIPT PARA TOOLTIP PERSONALIZADO (ALINHADO COM OS OUTROS ARQUIVOS) -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let tooltipElement;
+        const tooltipOffset = 10; 
+
+        function createTooltipElement() {
+            if (document.getElementById('global-custom-tooltip')) {
+                tooltipElement = document.getElementById('global-custom-tooltip'); return;
+            }
+            tooltipElement = document.createElement('div');
+            tooltipElement.id = 'global-custom-tooltip';
+            tooltipElement.className = 'custom-tooltip-popup';
+            document.body.appendChild(tooltipElement);
+        }
+        createTooltipElement(); 
+
+        function showTooltip(event) {
+            const target = event.currentTarget; 
+            const tooltipText = target.getAttribute('data-tooltip');
+            if (!tooltipText || !tooltipElement) return;
+
+            tooltipElement.textContent = tooltipText;
+            let tooltipType = target.getAttribute('data-tooltip-type'); // Prioriza o tipo explícito
+
+            if (!tooltipType || tooltipType === 'default') { // Se não houver tipo explícito ou for 'default', tenta inferir
+                const typeRegex = /(?:btn-|custom-btn-)(primary|danger|warning|secondary|success|info)/;
+                let typeFound = false;
+                target.classList.forEach(cls => {
+                    const match = cls.match(typeRegex);
+                    if (match && match[1]) {
+                        tooltipType = match[1];
+                        typeFound = true;
+                    }
+                });
+                if (!typeFound) { // Outros fallbacks
+                    if (target.classList.contains('navbar-link')) tooltipType = 'navbar-link'; // Específico para navbar
+                    else if (target.classList.contains('active') && target.classList.contains('navbar-link')) tooltipType = 'info';
+                    else if (target.classList.contains('btn-edit-note') || target.classList.contains('modal-close-btn')) tooltipType = 'secondary';
+                    else if (target.classList.contains('btn-save-note')) tooltipType = 'success';
+                    else if (target.classList.contains('laudo-link') || target.classList.contains('appointment-action-icon')) tooltipType = 'info';
+                    else tooltipType = 'default'; // Último fallback
+                }
+            }
+            
+            tooltipElement.className = 'custom-tooltip-popup visible'; 
+            tooltipElement.classList.add(`type-${tooltipType}`); 
+            tooltipElement.style.setProperty('--tooltip-arrow-color', getComputedStyle(tooltipElement).backgroundColor);
+
+            const targetRect = target.getBoundingClientRect();
+            tooltipElement.style.display = 'block'; 
+            const tooltipRect = tooltipElement.getBoundingClientRect();
+            tooltipElement.style.display = ''; 
+
+            let top = targetRect.top - tooltipRect.height - tooltipOffset;
+            let left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
+            tooltipElement.classList.remove('arrow-bottom');
+
+            if (top - window.scrollY < 5) { top = targetRect.bottom + tooltipOffset; tooltipElement.classList.add('arrow-bottom'); }
+            if (left < 5) { left = 5; } else if (left + tooltipRect.width > window.innerWidth - 5) { left = window.innerWidth - tooltipRect.width - 5; }
+            
+            tooltipElement.style.left = `${left}px`;
+            tooltipElement.style.top = `${top + window.scrollY}px`;
+        }
+
+        function hideTooltip() { if (tooltipElement) { tooltipElement.className = 'custom-tooltip-popup'; } }
+
+        document.body.addEventListener('mouseenter', (event) => {
+            const target = event.target.closest('[data-tooltip]');
+            if (target) {
+                // A lógica de data-original-title e title é para evitar conflito com tooltips nativos do navegador
+                if (target.hasAttribute('title') && target.getAttribute('title') !== target.getAttribute('data-tooltip')) {
+                     target.setAttribute('data-original-title', target.getAttribute('title'));
+                }
+                // Remove o title nativo para não sobrepor o tooltip personalizado
+                if (target.hasAttribute('title')) target.removeAttribute('title'); 
+                showTooltip({currentTarget: target});
+            }
+        }, true);
+
+        document.body.addEventListener('mouseleave', (event) => {
+            const target = event.target.closest('[data-tooltip]');
+            if (target) {
+                hideTooltip();
+                // Restaura o title nativo se ele existia originalmente
+                if (target.hasAttribute('data-original-title')) {
+                    target.setAttribute('title', target.getAttribute('data-original-title'));
+                    target.removeAttribute('data-original-title');
+                }
+            }
+        }, true);
+    });
+    </script>
+
+</body>
+</html>
