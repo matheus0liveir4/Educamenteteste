@@ -11,6 +11,7 @@
     "db:migrate:undo": "npx sequelize-cli db:migrate:undo"
   },
   "dependencies": {
+    "connect-session-sequelize": "^7.1.7",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
@@ -22,7 +23,7 @@
     "sequelize": "^6.37.7"
   },
   "devDependencies": {
-    "sequelize-cli": "^6.6.2",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "sequelize-cli": "^6.6.2"
   }
 }
