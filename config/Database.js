@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 // config/Database.js
 const { Sequelize } = require('sequelize');
-// Não precisamos do 'fs' aqui se o CA vier de uma variável de ambiente
-// const fs = require('fs'); 
-// const path = require('path'); // Também não precisamos de path para este método
 
 let sequelizeInstance;
 
@@ -23,7 +19,7 @@ if (process.env.NODE_ENV === 'production') {
       require: true, // Sempre requerer SSL para TiDB Cloud
       // Se DB_SSL_CA for fornecido, usamos para validar o certificado do servidor.
       // Se não, tentamos com rejectUnauthorized: false (menos seguro, mas pode funcionar se TiDB permitir).
-      rejectUnauthorized: dbSslCa ? true : false, 
+      rejectUnauthorized: dbSslCa ? true : false,
       ca: dbSslCa ? dbSslCa : undefined // Passa o conteúdo do CA se existir
     }
   };
@@ -52,14 +48,3 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = sequelizeInstance;
-=======
-const { Sequelize } = require('sequelize');
-
-// Conexão com o banco de dados
-const db = new Sequelize('sistema_escolar', 'root', '', {
-    host: 'localhost',
-    dialect: 'mysql'
-});
-
-module.exports = db;
->>>>>>> 94a95285ce6d51749f1cd61be8e52523fd590c6b

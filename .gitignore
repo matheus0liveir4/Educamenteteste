@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Logs
 logs
 *.log
@@ -43,7 +42,7 @@ coverage/
 Thumbs.db
 
 # Arquivos de editores/IDEs (opcional, mas comum)
-.vscode/ # Geralmente bom ignorar, a menos que configurações específicas precisem ser compartilhadas
+# .vscode/ # Você pode decidir se quer ignorar isso ou não. Se ignorar, descomente.
 .idea/   # Para IDEs da JetBrains
 
 # Arquivos de pacotes opcionais
@@ -52,6 +51,3 @@ Thumbs.db
 
 # Arquivos de pacotes do OSX
 *.swp # Arquivos de swap do Vim
-=======
-.env
->>>>>>> 94a95285ce6d51749f1cd61be8e52523fd590c6b
