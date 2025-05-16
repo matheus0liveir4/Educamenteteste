@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // config/Database.js
 const { Sequelize } = require('sequelize');
 // Não precisamos do 'fs' aqui se o CA vier de uma variável de ambiente
@@ -51,3 +52,14 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 module.exports = sequelizeInstance;
+=======
+const { Sequelize } = require('sequelize');
+
+// Conexão com o banco de dados
+const db = new Sequelize('sistema_escolar', 'root', '', {
+    host: 'localhost',
+    dialect: 'mysql'
+});
+
+module.exports = db;
+>>>>>>> 94a95285ce6d51749f1cd61be8e52523fd590c6b
