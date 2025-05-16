@@ -1,0 +1,53 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Arquivos de runtime
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Cache de dependências de diretório
+node_modules/
+jspm_packages/
+
+# Arquivos de configuração de ambiente
+.env
+.env.test
+.env.production
+.env*.local
+
+# Arquivos de build de typescript (se você usar TS no futuro)
+*.tsbuildinfo
+
+# Diretórios de build e output
+dist/
+build/
+out/
+public/uploads/ # IMPORTANTE se você NÃO estiver usando armazenamento externo para uploads ainda.
+                 # Se os uploads forem para o sistema de arquivos local do Render,
+                 # você não quer que eles sejam versionados no Git, pois serão efêmeros.
+
+# Arquivos de cobertura de teste
+coverage/
+*.lcov
+
+# Arquivos de sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de editores/IDEs (opcional, mas comum)
+.vscode/ # Geralmente bom ignorar, a menos que configurações específicas precisem ser compartilhadas
+.idea/   # Para IDEs da JetBrains
+
+# Arquivos de pacotes opcionais
+.npm
+.eslintcache
+
+# Arquivos de pacotes do OSX
+*.swp # Arquivos de swap do Vim

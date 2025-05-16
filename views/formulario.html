@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulário - EDUCA MENTE (Estilo Cadastro Paciente)</title>
+  <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
+
+  <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style_formulario.css"/> <!-- Supondo que este contém seus estilos pretendidos -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Mantendo seu bloco de estilo inline original */
+    #outroCursoInput,
+    #outroMotivoInput {
+      display: none;
+      margin-top: 10px;
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <main class="form-container">
+      <h1 class="title">EDUCA MENTE</h1>
+      <h2>Formulário</h2>
+
+      <!-- Usando sua estrutura de formulário original -->
+      <form action="/enviar_solicitacao" method="post" enctype="multipart/form-data">
+
+        <!-- Grupos de input SEM as classes de grid específicas -->
+        <div class="input-group">
+          <label for="name">Nome Completo</label>
+          <input type="text" id="name" name="name" placeholder="Digite seu nome completo"
+                 pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" title="Apenas letras e espaços são permitidos." required />
+        </div>
+
+        <div class="input-group">
+          <label for="age">Data de Nascimento</label>
+          <input type="date" id="age" name="age" min="1900-01-01" max="2100-12-31" required />
+        </div>
+
+        <div class="input-group">
+          <label for="course">Curso</label>
+          <select id="course" name="course" required onchange="verificarOutroCurso()">
+            <option value="" disabled selected>Selecione o curso</option>
+            <option value="Técnico em Administração">Técnico em Administração</option>
+            <option value="Técnico em Automação Industrial">Técnico em Automação Industrial</option>
+            <option value="Técnico em Desenvolvimento de Sistemas">Técnico em Desenvolvimento de Sistemas</option>
+            <option value="Técnico em Eletromecânica">Técnico em Eletromecânica</option>
+            <option value="Técnico em Eletrotécnica">Técnico em Eletrotécnica</option>
+            <option value="Técnico em Logística">Técnico em Logística</option>
+            <option value="Técnico em Mecatrônica">Técnico em Mecatrônica</option>
+            <option value="Técnico em Petroquímica">Técnico em Petroquímica</option>
+            <option value="Técnico em Química">Técnico em Química</option>
+            <option value="Técnico em Refrigeração e Climatização">Técnico em Refrigeração e Climatização</option>
+            <option value="Outro">Outro</option>
+          </select>
+          <!-- Input sem a classe 'hidden-by-default' -->
+          <input type="text" id="outroCursoInput" name="outro_curso" placeholder="Digite o curso" pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" title="Apenas letras e espaços são permitidos." />
+        </div>
+
+        <div class="input-group">
+          <label for="shift">Turno</label>
+          <select id="shift" name="shift" required>
+            <option value="" disabled selected>Selecione o turno</option>
+            <option value="matutino">Matutino</option>
+            <option value="vespertino">Vespertino</option>
+            <option value="noturno">Noturno</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+            <label for="turma">Turma</label>
+            <input type="text" id="turma" name="classroom" placeholder="Digite o número da turma"
+                   pattern="\d{1,5}" maxlength="5"
+                   title="Digite apenas números com até 5 dígitos." required
+                   oninput="this.value = this.value.replace(/\D/g, '').slice(0, 5)" />
+        </div>
+
+        <!-- CAMPO TELEFONE OPCIONAL -->
+        <div class="input-group">
+          <label for="phone">Telefone (Opcional)</label> <!-- Label atualizada -->
+          <input type="tel" id="phone" name="phone" placeholder="(00) 90000-0000"
+                 pattern="\(\d{2}\) 9?\d{4}-\d{4}"
+                 title="Digite o telefone no formato (00) 90000-0000" maxlength="15" /> <!-- Atributo 'required' REMOVIDO -->
+        </div>
+
+        <div class="input-group">
+          <label for="responsible">Responsável (Opcional)</label>
+          <input type="text" id="responsible" name="responsible" placeholder="Digite o nome do responsável"
+                 pattern="[A-Za-zÀ-ÖØ-öø-ÿ\s]+" title="Apenas letras e espaços são permitidos." />
+        </div>
+
+        <div class="input-group">
+          <label for="institution">Instituição</label>
+          <select id="institution" name="institution" required>
+            <option value="" disabled selected>Selecione a instituição</option>
+            <option value="SENAI Lauro de Freitas">SENAI Lauro de Freitas</option>
+            <option value="SENAI Camaçari">SENAI Camaçari</option>
+            <option value="SENAI CIMATEC">SENAI CIMATEC</option>
+            <option value="SENAI Dendezeiros">SENAI Dendezeiros</option>
+            <option value="SENAI Candeias">SENAI Candeias</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="motivo">Motivos / Observações do Solicitante</label>
+          <select id="motivo" name="observations" required onchange="verificarOutroMotivo()">
+            <option value="" disabled selected>Selecione o motivo</option>
+            <option value="Dificuldades na leitura e escrita">Dificuldades na leitura e escrita</option>
+            <option value="Problemas com matemática">Problemas com matemática</option>
+            <option value="Déficit de atenção e concentração">Déficit de atenção e concentração</option>
+            <option value="Diagnóstico ou suspeita de TDAH, dislexia, discalculia, etc.">Diagnóstico ou suspeita de TDAH, dislexia, discalculia, etc.</option>
+            <option value="Atraso no desenvolvimento acadêmico">Atraso no desenvolvimento acadêmico</option>
+            <option value="Dificuldades na linguagem oral ou escrita">Dificuldades na linguagem oral ou escrita</option>
+            <option value="Dificuldade de memorização e organização do pensamento">Dificuldade de memorização e organização do pensamento</option>
+            <option value="Desmotivação ou rejeição ao curso">Desmotivação ou rejeição ao curso</option>
+            <option value="Problemas emocionais que afetam o aprendizado">Problemas emocionais que afetam o aprendizado</option>
+            <option value="Acompanhamento individualizado para melhorar o desempenho acadêmico">Acompanhamento individualizado para melhorar o desempenho acadêmico</option>
+            <option value="Outro">Outro</option>
+          </select>
+           <!-- Input sem a classe 'hidden-by-default' -->
+          <input type="text" id="outroMotivoInput" name="outro_motivo" placeholder="Descreva o motivo ou observações importantes" />
+        </div>
+
+        <div class="input-group">
+          <label for="file">Anexar Laudo (Foto ou PDF) (Opcional)</label>
+          <input type="file" id="file" name="file" accept="image/*,application/pdf" />
+        </div>
+
+        <div class="form-actions">
+          <p class="forgot-password"><a href="#" class="btn-primary" onclick="voltar()">Voltar para o inicio</a></p>
+          <button type="submit" class="btn-primary"></a>Enviar Solicitação</button>
+        </div>
+      </form>
+    </main>
+  </div>
+
+  <!-- Seu bloco de script original (inalterado) -->
+  <script>
+    function verificarOutroCurso() {
+      const cursoSelect = document.getElementById('course');
+      const curso = cursoSelect.value;
+      const outroInput = document.getElementById('outroCursoInput');
+      // Removendo a manipulação direta de estilo do padding do pai
+      // const inputGroup = cursoSelect.closest('.input-group');
+
+      if (curso === 'Outro') {
+        outroInput.style.display = 'block';
+        outroInput.required = true; // O campo "Outro Curso" se torna obrigatório se "Outro" for selecionado
+        // inputGroup.style.paddingBottom = '0'; // Comentário: Exemplo de estilo que foi removido
+      } else {
+        outroInput.style.display = 'none';
+        outroInput.required = false; // Não é mais obrigatório
+        // inputGroup.style.paddingBottom = ''; // Comentário: Exemplo de estilo que foi removido
+         outroInput.value = ''; // Limpa o valor quando escondido
+      }
+    }
+
+    function verificarOutroMotivo() {
+        const motivoSelect = document.getElementById('motivo');
+        const motivo = motivoSelect.value;
+        const outroMotivoInput = document.getElementById('outroMotivoInput');
+        // const inputGroup = motivoSelect.closest('.input-group'); // Comentário: Variável não utilizada no código atual
+
+        if (motivo === 'Outro') {
+            outroMotivoInput.style.display = 'block';
+            outroMotivoInput.required = true; // O campo "Outro Motivo" se torna obrigatório se "Outro" for selecionado
+            // motivoSelect.style.marginBottom = '0'; // Comentário: Exemplo de estilo que foi removido
+            // inputGroup.style.paddingBottom = '0'; // Comentário: Exemplo de estilo que foi removido
+        } else {
+            outroMotivoInput.style.display = 'none';
+            outroMotivoInput.required = false; // Não é mais obrigatório
+            // motivoSelect.style.marginBottom = ''; // Comentário: Exemplo de estilo que foi removido
+            // inputGroup.style.paddingBottom = ''; // Comentário: Exemplo de estilo que foi removido
+            outroMotivoInput.value = ''; // Limpa o valor quando escondido
+        }
+    }
+
+     document.addEventListener('DOMContentLoaded', () => {
+        // Chamadas iniciais permanecem
+        verificarOutroCurso();
+        verificarOutroMotivo();
+
+      
+        // --- FIM: Adicionado Manipulador de Clique para o Seletor de Data ---
+
+
+        // Listeners de input existentes permanecem
+        const nameInput = document.getElementById('name');
+        if (nameInput) {
+            // Impede a digitação de caracteres que não sejam letras ou espaços no nome
+            nameInput.addEventListener('input', function () {
+                this.value = this.value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s]/g, '');
+            });
+        }
+
+        const responsibleInput = document.getElementById('responsible');
+         if (responsibleInput) {
+            // Impede a digitação de caracteres que não sejam letras ou espaços no nome do responsável
+            responsibleInput.addEventListener('input', function () {
+                // Permite apenas letras e espaços, mesmo sendo opcional
+                this.value = this.value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s]/g, '');
+            });
+        }
+
+        const ageInput = document.getElementById('age');
+        if (ageInput) {
+            ageInput.addEventListener('input', function(e) {
+                // Validação básica ou formatação para data, se necessário (atualmente não implementado)
+            });
+        }
+
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            // Aplica máscara de telefone (XX) 9XXXX-XXXX ou (XX) XXXX-XXXX
+            phoneInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não for dígito
+                value = value.slice(0, 11); // Limita a 11 dígitos (máximo para celular com 9)
+
+                if (value.length > 10) { // Celular (11 dígitos)
+                    value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+                } else if (value.length > 6) { // Telefone fixo parte 2 (7-10 dígitos)
+                    value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+                } else if (value.length > 2) { // Telefone fixo parte 1 (3-6 dígitos)
+                    value = value.replace(/^(\d{2})(\d*).*/, '($1) $2');
+                } else if (value.length > 0) { // Parte do DDD (1-2 dígitos)
+                    value = value.replace(/^(\d*).*/, '($1');
+                }
+                e.target.value = value; // Atualiza o valor no campo
+            });
+        }
+
+        // Nota: O input da Turma ainda possui o manipulador oninput inline nesta versão
+        // const turmaInput = document.getElementById('turma');
+        // if (turmaInput) { ... } // Comentário: Código para listener da turma (opcional)
+
+    }); // Fim do DOMContentLoaded
+
+    function getTipoUsuario() {
+        const match = document.cookie.match(/tipoUsuario=([^;]+)/);
+        return match ? decodeURIComponent(match[1]) : null;
+    }
+
+    function voltar() {
+        const tipo = getTipoUsuario();
+
+        if (tipo === 'psicopedagoga') {
+            window.location.href = "/painel";
+        } else {
+            window.location.href = "/";
+        }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+/* Reset e Fonte Geral */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Corpo da Página */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0A4275, #1575A3, #D9E6F2); /* Gradiente azul SENAI */
+}
+
+/* Contêiner Principal */
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 900px;
+    background-color: #fff; /* Fundo branco */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+/* Cabeçalho */
+.header {
+    background-color: #0A4275; /* Azul padrão SENAI */
+    color: #fff;
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    font-family: 'Audiowide', cursive; /* Aplicação da fonte Audiowide */
+}
+
+/* Formulário */
+.form-container {
+    padding: 2rem;
+    background-color: #F7F9FC; /* Cinza claro */
+}
+
+/* Grupos de Entrada */
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #0A4275; /* Azul escuro */
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #D9E6F2; /* Bordas em azul claro */
+    border-radius: 4px;
+    background-color: #f9f9f9; /* Cor de fundo suave */
+    color: #333; /* Cor do texto */
+    font-size: 1rem;
+}
+
+/* Botão Principal */
+.btn-primary {
+    width: 100%;
+    padding: 1rem;
+    background-color: #0077B5; /* Azul padrão SENAI */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
+}
+
+.btn-primary:hover {
+    background-color: #005C8A; /* Azul escuro ao passar o mouse */
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .header {
+        padding: 1rem;
+    }
+
+    .form-container {
+        padding: 1.5rem;
+    }
+
+    .btn-primary {
+        padding: 1rem;
+    }
+}

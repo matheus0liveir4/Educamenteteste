@@ -1,0 +1,400 @@
+/* ======================================== */
+/* Estilo Global (Cores Originais)        */
+/* ======================================== */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+/* TEMA DARK */
+body.dark{
+    background-color: rgb(49, 47, 47);
+    color: #FFFFFF;
+    border-bottom: 1px solid #7f8083;
+    
+}
+body.dark .search-filter-section {
+    padding: 1rem 1.5rem 1rem 1.5rem;
+    background-color: rgb(78, 78, 78);
+    border-bottom: 1px solid #D9E6F2;
+    font-family: Arial, sans-serif;
+}
+
+
+body.dark table th
+ {
+    background-color: rgb(49, 47, 47);
+    text-align: center;
+    padding: 0.8rem;
+    color: #FFFFFF;
+    border-bottom: 1px solid #7f8083;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+body.dark table th,
+table td {
+    text-align: center;
+    padding: 0.8rem;
+    border-bottom: 1px solid #7f8083;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+body.dark 
+/* ======================================== */
+/* Container Principal (Cores Originais)  */
+/* ======================================== */
+.container-solicitacoes {
+    width: 90%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+
+
+body.dark table tbody tr:hover {
+    background-color: #444548; 
+}
+
+
+/* ======================================== */
+/* Cabeçalho (Cores Originais)           */
+/* ======================================== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    color: #0A4275;
+}
+
+.header h1 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+/* ======================================== */
+/* Botão Primário (Cores Originais)       */
+/* ======================================== */
+.btn-primary {
+    padding: 0.8rem 1.5rem;
+    background-color: #1575A3;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.9rem;
+}
+
+.btn-primary:hover {
+    background-color: #0A4275;
+}
+
+/* ============================================================ */
+/* Seção de Pesquisa e Filtro (Estrutura Google, Cores Tema) */
+/* ============================================================ */
+.search-filter-section {
+    padding: 1rem 1.5rem 1rem 1.5rem;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid #D9E6F2;
+    font-family: Arial, sans-serif;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    background-color: #F7F9FC;
+    border: 1px solid transparent;
+    border-radius: 24px;
+    padding: 0.65rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.search-bar-container i.fa-search {
+    color: #5F6368;
+    font-size: 1.125rem;
+    margin-right: 1rem;
+    line-height: 1;
+}
+
+.search-bar-container input[type="text"] {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1rem;
+    color: #333;
+    font-family: inherit;
+    padding: 0;
+}
+
+.search-bar-container input[type="text"]::placeholder {
+    color: #5F6368;
+    opacity: 1;
+}
+
+.filter-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.filter-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #F7F9FC;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    font-family: inherit;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.filter-button:hover {
+    background-color: #E3EDF7;
+}
+
+.filter-button i {
+    color: #5F6368;
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.filter-button i.fa-caret-down {
+    margin-left: 0.3rem;
+    font-size: 0.7rem;
+}
+
+/* ======================================== */
+/* Estilos para Dropdowns e Interatividade */
+/* ======================================== */
+
+.filter-button-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.filter-dropdown {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.15);
+    z-index: 10;
+    border-radius: 4px;
+    border: 1px solid #D9E6F2;
+    margin-top: 5px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.filter-dropdown.active {
+    display: block;
+}
+
+.filter-dropdown a {
+    color: #333;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    border-bottom: 1px solid #F7F9FC;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+.filter-dropdown a:last-child {
+    border-bottom: none;
+}
+
+
+.filter-dropdown a:hover {
+    background-color: #E3EDF7;
+    color: #333;
+}
+
+.filter-button.active {
+    background-color: #E3EDF7;
+}
+
+/* --- Cores Hover Específicas para Status Dropdown --- */
+#status-dropdown a.filter-option[data-filter-value="all"]:hover {
+   background-color: #E3EDF7;
+   color: #333;
+}
+#status-dropdown a.filter-option[data-filter-value="Aprovado"]:hover {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+}
+#status-dropdown a.filter-option[data-filter-value="Rejeitado"]:hover {
+    background-color: #F44336;
+    color: #FFFFFF;
+}
+#status-dropdown a.filter-option[data-filter-value="Pendente"]:hover {
+    background-color: #FFEB3B;
+    color: #0A4275;
+}
+#status-dropdown a.filter-option[data-filter-value="Finalizado"]:hover {
+    background-color: #78909C;
+    color: #FFFFFF;
+}
+
+
+/* ======================================== */
+/* Conteúdo da Tabela (Cores Originais)   */
+/* ======================================== */
+.table-container {
+    padding: 1.5rem;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+table th,
+table td {
+    text-align: center;
+    padding: 0.8rem;
+    border-bottom: 1px solid #D9E6F2;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+table th {
+    background-color: #F7F9FC;
+    font-weight: bold;
+    color: #333;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    white-space: nowrap;
+}
+
+td.telefone-col,
+td.unidade-col {
+    white-space: nowrap;
+}
+
+table tr:hover {
+    background-color: #E3EDF7;
+}
+
+table tr:last-child td {
+    border-bottom: none;
+}
+
+/* ======================================== */
+/* Status Badges (Cores Originais + Novo) */
+/* ======================================== */
+.status {
+    font-weight: bold;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    text-align: center;
+    display: inline-block;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    white-space: nowrap;
+    min-width: 50px;       /* 🔥 TAMANHO PADRÃO HORIZONTAL */
+    display: inline-flex;   /* 🔥 Alinhamento interno */
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease, cursor 0.1s ease;
+    background-color: #0A4275;
+    color: #FFFFFF;
+}
+
+
+.status.pending {
+    background-color: #FFEB3B;
+    color: #0A4275;
+    /* cursor: default; */
+}
+
+.status.approved {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.status.rejected {
+    background-color: #F44336;
+    color: #FFFFFF;
+    
+}
+
+.status.finalized {
+    background-color: #78909C;
+    color: #FFFFFF;
+    cursor: pointer; /* MODIFICADO: Agora Finalizado também é clicável */
+}
+
+
+/* ======================================== */
+/* Botões de Ação (Cores Originais)       */
+/* ======================================== */
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.btn-view, .btn-approve, .btn-reject, .btn-finalize, .btn-edit {
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, opacity 0.3s;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.2;
+    font-weight: normal;
+}
+
+.btn-view { background-color: #FFEB3B; color: #0A4275; }
+.btn-approve { background-color: #4CAF50; color: #FFFFFF; }
+.btn-reject { background-color: #F44336; color: #FFFFFF; }
+.btn-finalize { background-color: #607D8B; color: #FFFFFF; }
+
+.btn-view:hover { background-color: #FDD835; }
+.btn-approve:hover:not(:disabled) { background-color: #388E3C; }
+.btn-reject:hover:not(:disabled) { background-color: #D32F2F; }
+.btn-finalize:hover:not(:disabled) { background-color: #455A64; }
+
+/* Estado desabilitado genérico */
+.btn-approve:disabled,
+.btn-reject:disabled,
+.btn-finalize:disabled {
+    background-color: #E3EDF7;
+    cursor: not-allowed;
+    color: #A1A5A8;
+    opacity: 0.7;
+}
+
