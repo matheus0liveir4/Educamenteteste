@@ -22,9 +22,6 @@ Banco de Dados: [insira aqui]
 
 Notificações: [ex: Email via SMTP, Firebase, etc.]
 
-## 🔗 Link da Hospedagem
-https://educamente-yu3g.onrender.com/
-
 
 ## 📌 Status do Projeto
 

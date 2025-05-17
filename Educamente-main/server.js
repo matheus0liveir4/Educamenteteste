@@ -37,33 +37,16 @@ const { Op } = require("sequelize");
 const multer = require('multer');
 const expressSession = require('express-session');
 const nodemailer = require('nodemailer');
-const SequelizeStore = require('connect-session-sequelize')(expressSession.Store); // <<< NÃO ESQUEÇA DESTE REQUIRE
-
 // Seus models
 const { sequelize, Usuario, Solicitacao, Agendamento, Observacao } = require('./models');
 
-// Configuração do Session Store com Sequelize  <<< PRECISA VIR ANTES DE USAR sessionStore
-const sessionStore = new SequelizeStore({
-  db: sequelize, 
-  table: 'Sessions', 
-  checkExpirationInterval: 15 * 60 * 1000, 
-  expiration: 24 * 60 * 60 * 1000  
-});
+// Sincroniza o banco de dados
+sequelize.sync({ force: false })
+    .then(() => console.log('[DB SYNC] Banco de dados sincronizado com sucesso!'))
+    .catch(err => console.error('[DB SYNC ERROR] Erro ao sincronizar o banco de dados:', err));
 
-// Sincroniza o banco de dados e a tabela de sessões
-Promise.all([
-    sequelize.sync({ force: false }), // Sincroniza seus modelos existentes (Usuarios, Solicitacoes, etc.)
-    sessionStore.sync()              // Agora sessionStore está definido e pode ser usado aqui
-])
-.then(() => {
-    console.log('[DB SYNC & SESSION STORE] Banco de dados e tabela de sessões sincronizados com sucesso!');
-})
-.catch(err => {
-    console.error('[DB SYNC & SESSION STORE ERROR] Erro ao sincronizar:', err);
-});
+const app = express();
 
-// const app = express(); // Esta linha vem depois, como no seu código original
-// ...
 // Middlewares
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -72,10 +55,9 @@ app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(expressSession({
-  secret: process.env.SESSION_SECRET || 'YOUR_STRONG_SECRET_KEY_fallback_dev', // MANTENHA SEU SECRET FORTE
-  store: sessionStore, // <<< ESTA É A MUDANÇA PRINCIPAL AQUI
-  resave: false,       // 'false' é geralmente recomendado
-  saveUninitialized: false, // 'false' é geralmente recomendado
+  secret: process.env.SESSION_SECRET || 'YOUR_STRONG_SECRET_KEY_fallback_dev',
+  resave: false,
+  saveUninitialized: false,
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
