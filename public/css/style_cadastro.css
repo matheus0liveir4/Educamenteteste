@@ -193,3 +193,38 @@ body {
         padding: 1rem;
     }
 }
+
+/* Adicionar estilos para posicionar o ícone do olho */
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            display: none; /* Ocultar inicialmente */
+        }
+
+        /* Indicador de força da senha */
+        .password-strength {
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .strength-bar {
+            height: 5px;
+            width: 0%;
+            background: #ddd;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            margin-top: 3px;
+            color: #666;
+        }

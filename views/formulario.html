@@ -266,14 +266,6 @@
         });
       }
 
-      // A validação para 'outroMotivoInput' pode ser mais permissiva, mas se quiser restringir a letras:
-      // const outroMotivoInputEl = document.getElementById('outroMotivoInput');
-      // if (outroMotivoInputEl) {
-      //   outroMotivoInputEl.addEventListener('input', function () {
-      //     this.value = this.value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s.,!?0-9]/g, ''); // Exemplo mais permissivo
-      //   });
-      // }
-
       const phoneInput = document.getElementById('phone');
       if (phoneInput) {
         phoneInput.addEventListener('input', function (e) {
@@ -291,7 +283,6 @@
           e.target.value = value;
         });
       }
-      // A validação do campo Turma já está inline no HTML (oninput), o que é funcional.
     });
   </script>
 </body>
