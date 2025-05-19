@@ -193,9 +193,7 @@ function requireLogin(tiposPermitidos = []) {
 
 // Rotas de páginas HTML
 app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'views', 'index.html')); });
-app.get('/login_aluno', (req, res) => { res.sendFile(path.join(__dirname, 'views', 'login_aluno.html')); });
-app.get('/login_professor', (req, res) => { res.sendFile(path.join(__dirname, 'views', 'login_professor.html')); });
-app.get('/login_psico', (req, res) => { res.sendFile(path.join(__dirname, 'views', 'login_psico.html')); });
+app.get('/login', (req, res) => { res.sendFile(path.join(__dirname, 'views', 'login.html'))});
 app.get('/cadastro', (req, res) => { res.sendFile(path.join(__dirname, 'views', 'cadastro.html')); });
 
 app.get('/formulario', requireLogin(['aluno', 'professor', 'psicopedagoga']), (req, res) => { res.sendFile(path.join(__dirname, 'views', 'formulario.html')); });
@@ -272,7 +270,7 @@ app.post('/cadastro_aluno', async (req, res) => {
         const senhaHash = await bcrypt.hash(password, saltRounds);
         await Usuario.create({ nome: name, email: email, senha: senhaHash, tipo: 'aluno' }); // IMPLEMENTAR HASH
         console.log(`[CADASTRO SUCCESS] Aluno: ${email}`);
-        res.redirect('/login_aluno?cadastro=sucesso');
+        res.redirect('/login?tipo=aluno&cadastro=sucesso');
 
     } catch (err) {
         console.error("[CADASTRO CRITICAL]", err);
@@ -331,12 +329,6 @@ app.post('/login', async (req, res) => {
             // Se ela não for feita para receber variáveis, a mensagem será estática.
             const errorPagePath = path.join(__dirname, 'views', 'erro_login_tipo_incorreto.html');
             if (fs.existsSync(errorPagePath)) {
-                // Para passar as variáveis para esta página, você precisaria de um template engine
-                // ou ler o arquivo e substituir placeholders.
-                // Por enquanto, apenas enviaremos o arquivo.
-                // Se você precisa das variáveis, o HTML inline é uma opção ou adote um template engine.
-                // Exemplo se o HTML for estático:
-                // return res.status(403).sendFile(errorPagePath);
 
                 // Mantendo o HTML inline para permitir variáveis:
                  return res.status(403).send(`
