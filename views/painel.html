@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel - EDUCA MENTE</title>
+    <link rel="shortcut icon" href="img/faviconeducamente.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="css/styles.css"> 
+    <link rel="stylesheet" href="css/painel.css">
+
+    <style>
+        /* Variáveis de cor base (COPIADAS/ALINHADAS COM SOLICITACOES.HTML) */
+        :root {
+          --primary: #0A4275;
+          --secondary: #1575A3; 
+          --switch-bg-unchecked: #ccc;
+          --switch-bg-checked: var(--secondary, #1575A3);
+          --switch-slider-color: white;
+          --white: #FFFFFF;
+          --success: #4CAF50; /* Usando a var de solicitacoes.html */
+          --warning: #FFC107; /* Usando a var de solicitacoes.html */
+          --danger: #F44336;  /* Usando a var de solicitacoes.html */
+          --gray-100: #f8f9fa;
+          --gray-200: #e9ecef; 
+          --gray-300: #dee2e6;
+          --tooltip-default-bg: #555;
+          
+          /* Variáveis para modal/toast, copiadas de solicitacoes.html para garantir consistência */
+          --custom-modal-bg: #ffffff; 
+          --custom-modal-text-color: #333333; 
+          --custom-modal-header-border: var(--gray-300, #dee2e6);
+          --custom-modal-box-shadow: rgba(0, 0, 0, 0.1); 
+          --custom-toast-text-color: #ffffff; 
+          --custom-toast-success-bg: var(--success, #4CAF50);
+          --custom-toast-error-bg: var(--danger, #F44336);
+          --custom-toast-warning-bg: var(--warning, #FFC107);
+          --custom-toast-warning-text: #333333; 
+          --custom-toast-info-bg: var(--secondary, #1575A3);
+          --custom-toast-box-shadow: rgba(0,0,0,0.1); 
+          --custom-toast-icon-spacing: 10px;
+        }
+        body.dark {
+            background-color: #222; /* Já existia em styles.css, mantido por consistência */
+            color: #eee; /* Já existia em styles.css, mantido por consistência */
+            --tooltip-default-bg: #444;
+            /* Variáveis de dark mode para modal/toast, copiadas de solicitacoes.html */
+            --custom-modal-bg: #3a3a3a; 
+            --custom-modal-text-color: #eeeeee; 
+            --custom-modal-header-border: #555555;
+            --custom-modal-box-shadow: rgba(0, 0, 0, 0.3); 
+            --custom-toast-text-color: #ffffff; 
+            --custom-toast-success-bg: #388E3C; 
+            --custom-toast-error-bg: #C62828;   
+            --custom-toast-warning-bg: #FFA000; 
+            --custom-toast-warning-text: #222222;
+            --custom-toast-info-bg: #105A7F;    
+            --custom-toast-box-shadow: rgba(255,255,255,0.1);
+        }
+
+        /* Estilos da Navbar e controles da direita (COPIADOS/ALINHADOS COM SOLICITACOES.HTML) */
+        .navbar-brand { font-family: 'Audiowide', sans-serif; font-size: 1.6rem; color: var(--white, #FFFFFF) !important; text-decoration: none; font-weight: normal; padding: 0.25rem 0; }
+        .navbar { background-color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.1); position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 64px; border-bottom: 1px solid var(--primary); }
+        body.dark .navbar { background-color: #333; border-bottom-color: #444; }
+        body.dark .navbar-brand { color: var(--white, #FFFFFF) !important; text-shadow: none; }
+
+        .navbar-container { display: flex; justify-content: space-between; align-items: center; height: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+        .navbar-menu { list-style: none; display: flex; justify-content: center; align-items: center; flex-grow: 1; margin: 0; padding: 0; gap: 1.5rem; }
+        .navbar-link { color: var(--white, #FFFFFF); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; padding: 8px 0; position: relative; cursor: pointer; transition: color 0.2s; opacity: 0.85; font-size: 0.9rem; }
+        .navbar-link:after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background-color: var(--white, #FFFFFF); transition: width 0.3s ease-in-out; }
+        .navbar-link.active, .navbar-link:hover { color: var(--white, #FFFFFF); opacity: 1; }
+        .navbar-link.active:after { width: 100%; }
+        body.dark .navbar-link { color: #ccc; }
+        body.dark .navbar-link.active, body.dark .navbar-link:hover { color: #fff; }
+        
+        .navbar-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+        .navbar-icon svg, .navbar-icon i { width: 18px; height: 18px; color: var(--white, #FFFFFF); vertical-align: middle; }
+
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; cursor: pointer; vertical-align: middle; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--switch-bg-unchecked); border-radius: 20px; transition: background-color 0.3s; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: var(--switch-slider-color); border-radius: 50%; transition: transform 0.3s; }
+        input:checked + .slider { background-color: var(--switch-bg-checked); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        .navbar-right-controls {
+            display: flex;
+            align-items: center;
+            margin-left: auto; /* Empurra este grupo para a direita */
+        }
+        .dark-mode-toggle-wrapper { 
+            display: flex; 
+            align-items: center; 
+            gap: 0.6rem; /* Espaçamento entre sol/lua e switch */
+        }
+        .dark-mode-toggle-wrapper i { 
+            font-size: 1.4rem; 
+            line-height: 1; 
+            vertical-align: middle; 
+            cursor: pointer;
+            color: var(--white, #FFFFFF); 
+            transition: color 0.3s; 
+        }
+        body.dark .dark-mode-toggle-wrapper i { color: #f0f0f0; }
+        #icon-sun { display: inline-block; } #icon-moon { display: none; } /* Inicialmente, sol visível */
+        body.dark #icon-sun { display: none; } body.dark #icon-moon { display: inline-block; } /* No dark mode, lua visível */
+        .dark-mode-toggle-wrapper .switch { margin: 0; }
+
+        .navbar-logout-button {
+            display: inline-flex; 
+            align-items: center;
+            justify-content: center;
+            color: var(--white, #FFFFFF);
+            font-size: 1.4rem; 
+            text-decoration: none;
+            opacity: 0.85;
+            transition: opacity 0.2s ease-in-out, color 0.2s ease-in-out;
+            cursor: pointer; 
+            margin-left: 1rem; /* Espaço entre o toggle de tema e o botão de sair */
+        }
+        .navbar-logout-button:hover { opacity: 1; }
+        body.dark .navbar-logout-button { color: #f0f0f0; }
+        body.dark .navbar-logout-button:hover { color: #ffffff; }
+        
+        .no-transitions * { transition: none !important; } /* Para evitar transições ao mudar tema */
+
+        /* --- ESTILOS PARA A LISTA DE SOLICITAÇÕES RECENTES (MODIFICADO PARA CENTRALIZAÇÃO) --- */
+        .clickable-student-item { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; /* Adicionado para centralizar o conteúdo flex */
+            text-align: center;      /* Adicionado para centralizar o texto dentro dos spans */
+            padding: 10px 12px;      /* Aumentado padding vertical para melhor visualização */
+            cursor: pointer;
+            border-bottom: 1px solid var(--gray-200, #e9ecef); 
+            transition: background-color 0.15s ease-in-out;
+        }
+        .clickable-student-item:last-child {
+            border-bottom: none; 
+        }
+        .clickable-student-item .student-name-in-list { 
+            color: var(--text-color, #333); 
+            /* margin-right: 15px; Removido para permitir centralização mais natural */
+            font-size: 0.9rem; 
+            flex-grow: 1; /* Permite que o nome ocupe espaço */
+            text-align: center; /* Garante centralização do texto do nome */
+        }
+        .clickable-student-item .request-date-in-list { 
+            font-size: 0.8rem;
+            color: var(--text-secondary-color, #6c757d);
+            white-space: nowrap; 
+            margin-left: 10px; /* Adicionado um pequeno espaço entre nome e data */
+            text-align: center; /* Garante centralização do texto da data */
+        }
+        .clickable-student-item:hover {
+            background-color: var(--gray-100, #f8f9fa); 
+        }
+        body.dark .clickable-student-item { border-bottom-color: #444; }
+        body.dark .clickable-student-item .student-name-in-list { color: #eee; }
+        body.dark .clickable-student-item .request-date-in-list { color: #aaa; }
+        body.dark .clickable-student-item:hover { background-color: #3a3a3a; }
+        #pending-requests.has-items-for-list { padding: 0 !important; }
+
+        /* --- ESTILOS PARA O MODAL (detalhes, já estava em painel.html - adaptado) --- */
+        .status-badge-modal { padding: .2em .6em .3em; font-size: .75em; font-weight: 700; line-height: 1; color: #fff; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: .25rem; display: inline-block; }
+        .status-badge-modal.pendente, .status-badge-modal.pending { background-color: var(--warning); color: #212529; }
+        .status-badge-modal.aprovado, .status-badge-modal.approved { background-color: var(--success); }
+        .status-badge-modal.rejeitado, .status-badge-modal.rejected { background-color: var(--danger); }
+        .status-badge-modal.finalizado, .status-badge-modal.completed { background-color: #6c757d; }
+        .status-badge-modal.agendado, .status-badge-modal.scheduled { background-color: #17a2b8; }
+        body.dark .status-badge-modal.pendente { background-color: #FFA000; color: #212529;}
+        body.dark .status-badge-modal.aprovado { background-color: #388E3C;}
+        body.dark .status-badge-modal.rejeitado { background-color: #C62828;}
+        body.dark .status-badge-modal.finalizado { background-color: #545b62;}
+        body.dark .status-badge-modal.agendado { background-color: #107686;}
+        .modal-body p { margin-bottom: 0.8rem; line-height: 1.6; }
+        .modal-body hr { margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 1px solid var(--gray-300, #dee2e6); }
+        body.dark .modal-body hr { border-top-color: #555; }
+        .modal-body h4 { margin-top: 0.5rem; margin-bottom: 0.5rem; font-weight: 500; }
+        .modal-body a.laudo-link { color: var(--primary, #0A4275); text-decoration: none; }
+        .modal-body a.laudo-link:hover { text-decoration: underline; }
+        body.dark .modal-body a.laudo-link { color: #5cb9f0; }
+        #requests-count-summary { display: inline-flex; align-items: center; min-width: 90px; box-sizing: border-box; }
+        #requests-count-summary .pending-label { opacity: 0.9; flex-grow: 1; }
+        #requests-count-summary .pending-value { font-weight: bold; margin-left: 5px; flex-shrink: 0; }
+        .modal-footer { display: flex; justify-content: flex-end; gap: 0.5rem; }
+        #agendar-atendimento-modal-btn { order: -1; }
+    </style>
+    
+    <!-- ESTILOS PARA TOOLTIP PERSONALIZADO (COPIADO DE SOLICITACOES.HTML) -->
+    <style>
+        .custom-tooltip-popup {
+            position: absolute;
+            padding: 8px 12px;
+            background-color: var(--tooltip-default-bg, #555);
+            color: white;
+            border-radius: 5px;
+            font-size: 0.875rem;
+            line-height: 1.4;
+            z-index: 1070;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, transform 0.15s ease-out;
+            pointer-events: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            white-space: nowrap;
+            transform: translateY(5px);
+        }
+        .custom-tooltip-popup.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .custom-tooltip-popup::after { content: ''; position: absolute; left: 50%; top: 100%; transform: translateX(-50%); border-width: 6px; border-style: solid; border-color: var(--tooltip-arrow-color, var(--tooltip-default-bg, #555)) transparent transparent transparent; }
+        .custom-tooltip-popup.arrow-bottom::after { top: auto; bottom: 100%; border-color: transparent transparent var(--tooltip-arrow-color, var(--tooltip-default-bg, #555)) transparent; }
+        .custom-tooltip-popup.type-primary { background-color: var(--primary); --tooltip-arrow-color: var(--primary); }
+        .custom-tooltip-popup.type-danger  { background-color: var(--danger);  --tooltip-arrow-color: var(--danger); }
+        .custom-tooltip-popup.type-warning { background-color: var(--warning); color: #212529; --tooltip-arrow-color: var(--warning); }
+        .custom-tooltip-popup.type-secondary{ background-color: var(--gray-200);color: #333; --tooltip-arrow-color: var(--gray-200); }
+        .custom-tooltip-popup.type-success { background-color: var(--success); --tooltip-arrow-color: var(--success); }
+        .custom-tooltip-popup.type-info    { background-color: var(--secondary); --tooltip-arrow-color: var(--secondary); }
+        .custom-tooltip-popup.type-default { background-color: var(--tooltip-default-bg, #555); --tooltip-arrow-color: var(--tooltip-default-bg, #555); }
+        body.dark .custom-tooltip-popup.type-primary { background-color: var(--primary); --tooltip-arrow-color: var(--primary); }
+        body.dark .custom-tooltip-popup.type-danger  { background-color: var(--danger);  --tooltip-arrow-color: var(--danger); }
+        body.dark .custom-tooltip-popup.type-warning { background-color: var(--custom-toast-warning-bg, #FFA000); color: var(--custom-toast-warning-text, #222); --tooltip-arrow-color: var(--custom-toast-warning-bg, #FFA000); }
+        body.dark .custom-tooltip-popup.type-secondary{ background-color: #5a5a5a; color: var(--custom-modal-text-color, #eee); --tooltip-arrow-color: #5a5a5a; }
+        body.dark .custom-tooltip-popup.type-success { background-color: var(--custom-toast-success-bg, #388E3C); --tooltip-arrow-color: var(--custom-toast-success-bg, #388E3C); }
+        body.dark .custom-tooltip-popup.type-info    { background-color: var(--custom-toast-info-bg, #105A7F); --tooltip-arrow-color: var(--custom-toast-info-bg, #105A7F); }
+        body.dark .custom-tooltip-popup.type-default { background-color: var(--tooltip-default-bg, #444); --tooltip-arrow-color: var(--tooltip-default-bg, #444); }
+    </style>
+
+    <!-- Estilos de Modal e Toast (COPIADOS DE SOLICITACOES.HTML - para o modal de logout) -->
+    <style id="custom-modal-toast-styles">
+        .custom-modal { display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto; outline: 0; background-color: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center; }
+        .custom-modal.show { display: flex; }
+        .custom-modal-content { position: relative; display: flex; flex-direction: column; width: 90%; max-width: 500px; pointer-events: auto; background-color: var(--custom-modal-bg); background-clip: padding-box; border: 1px solid var(--custom-modal-header-border); border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem var(--custom-modal-box-shadow); color: var(--custom-modal-text-color); animation: fadeInModal 0.3s ease-out; }
+        @keyframes fadeInModal { from { opacity: 0; transform: scale(0.95) translateY(-10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+        .custom-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; border-bottom: 1px solid var(--custom-modal-header-border); border-top-left-radius: calc(0.5rem - 1px); border-top-right-radius: calc(0.5rem - 1px); }
+        .custom-modal-title { margin-bottom: 0; line-height: 1.5; font-size: 1.2rem; font-weight: 500; color: var(--primary); }
+        body.dark .custom-modal-title { color: #5cb9f0; }
+        .custom-modal-close { padding: 0.25rem 0.5rem; margin: -0.5rem -0.75rem -0.5rem auto; background-color: transparent; border: 0; font-size: 1.75rem; font-weight: 700; line-height: 1; color: var(--custom-modal-text-color); opacity: .5; cursor: pointer; transition: opacity 0.15s ease-in-out; }
+        body.dark .custom-modal-close { color: var(--custom-modal-text-color); }
+        .custom-modal-close:hover { opacity: .85; }
+        .custom-modal-body { position: relative; flex: 1 1 auto; padding: 1.25rem; font-size: 0.95rem; line-height: 1.6; }
+        .custom-modal-body p { margin-bottom: 0; color: var(--custom-modal-text-color); } /* Ajustado para p dentro de custom-modal-body */
+        body.dark .custom-modal-body p { color: var(--custom-modal-text-color); }
+        .custom-modal-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 0.5rem; padding: 1rem 1.25rem; background-color: transparent; border-top: 1px solid var(--custom-modal-header-border); border-bottom-right-radius: calc(0.5rem - 1px); border-bottom-left-radius: calc(0.5rem - 1px); }
+        .custom-btn { display: inline-block; font-weight: 500; text-align: center; vertical-align: middle; cursor: pointer; user-select: none; background-color: transparent; border: 1px solid transparent; padding: 0.5rem 1rem; font-size: 0.9rem; line-height: 1.5; border-radius: 0.3rem; transition: all .15s ease-in-out; }
+        .custom-btn-primary { color: #fff; background-color: var(--primary); border-color: var(--primary); }
+        .custom-btn-primary:hover { background-color: #083864; border-color: #073055; }
+        .custom-btn-secondary { color: var(--primary); background-color: var(--gray-200, #e9ecef); border-color: var(--gray-300, #dee2e6); }
+        .custom-btn-secondary:hover { background-color: var(--gray-300, #dee2e6); border-color: #c8ced3; }
+        body.dark .custom-btn-secondary { color: var(--custom-modal-text-color); background-color: #5a5a5a; border-color: #6c757d; }
+        body.dark .custom-btn-secondary:hover { background-color: #656565; border-color: #787878; }
+        .custom-btn-danger { color: #fff; background-color: var(--danger, #F44336); border-color: var(--danger, #F44336); }
+        .custom-btn-danger:hover { background-color: #D32F2F; border-color: #c82333; }
+        .custom-btn-warning { color: #212529; background-color: var(--warning, #FFC107); border-color: var(--warning, #FFC107); }
+        .custom-btn-warning:hover { background-color: #e0a800; border-color: #d39e00; }
+        body.dark .custom-btn-warning { color: var(--custom-toast-warning-text); background-color: var(--custom-toast-warning-bg); border-color: var(--custom-toast-warning-bg); }
+        body.dark .custom-btn-warning:hover { background-color: #df8c00; border-color: #d39e00; }
+        .custom-toast-container { position: fixed; top: 80px; right: 20px; z-index: 1055; width: auto; max-width: 380px; }
+        .custom-toast { color: var(--custom-toast-text-color); padding: 0.85rem 1.35rem; margin-bottom: 1rem; border: none; border-radius: 0.3rem; box-shadow: 0 0.35rem 0.85rem var(--custom-toast-box-shadow); opacity: 0; transform: translateX(110%); transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1); display: flex; align-items: center; font-size: 0.9rem; line-height: 1.4; }
+        .custom-toast.show { opacity: 1; transform: translateX(0); }
+        .custom-toast-icon { margin-right: var(--custom-toast-icon-spacing); font-size: 1.3em; line-height: 1; }
+        .custom-toast-success { background-color: var(--custom-toast-success-bg); }
+        .custom-toast-error { background-color: var(--custom-toast-error-bg); }
+        .custom-toast-warning { background-color: var(--custom-toast-warning-bg); color: var(--custom-toast-warning-text); }
+        .custom-toast-info { background-color: var(--custom-toast-info-bg); }
+    </style>
+
+    <script src="js/utils.js"></script>
+    <script src="js/icons.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+     <nav class="navbar">
+       <div class="container navbar-container">
+         <a href="/painel" class="navbar-brand" data-tooltip="Página Inicial Educa Mente" data-tooltip-type="default">Educa Mente</a>
+         <ul class="navbar-menu">
+           <li class="navbar-item"> 
+             <a href="/painel" class="navbar-link active" data-tooltip="Ir para o Painel Principal" data-tooltip-type="info"> 
+               <span class="navbar-icon" id="icon-home"></span> <span>Painel</span> 
+             </a> 
+           </li>
+           <li class="navbar-item"> 
+             <a href="/historico" class="navbar-link" data-tooltip="Visualizar Histórico de Atendimentos e Alunos" data-tooltip-type="info"> 
+               <span class="navbar-icon" id="icon-history"></span> <span>Histórico</span> 
+             </a> 
+           </li>
+           <li class="navbar-item"> 
+             <a href="/solicitacoes" class="navbar-link" data-tooltip="Gerenciar Solicitações" data-tooltip-type="info"> 
+               <span class="navbar-icon" id="icon-requests"></span> <span>Solicitações</span> 
+             </a> 
+           </li>
+         </ul>
+         
+         <!-- Controles da Direita (Dark Mode e Logout) -->
+         <div class="navbar-right-controls">
+             <div class="dark-mode-toggle-wrapper">
+               <i class="fas fa-sun" id="icon-sun" data-tooltip="Alternar para Modo Claro" data-tooltip-type="warning"></i>
+               <i class="fas fa-moon" id="icon-moon" data-tooltip="Alternar para Modo Escuro" data-tooltip-type="info"></i>
+               <label class="switch" data-tooltip="Ativar/Desativar Modo Escuro" data-tooltip-type="default">
+                 <input type="checkbox" id="toggle-dark-mode">
+                 <span class="slider"></span>
+               </label>
+             </div>
+             <a href="/" class="navbar-logout-button" id="logout-nav-link" data-tooltip="Sair (deslogar)" data-tooltip-type="danger">
+               <i class="fas fa-sign-out-alt"></i>
+             </a>
+         </div>
+       </div>
+     </nav>
+
+    <!-- Modal de Detalhes (já existente no painel.html) -->
+    <div class="modal" id="appointment-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Detalhes</h2>
+          <button class="modal-close" id="close-modal" data-tooltip="Fechar detalhes" data-tooltip-type="secondary">×</button> 
+        </div>
+         <div class="loading-spinner" id="modal-loading" style="display: none; margin: 2rem auto;"></div>
+        <div class="modal-body" id="appointment-details">
+            <!-- Conteúdo será carregado aqui -->
+        </div>
+        <div class="modal-footer">
+          <!-- Botão Agendar será adicionado dinamicamente com data-tooltip -->
+          <button class="btn btn-primary" id="close-appointment" data-tooltip="Fechar janela de detalhes" data-tooltip-type="primary">Fechar</button> 
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content (conteúdo específico do painel) -->
+    <main class="main-content">
+      <div class="container">
+        <div class="welcome-header"> <h1 class="welcome-name" id="welcome-name">Olá,...</h1> <p class="welcome-date" id="welcome-date">...</p> </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3">
+          <div class="grid-column" style="grid-column: span 1 / span 1; display: flex; flex-direction: column; gap: 32px;">
+            <!-- Card Solicitações Recentes -->
+            <div class="card"> 
+                <div class="card-header"> 
+                    <h2 class="card-title">Solicitações Recentes</h2> 
+                    <span class="badge badge-warning" id="requests-count-summary" data-tooltip="Número de solicitações pendentes" data-tooltip-type="warning">...</span> 
+                </div> 
+                <div class="card-body" id="pending-requests"> 
+                    <div id="urgent-requests-loading" class="loading-spinner" style="display: block; margin: 20px auto;"></div>
+                    <div id="urgent-requests-list" style="display: none;"> 
+                        <!-- Nomes dos alunos e datas serão inseridos aqui pelo JS -->
+                    </div>
+                    <p class="text-center text-gray-500" id="no-urgent-requests-message" style="display: none; padding: 20px;">Nenhuma solicitação pendente.</p> 
+                </div> 
+                <div class="card-footer" style="text-align: center;"> 
+                    <a href="/solicitacoes" class="footer-link" data-tooltip="Ver todas as solicitações na tela de gerenciamento" data-tooltip-type="info">Ver Todas Solicitações</a> 
+                </div> 
+            </div>
+            <div class="card"> <div class="card-header"> <h2 class="card-title">Resumo do Dia</h2> </div> <div class="card-body"> <div id="daily-summary-loading" class="loading-spinner" style="display: none;"></div> <div id="daily-summary-content"> <p class="text-center text-gray-500">Carregando resumo...</p> </div> </div> </div>
+          </div>
+          <div class="grid-column" style="grid-column: span 2 / span 2;" id="calendar">
+            <div class="card"> 
+                <div class="card-header"> <div> <h2 class="card-title">Agenda Semanal</h2> </div> </div> 
+                <div class="card-body"> 
+                    <div class="calendar-controls"> 
+                        <button class="btn calendar-nav-btn" id="prev-week" data-tooltip="Ver semana anterior" data-tooltip-type="secondary"> 
+                            <span id="icon-chevron-left"></span> 
+                        </button> 
+                        <div class="week-range-display" id="week-range">Carregando...</div> 
+                        <button class="btn calendar-nav-btn" id="next-week" data-tooltip="Ver próxima semana" data-tooltip-type="secondary"> 
+                            <span id="icon-chevron-right"></span> 
+                        </button> 
+                    </div> 
+                    <div class="calendar-days" id="calendar-days"> 
+                        <div class="loading-spinner" style="width: 20px; height: 20px; margin: 0.5rem auto;"></div> 
+                    </div> 
+                    <div class="time-slots-wrapper" id="time-slots"> 
+                        <div class="loading-spinner" id="calendar-loading"></div> 
+                        <ul class="compact-appointment-list" id="compact-appointment-list" style="display: none;"></ul> 
+                        <div id="no-appointments-for-day" style="display: none;" class="no-appointments-message"> <i class="far fa-calendar-times"></i> <span>Nenhum atendimento agendado para este dia.</span> </div> 
+                        <div id="calendar-error" style="display: none; color: red; text-align: center; padding: 1rem;">Erro ao carregar horários.</div> 
+                    </div> 
+                </div> 
+                <div class="card-footer flex justify-end"> 
+                    <button class="btn btn-secondary" id="new-appointment" data-tooltip="Ver próximos atendimentos na tela de solicitações" data-tooltip-type="secondary"> 
+                        <span style="margin-right: 8px"></span> <span>Próximos Atendimentos</span> 
+                    </button> 
+                </div> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer"> <div class="container footer-content"> <p class="footer-text">© 2025 Educa Mente - Sistema de Gestão para Psicopedagogos</p> </div> </footer>
+    
+    <script src="js/painel.js"></script> 
+
+    <script>
+        // Funções auxiliares do Modal e formatação de data (do painel.js original)
+        function openCustomModal(title, contentHTML, solicitacao) { 
+            const modal = document.getElementById('appointment-modal');
+            const modalTitleEl = modal.querySelector('.modal-title');
+            const modalDetailsEl = document.getElementById('appointment-details');
+            const modalLoadingEl = document.getElementById('modal-loading');
+            const modalFooter = modal.querySelector('.modal-footer');
+            if (!modal || !modalTitleEl || !modalDetailsEl || !modalLoadingEl || !modalFooter) { return; }
+            modalTitleEl.textContent = title;
+            modalDetailsEl.innerHTML = contentHTML || '';
+            modalLoadingEl.style.display = 'none';
+            const existingAgendarBtn = modalFooter.querySelector('#agendar-atendimento-modal-btn');
+            if (existingAgendarBtn) existingAgendarBtn.remove();
+            const closeBtn = modalFooter.querySelector('#close-appointment');
+            if (solicitacao && (solicitacao.status === 'Pendente' || solicitacao.status === 'Aprovado')) {
+                const agendarBtn = document.createElement('button');
+                agendarBtn.id = 'agendar-atendimento-modal-btn';
+                agendarBtn.classList.add('btn', 'btn-primary'); 
+                agendarBtn.innerHTML = `<i class="fas fa-calendar-plus" style="margin-right: 5px;"></i> Agendar`;
+                agendarBtn.setAttribute('data-tooltip', 'Ir para a tela de agendamento desta solicitação');
+                agendarBtn.setAttribute('data-tooltip-type', 'primary'); 
+                agendarBtn.addEventListener('click', () => {
+                    const params = new URLSearchParams({
+                        id: solicitacao.id, // CORREÇÃO APLICADA AQUI
+                        aluno: solicitacao.nome || '',
+                        curso: solicitacao.curso || '',
+                        unidade: solicitacao.instituicao || '',
+                        telefone: solicitacao.telefone || ''
+                    });
+                    window.location.href = `/agendamento?${params.toString()}`;
+                });
+                if (closeBtn) modalFooter.insertBefore(agendarBtn, closeBtn);
+                else modalFooter.appendChild(agendarBtn);
+            }
+            modal.style.display = 'flex';
+        }
+        function showCustomModalLoading(title = 'Carregando...') { 
+            const modal = document.getElementById('appointment-modal');
+            const modalTitleEl = modal.querySelector('.modal-title');
+            const modalDetailsEl = document.getElementById('appointment-details');
+            const modalLoadingEl = document.getElementById('modal-loading');
+            const modalFooter = modal.querySelector('.modal-footer');
+            if (!modal || !modalTitleEl || !modalDetailsEl || !modalLoadingEl || !modalFooter) { return; }
+            modalTitleEl.textContent = title;
+            modalDetailsEl.innerHTML = '';
+            modalLoadingEl.style.display = 'block';
+            const existingAgendarBtn = modalFooter.querySelector('#agendar-atendimento-modal-btn');
+            if (existingAgendarBtn) existingAgendarBtn.remove();
+            modal.style.display = 'flex';
+        }
+        function closeCustomModal() { 
+            const modal = document.getElementById('appointment-modal');
+            if (modal) modal.style.display = 'none'; 
+        }
+        function formatDateForDisplay(dateString) { 
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) { 
+                const parts = dateString.split('-');
+                if (parts.length === 3) {
+                    const utcDate = new Date(Date.UTC(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])));
+                     if (!isNaN(utcDate.getTime())) return utcDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+                } return dateString; 
+            } return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }); 
+        }
+        async function showRequestDetailsInModal(solicitacaoId) { 
+            showCustomModalLoading('Carregando Detalhes...');
+            try {
+                const response = await fetch(`/api/solicitacoes/${solicitacaoId}`);
+                if (!response.ok) { const errorData = await response.json().catch(() => ({ message: `Erro HTTP ${response.status}` })); throw new Error(errorData.message); }
+                const solicitacao = await response.json(); 
+                const modalTitleText = solicitacao.status === 'Agendado' ? 'Detalhes do Atendimento Agendado' : 'Detalhes da Solicitação';
+                const dataNascimentoStr = formatDateForDisplay(solicitacao.data_nascimento);
+                const statusClasseModal = solicitacao.status ? solicitacao.status.toLowerCase() : 'pendente';
+                let htmlContent = `<p><strong>Nome:</strong> ${solicitacao.nome || 'N/A'}</p> <p><strong>Data de Nascimento:</strong> ${dataNascimentoStr}</p> <p><strong>Curso:</strong> ${solicitacao.curso || 'N/A'}</p> <p><strong>Turno:</strong> ${solicitacao.turno || 'N/A'}</p> <p><strong>Turma:</strong> ${solicitacao.turma || 'N/A'}</p> <p><strong>Unidade:</strong> ${solicitacao.instituicao || 'N/A'}</p> <p><strong>Telefone:</strong> ${solicitacao.telefone || 'N/A'}</p> <p><strong>Responsável:</strong> ${solicitacao.responsavel || 'N/A'}</p> <p><strong>Status:</strong> <span class="status-badge-modal ${statusClasseModal}">${solicitacao.status || 'N/A'}</span></p> <p><strong>Observações Iniciais:</strong> ${solicitacao.obser || 'Nenhuma'}</p>`;
+                if (solicitacao.laudo && solicitacao.imagem) htmlContent += `<p><strong>Laudo:</strong> <a href="/uploads/${solicitacao.imagem}" target="_blank" class="laudo-link" data-tooltip="Abrir laudo em nova aba" data-tooltip-type="info">Visualizar Laudo <i class="fas fa-external-link-alt fa-xs"></i></a></p>`; 
+                else if (solicitacao.laudo) htmlContent += `<p><strong>Laudo:</strong> Sim (arquivo não disponível)</p>`; else htmlContent += `<p><strong>Laudo:</strong> Não informado</p>`;
+                if (solicitacao.status === 'Agendado') {
+                    htmlContent += '<hr><h4>Detalhes do Agendamento:</h4>';
+                    const dataAgendadaStr = formatDateForDisplay(solicitacao.data_agendamento);
+                    htmlContent += `<p><strong>Data Agendada:</strong> ${dataAgendadaStr}</p>`;
+                    htmlContent += `<p><strong>Hora Agendada:</strong> ${solicitacao.hora_agendamento || 'N/A'}</p>`;
+                    if (solicitacao.agendamentos && solicitacao.agendamentos.length > 0 && solicitacao.agendamentos[0].obser_agendamento) htmlContent += `<p><strong>Observações do Agendamento:</strong> ${solicitacao.agendamentos[0].obser_agendamento}</p>`;
+                } openCustomModal(modalTitleText, htmlContent, solicitacao); 
+            } catch (error) { openCustomModal('Erro ao Carregar', `<p style="color: red;">Não foi possível carregar os detalhes: ${error.message}. Tente novamente.</p>`, null); }
+        }
+        async function loadAndDisplayRecentRequests() {
+            const listContainer = document.getElementById('urgent-requests-list'); 
+            const loadingSpinner = document.getElementById('urgent-requests-loading');
+            const countBadgeInHeader = document.getElementById('requests-count-summary'); 
+            const noItemsMessageElement = document.getElementById('no-urgent-requests-message'); 
+            const cardBody = document.getElementById('pending-requests'); 
+            if (!listContainer || !loadingSpinner || !countBadgeInHeader || !noItemsMessageElement || !cardBody) return;
+            loadingSpinner.style.display = 'block'; listContainer.innerHTML = ''; listContainer.style.display = 'none'; 
+            noItemsMessageElement.style.display = 'none'; countBadgeInHeader.innerHTML = '...'; cardBody.classList.remove('has-items-for-list'); 
+            try {
+                const response = await fetch('/api/solicitacoes/pendentes'); 
+                if (!response.ok) throw new Error(`Erro HTTP ${response.status} ao buscar solicitações recentes.`);
+                const requests = await response.json();
+                countBadgeInHeader.innerHTML = `<span class="pending-label">Pendentes</span><span class="pending-value">${requests.length}</span>`; 
+                if (requests.length === 0) { noItemsMessageElement.style.display = 'block'; cardBody.classList.remove('has-items-for-list'); } 
+                else {
+                    cardBody.classList.add('has-items-for-list'); 
+                    requests.forEach(request => {
+                        const itemElement = document.createElement('div'); 
+                        itemElement.classList.add('clickable-student-item'); 
+                        itemElement.setAttribute('data-id', request.id);
+                        itemElement.setAttribute('data-tooltip', `Clique para ver detalhes de ${request.nome}`);
+                        itemElement.setAttribute('data-tooltip-type', 'info'); 
+                        const studentNameSpan = document.createElement('span'); studentNameSpan.classList.add('student-name-in-list'); studentNameSpan.textContent = request.nome || 'Nome não disponível';
+                        const requestDateSpan = document.createElement('span'); requestDateSpan.classList.add('request-date-in-list'); requestDateSpan.textContent = formatDateForDisplay(request.criado_em); 
+                        itemElement.appendChild(studentNameSpan); itemElement.appendChild(requestDateSpan);
+                        itemElement.addEventListener('click', () => showRequestDetailsInModal(request.id));
+                        listContainer.appendChild(itemElement);
+                    });
+                } listContainer.style.display = 'block'; 
+            } catch (error) {
+                noItemsMessageElement.textContent = 'Falha ao carregar solicitações.'; 
+                noItemsMessageElement.style.color = 'red'; noItemsMessageElement.style.display = 'block';
+                listContainer.style.display = 'none'; countBadgeInHeader.innerHTML = "Erro"; cardBody.classList.remove('has-items-for-list');
+            } finally { loadingSpinner.style.display = 'none'; }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- INICIALIZAÇÃO DE ÍCONES DA NAVBAR ---
+            try {
+                if (typeof icons !== 'undefined' && icons.home && icons.history && icons.requests) {
+                    const iconHomeEl = document.getElementById('icon-home');
+                    const iconHistoryEl = document.getElementById('icon-history');
+                    const iconRequestsEl = document.getElementById('icon-requests');
+                    if(iconHomeEl) iconHomeEl.innerHTML = icons.home;
+                    if(iconHistoryEl) iconHistoryEl.innerHTML = icons.history;
+                    if(iconRequestsEl) iconRequestsEl.innerHTML = icons.requests;
+                    
+                    if (document.getElementById('icon-chevron-left') && icons.chevronLeft) document.getElementById('icon-chevron-left').innerHTML = icons.chevronLeft;
+                    if (document.getElementById('icon-chevron-right') && icons.chevronRight) document.getElementById('icon-chevron-right').innerHTML = icons.chevronRight;
+                } else { console.warn("Objeto 'icons' (de js/icons.js) não definido ou incompleto para a navbar."); }
+            } catch (e) { console.error("Erro ao carregar ícones:", e); }
+
+            loadAndDisplayRecentRequests(); 
+
+            const closeModalButtonOriginal = document.getElementById('close-modal');
+            const closeAppointmentButtonOriginal = document.getElementById('close-appointment');
+            const modalElement = document.getElementById('appointment-modal');
+            if(closeModalButtonOriginal) closeModalButtonOriginal.addEventListener('click', closeCustomModal);
+            if(closeAppointmentButtonOriginal) closeAppointmentButtonOriginal.addEventListener('click', closeCustomModal);
+            if(modalElement) modalElement.addEventListener('click', function(event) { if (event.target === modalElement) closeCustomModal(); });
+
+            const originalButton = document.getElementById('new-appointment');
+            if (originalButton) { 
+                const clonedButton = originalButton.cloneNode(true); 
+                if (originalButton.parentNode) {
+                    originalButton.parentNode.replaceChild(clonedButton, originalButton);
+                     clonedButton.addEventListener('click', function(event) {
+                        event.preventDefault(); 
+                        sessionStorage.setItem('focusTabOnLoad', 'upcoming');
+                        window.location.href = '/solicitacoes'; 
+                    });
+                }
+            }
+
+            const toggleDarkMode = document.getElementById('toggle-dark-mode');
+            const iconSun = document.getElementById('icon-sun');
+            const iconMoon = document.getElementById('icon-moon');
+
+            if (toggleDarkMode && iconSun && iconMoon) {
+                const applyDarkModePreference = (isDark) => {
+                    document.body.classList.add('no-transitions');
+                    document.body.classList.toggle('dark', isDark);
+                    iconSun.style.display = isDark ? 'none' : 'inline-block';
+                    iconMoon.style.display = isDark ? 'inline-block' : 'none';
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            document.body.classList.remove('no-transitions');
+                        });
+                    });
+                };
+
+                const darkModeUserPreference = localStorage.getItem('darkMode') === 'enabled';
+                toggleDarkMode.checked = darkModeUserPreference;
+                applyDarkModePreference(darkModeUserPreference);
+
+                toggleDarkMode.addEventListener('change', function() {
+                    const isDarkEnabled = this.checked;
+                    applyDarkModePreference(isDarkEnabled);
+                    localStorage.setItem('darkMode', isDarkEnabled ? 'enabled' : 'disabled');
+                    if (typeof window.updateCalendarTheme === 'function') { 
+                        window.updateCalendarTheme(isDarkEnabled);
+                    }
+                });
+            } else {
+                console.warn("Elementos do Dark Mode (toggle, sol, lua) não encontrados.");
+            }
+
+            const logoutButton = document.getElementById('logout-nav-link');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function(event) {
+                    event.preventDefault(); 
+                    const logoutUrl = this.getAttribute('href'); 
+                    
+                    if (typeof window.showConfirmationModal === 'function') {
+                        window.showConfirmationModal(
+                            'Confirmar Saída', 
+                            'Tem certeza que deseja sair da sua conta e retornar à tela inicial?', 
+                            () => { window.location.href = logoutUrl; }, 
+                            null, 
+                            'Sim, Sair', 
+                            'custom-btn-danger' 
+                        );
+                    } else {
+                        console.warn('Função window.showConfirmationModal não definida. Usando confirm padrão do navegador.');
+                        if (confirm('Tem certeza que deseja sair da sua conta e retornar à tela inicial?')) {
+                            window.location.href = logoutUrl;
+                        }
+                    }
+                });
+            } else {
+                console.warn("Elemento #logout-nav-link não encontrado.");
+            }
+        });
+    </script>
+
+    <!-- SCRIPT PARA MODAL DE CONFIRMAÇÃO E TOAST (COPIADO DE SOLICITACOES.HTML) -->
+    <script>
+    (function() {
+        'use strict';
+        let modalElement, modalTitleElement, modalBodyElement, confirmBtn, cancelBtn, closeBtnModal, currentConfirmCallback, currentCancelCallback, toastContainerElement;
+        
+        function initializeModalDOM() {
+            if (document.getElementById('confirmationModal_generated')) return; 
+            const modalHTML = `
+                <div id="confirmationModal_generated" class="custom-modal" aria-modal="true" role="dialog">
+                    <div class="custom-modal-content">
+                        <div class="custom-modal-header">
+                            <h5 class="custom-modal-title" id="modalTitle_generated">Confirmar Ação</h5>
+                            <button type="button" class="custom-modal-close" id="modalCloseBtn_generated" aria-label="Fechar" data-tooltip="Fechar esta caixa de diálogo" data-tooltip-type="secondary">×</button>
+                        </div>
+                        <div class="custom-modal-body" id="modalBodyText_generated"><p>Você tem certeza?</p></div>
+                        <div class="custom-modal-footer">
+                            <button type="button" class="custom-btn custom-btn-secondary" id="modalCancelBtn_generated" data-tooltip="Cancelar ação e fechar">Cancelar</button>
+                            <button type="button" class="custom-btn custom-btn-primary" id="modalConfirmBtn_generated" data-tooltip="Confirmar e executar ação">Confirmar</button>
+                        </div>
+                    </div>
+                </div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            modalElement = document.getElementById('confirmationModal_generated'); 
+            modalTitleElement = document.getElementById('modalTitle_generated'); 
+            modalBodyElement = document.getElementById('modalBodyText_generated'); 
+            confirmBtn = document.getElementById('modalConfirmBtn_generated'); 
+            cancelBtn = document.getElementById('modalCancelBtn_generated'); 
+            closeBtnModal = document.getElementById('modalCloseBtn_generated');
+            
+            confirmBtn.addEventListener('click', () => { if (currentConfirmCallback) currentConfirmCallback(); hideModal(); });
+            const closeModalActions = () => { if (currentCancelCallback) currentCancelCallback(); hideModal(); };
+            cancelBtn.addEventListener('click', closeModalActions); 
+            closeBtnModal.addEventListener('click', closeModalActions); 
+            modalElement.addEventListener('click', (event) => { if (event.target === modalElement) closeModalActions(); }); 
+            document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modalElement && modalElement.classList.contains('show')) closeModalActions(); });
+        }
+        function hideModal() { if (!modalElement) return; modalElement.classList.remove('show'); currentConfirmCallback = null; currentCancelCallback = null; }
+        
+        window.showConfirmationModal = function(title, message, confirmCallback, cancelCallback, confirmButtonText = 'Confirmar', confirmButtonClass = 'custom-btn-primary') {
+            if (!modalElement) initializeModalDOM(); 
+            modalTitleElement.textContent = title; 
+            modalBodyElement.innerHTML = `<p>${message.replace(/\n/g, "<br>")}</p>`; 
+            confirmBtn.textContent = confirmButtonText; 
+            confirmBtn.className = `custom-btn ${confirmButtonClass}`;
+            confirmBtn.setAttribute('data-tooltip', `${confirmButtonText} e executar ação`); 
+            
+            currentConfirmCallback = confirmCallback; 
+            currentCancelCallback = cancelCallback; 
+            modalElement.classList.add('show'); 
+            if(confirmBtn) confirmBtn.focus();
+        }
+
+        function initializeToastContainerDOM() {
+            if (document.getElementById('toastContainer_generated')) return; 
+            const toastContainerHTML = `<div id="toastContainer_generated" class="custom-toast-container"></div>`;
+            document.body.insertAdjacentHTML('beforeend', toastContainerHTML); 
+            toastContainerElement = document.getElementById('toastContainer_generated');
+        }
+        window.showToast = function(message, type = 'info', duration = 3500) {
+            if (!toastContainerElement) initializeToastContainerDOM(); 
+            const toast = document.createElement('div'); 
+            toast.className = `custom-toast custom-toast-${type}`; 
+            let iconClass = '';
+            switch (type) { 
+                case 'success': iconClass = 'fas fa-check-circle'; break; 
+                case 'error': iconClass = 'fas fa-times-circle'; break; 
+                case 'warning': iconClass = 'fas fa-exclamation-triangle'; break; 
+                case 'info': iconClass = 'fas fa-info-circle'; break; 
+            }
+            toast.innerHTML = (iconClass ? `<i class="${iconClass} custom-toast-icon"></i>` : '') + `<span>${message}</span>`;
+            toastContainerElement.prepend(toast); 
+            requestAnimationFrame(() => { requestAnimationFrame(() => { toast.classList.add('show'); }); });
+            setTimeout(() => { 
+                toast.classList.remove('show'); 
+                toast.addEventListener('transitionend', () => { 
+                    if (toast.parentNode === toastContainerElement) { toastContainerElement.removeChild(toast); } 
+                }, { once: true }); 
+            }, duration);
+        }
+    })();
+    </script>
+
+    <!-- SCRIPT PARA TOOLTIP PERSONALIZADO (COPIADO DE SOLICITACOES.HTML) -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let tooltipElement;
+        const tooltipOffset = 10; 
+
+        function createTooltipElement() {
+            if (document.getElementById('global-custom-tooltip')) {
+                tooltipElement = document.getElementById('global-custom-tooltip');
+                return;
+            }
+            tooltipElement = document.createElement('div');
+            tooltipElement.id = 'global-custom-tooltip';
+            tooltipElement.className = 'custom-tooltip-popup';
+            document.body.appendChild(tooltipElement);
+        }
+
+        createTooltipElement(); 
+
+        function showTooltip(event) {
+            const target = event.currentTarget;
+            const tooltipText = target.getAttribute('data-tooltip');
+            
+            if (!tooltipText || !tooltipElement) return;
+
+            tooltipElement.textContent = tooltipText;
+
+            let tooltipType = target.getAttribute('data-tooltip-type') || 'default';
+            if (tooltipType === 'default') { 
+                const typeRegex = /(?:btn-|custom-btn-)(primary|danger|warning|secondary|success|info)/;
+                let typeFound = false;
+                target.classList.forEach(cls => {
+                    const match = cls.match(typeRegex);
+                    if (match && match[1]) {
+                        tooltipType = match[1];
+                        typeFound = true;
+                    }
+                });
+                 if (!typeFound) { 
+                    if (target.classList.contains('badge-warning')) tooltipType = 'warning';
+                    else if (target.classList.contains('footer-link')) tooltipType = 'info';
+                    else if (target.classList.contains('active') && target.classList.contains('navbar-link')) tooltipType = 'info';
+                    else if (target.classList.contains('laudo-link')) tooltipType = 'info';
+                    else if (target.classList.contains('clickable-student-item')) tooltipType = 'info';
+                    else if (target.classList.contains('calendar-nav-btn')) tooltipType = 'secondary';
+                    else if (target.classList.contains('modal-close')) tooltipType = 'secondary';
+                 }
+            }
+            
+            tooltipElement.className = 'custom-tooltip-popup visible'; 
+            tooltipElement.classList.add(`type-${tooltipType}`);
+            tooltipElement.style.setProperty('--tooltip-arrow-color', getComputedStyle(tooltipElement).backgroundColor);
+
+            const targetRect = target.getBoundingClientRect();
+            
+            tooltipElement.style.display = 'block'; 
+            const tooltipRect = tooltipElement.getBoundingClientRect();
+            tooltipElement.style.display = ''; 
+
+            let top = targetRect.top - tooltipRect.height - tooltipOffset;
+            let left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
+            tooltipElement.classList.remove('arrow-bottom');
+
+            if (top - window.scrollY < 5) { 
+                top = targetRect.bottom + tooltipOffset;
+                tooltipElement.classList.add('arrow-bottom');
+            }
+
+            if (left < 5) { left = 5; } 
+            else if (left + tooltipRect.width > window.innerWidth - 5) { left = window.innerWidth - tooltipRect.width - 5; }
+            
+            tooltipElement.style.left = `${left}px`;
+            tooltipElement.style.top = `${top + window.scrollY}px`;
+        }
+
+        function hideTooltip() {
+            if (tooltipElement) {
+                tooltipElement.className = 'custom-tooltip-popup'; 
+            }
+        }
+
+        document.body.addEventListener('mouseenter', event => {
+            const target = event.target.closest('[data-tooltip]');
+            if (target) {
+                if (target.hasAttribute('title') && target.getAttribute('title') !== target.getAttribute('data-tooltip')) { 
+                     target.setAttribute('data-original-title', target.getAttribute('title'));
+                     target.removeAttribute('title');
+                }
+                showTooltip({ currentTarget: target });
+            }
+        }, true);
+
+        document.body.addEventListener('mouseleave', event => {
+            const target = event.target.closest('[data-tooltip]');
+            if (target) {
+                if (target.hasAttribute('data-original-title')) { 
+                    target.setAttribute('title', target.getAttribute('data-original-title'));
+                    target.removeAttribute('data-original-title');
+                }
+                hideTooltip();
+            }
+        }, true);
+    });
+    </script>
+</body>
+</html>
