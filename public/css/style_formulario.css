@@ -128,13 +128,22 @@ body {
     box-shadow: 0 0 0 2px rgba(21, 117, 163, 0.2);
 }
 
+.input-group.laudo, .input-group.email{
+    margin-left: 40px;
+}
+
 
 #outroCursoInput,
-#outroMotivoInput {
-  margin-top: 10px;
-  width: 100%;
-  max-width: 350px; /* Ensure it matches other inputs */
-}
+    #outroMotivoInput {
+      display: none;
+      margin-top: 10px;
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      max-width: 350px; 
+    }
 
 .hidden-by-default {
     display: none !important;
@@ -154,6 +163,11 @@ body {
 }
 
 
+
+    /* Classe para esconder campos condicionalmente por padrão */
+    .conditional-field {
+      display: none;
+    }
 .form-actions {
     display: flex;
     justify-content: space-between;

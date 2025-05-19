@@ -198,9 +198,7 @@ app.get('/login_professor', (req, res) => { res.sendFile(path.join(__dirname, 'v
 app.get('/login_psico', (req, res) => { res.sendFile(path.join(__dirname, 'views', 'login_psico.html')); });
 app.get('/cadastro', (req, res) => { res.sendFile(path.join(__dirname, 'views', 'cadastro.html')); });
 
-app.get('/formulario', requireLogin(['aluno']), (req, res) => { res.sendFile(path.join(__dirname, 'views', 'formulario.html')); });
-app.get('/formulario_professor', requireLogin(['professor']), (req, res) => { res.sendFile(path.join(__dirname, 'views', 'formulario_professor.html')); });
-app.get('/formulario_psicopedagoga', requireLogin(['psicopedagoga']), (req, res) => { res.sendFile(path.join(__dirname, 'views', 'formulario_psicopedagoga.html')); });
+app.get('/formulario', requireLogin(['aluno', 'professor', 'psicopedagoga']), (req, res) => { res.sendFile(path.join(__dirname, 'views', 'formulario.html')); });
 app.get('/confirmacao', requireLogin(['aluno', 'professor', 'psicopedagoga']), (req, res) => { res.sendFile(path.join(__dirname, 'views', 'confirmar_envio.html')); });
 
 app.get('/painel', requireLogin(['psicopedagoga']), (req, res) => { res.sendFile(path.join(__dirname, 'views', 'painel.html')); });
@@ -358,15 +356,29 @@ app.post('/login', async (req, res) => {
             req.session.tipoUsuario = usuario.tipo;
             req.session.nomeUsuario = usuario.nome;
         
-            // Define cookie acessível via JavaScript com o tipo de usuário
+            // Define cookie acessível via JavaScript com o tipo e nome de usuário
             res.cookie('tipoUsuario', usuario.tipo, {
-                maxAge: 24 * 60 * 60 * 1000,
+                maxAge: 24 * 60 * 60 * 1000, 
                 sameSite: 'Lax',
-                httpOnly: false
+                httpOnly: false 
+            });
+
+            res.cookie('nomeUsuario', usuario.nome, { 
+                maxAge: 24 * 60 * 60 * 1000, 
+                sameSite: 'Lax',
+                httpOnly: false 
             });
         
             console.log(`[LOGIN SUCCESS] User: ${usuario.nome} (ID: ${usuario.id}), Tipo: ${usuario.tipo}.`);
-            const redirectPath = {'psicopedagoga':'/painel','professor':'/formulario_professor','aluno':'/formulario'}[usuario.tipo] || '/';
+            
+            let redirectPath;
+            if (usuario.tipo === 'psicopedagoga') {
+                redirectPath = '/painel';
+            } else if (usuario.tipo === 'aluno' || usuario.tipo === 'professor') {
+                redirectPath = '/formulario'; // Todos os outros vão para o formulário unificado
+            } else {
+                redirectPath = '/'; // Fallback
+            }  
             res.redirect(redirectPath);
         });
         
@@ -383,7 +395,7 @@ app.get('/api/usuario-logado', requireLogin(), (req, res) => {
 
 // Rota de Enviar Solicitação
 app.post('/enviar_solicitacao', requireLogin(['aluno', 'psicopedagoga', 'professor']), upload.single('file'), async (req, res) => {
-    const { name, age, course, shift, classroom, phone, responsible, institution, observations, outro_motivo, outro_curso } = req.body;
+    const { name, age, course, shift, classroom, phone, responsible, institution, observations, outro_motivo, outro_curso} = req.body;
     if (!name || !age || !course || !shift || !classroom) return res.status(400).send("Campos obrigatórios não preenchidos.");
     try {
         const novaSolicitacao = await Solicitacao.create({
