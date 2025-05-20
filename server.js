@@ -50,29 +50,17 @@ sequelize.sync({ force: false })
 
 const app = express();
 
-const connection = mysql.createConnection({
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
   host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  ssl: {
-    // Para Render, o conteúdo do certificado pode ser armazenado em uma variável de ambiente
-    ca: process.env.DB_CA_CERT 
-      ? Buffer.from(process.env.DB_CA_CERT, 'base64').toString('utf-8') 
-      : fs.readFileSync('./ca.pem') // Fallback local
-  }
+  port: Number(process.env.DB_PORT),
+  dialect: 'mysql',
+  dialectOptions: {
+    ssl: {
+      ca: process.env.DB_CA_CERT ? Buffer.from(process.env.DB_CA_CERT, 'base64').toString('utf-8') : undefined,
+    }
+  },
+  logging: false,
 });
-
-connection.connect((err) => {
-  if (err) {
-    console.error('Erro ao conectar ao MySQL:', err.message);
-  } else {
-    console.log('Conexão bem-sucedida ao MySQL Aiven!');
-  }
-});
-
-module.exports = connection;
 
 // Middlewares
 app.use(cors());
