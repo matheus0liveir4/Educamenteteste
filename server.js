@@ -59,7 +59,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.set('trust proxy', 1);
 app.use(expressSession({
+    
   secret: process.env.SESSION_SECRET || 'YOUR_STRONG_SECRET_KEY_fallback_dev',
   resave: false,
   saveUninitialized: false,
@@ -70,6 +72,8 @@ app.use(expressSession({
     maxAge: 24 * 60 * 60 * 1000
   }
 }));
+
+
 
 // Configuração do Multer
 const uploadDir = path.join(__dirname, 'public', 'uploads');
@@ -194,6 +198,7 @@ function requireLogin(tiposPermitidos = []) {
         next();
     };
 }
+
 
 // Rotas de páginas HTML
 app.get('/', (req, res) => { res.sendFile(path.join(__dirname, 'views', 'index.html')); });
@@ -351,6 +356,10 @@ app.post('/login', async (req, res) => {
             req.session.usuarioId = usuario.id;
             req.session.tipoUsuario = usuario.tipo;
             req.session.nomeUsuario = usuario.nome;
+            req.session.save(() => {
+                console.log('[LOGIN SESSION SALVA]', req.session);
+                res.redirect('/painel'); // ou a página desejada
+            });
         
             // Define cookie acessível via JavaScript com o tipo e nome de usuário
             res.cookie('tipoUsuario', usuario.tipo, {
