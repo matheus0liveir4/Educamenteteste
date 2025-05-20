@@ -182,9 +182,10 @@ async function enviarEmailConfirmacaoAgendamento(emailDestinatario, nomeAluno, d
 // --- Middleware de Autenticação ---
 function requireLogin(tiposPermitidos = []) {
     return (req, res, next) => {
+        console.log('[SESSION DEBUG]', req.session);
         if (!req.session.usuarioId) {
             console.warn(`[AUTH REJECT] ${req.method} ${req.originalUrl}: Não logado.`);
-            return req.originalUrl.startsWith('/api/') ? res.status(401).json({ error: 'Autenticação necessária.' }) : res.redirect('/login_psico');
+            return req.originalUrl.startsWith('/api/') ? res.status(401).json({ error: 'Autenticação necessária.' }) : res.redirect('/login?tipo=psicopedagoga');
         }
         if (Array.isArray(tiposPermitidos) && tiposPermitidos.length > 0 && !tiposPermitidos.includes(req.session.tipoUsuario)) {
             console.warn(`[AUTH REJECT] ${req.method} ${req.originalUrl}: Tipo '${req.session.tipoUsuario}' não permitido. UserID: ${req.session.usuarioId}`);
