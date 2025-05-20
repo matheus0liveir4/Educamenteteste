@@ -28,6 +28,7 @@ if (dotenvResult.error) {
 }
 
 // Suas outras requires:
+const mysql = require('mysql2');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
