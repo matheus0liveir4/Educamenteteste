@@ -7,7 +7,7 @@ const db = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.D
   dialect: 'mysql',
   dialectOptions: {
     ssl: {
-      ca: process.env.DB_CA_CERT ? Buffer.from(process.env.DB_CA_CERT, 'base64').toString('utf-8') : undefined,
+       ca: fs.readFileSync(path.join(__dirname, 'certs/ca.pem'))
     }
   },
   logging: false,
