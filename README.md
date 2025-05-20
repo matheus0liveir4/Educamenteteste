@@ -22,6 +22,8 @@ Banco de Dados: [insira aqui]
 
 Notificações: [ex: Email via SMTP, Firebase, etc.]
 
+## 📎Link do Deploy
+https://educamenteteste.onrender.com/
 
 ## 📌 Status do Projeto
 
