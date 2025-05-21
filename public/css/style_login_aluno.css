@@ -1,0 +1,307 @@
+/* Reset e Fonte Geral */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Corpo da página */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0A4275, #1575A3, #D9E6F2); /* Azul escuro, azul médio, cinza claro */
+    animation: fadeInBackground 1s ease-out; /* Animação de fundo */
+}
+
+/* Contêiner Principal */
+.container {
+    display: flex;
+    width: 900px;
+    background-color: #fff; /* Fundo branco para o conteúdo */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: slideInContainer 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; /* Entrada suave */
+}
+
+/* Sidebar */
+.sidebar {
+    width: 40%;
+    background-color: #0A4275; /* Azul escuro SENAI */
+    color: #fff;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInSidebar 0.8s ease-out forwards; /* Entrada progressiva */
+    animation-delay: 0.0s;
+}
+
+.sidebar h1 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-family: 'Audiowide', cursive; /* Fonte Audiowide */
+    color: #fff;
+}
+
+.sidebar p {
+    font-size: 1.1rem;
+    color: #D9E6F2; /* Cinza claro */
+    margin-bottom: 2rem;
+}
+
+/* Formulário */
+.form-container {
+    width: 60%;
+    padding: 2rem;
+    background-color: #F7F9FC; /* Cinza claro de fundo */
+    border-left: 2px solid #D9E6F2; /* Separador azul claro */
+    opacity: 0;
+    animation: fadeInForm 0.8s ease-out forwards; /* Entrada progressiva */
+    animation-delay: 0.s;
+}
+
+.form-container h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: #0A4275; /* Azul escuro */
+}
+
+/* Grupos de Entrada */
+.input-group {
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInInput 0.6s ease-out forwards;
+    animation-delay: 0.2s;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #0A4275; /* Azul escuro */
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #1575A3; /* Cinza claro */
+    border-radius: 4px;
+    margin-top: 0.3rem;
+    color: #333; /* Texto preto */
+    outline: none;
+    font-size: 18px;
+}
+
+/* Adicionar estilo para o grupo de senha */
+.password-group {
+    position: relative;
+}
+
+.password-container {
+    display: flex;
+    align-items: center;
+}
+
+.eye-icon {
+    margin-left: -30px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #42A5F5; /* Azul claro */
+}
+
+/* Botão Principal */
+.btn-primary {
+    width: 100%;
+    padding: 1rem;
+    background-color: #1575A3; /* Azul médio */
+    color: #fff; /* Branco */
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInButton 0.8s ease-out forwards;
+    animation-delay: 0.8s;
+}
+
+.btn-primary:hover {
+    background-color: #0A4275; /* Azul escuro no hover */
+}
+
+/* Link de Login */
+.login-link {
+    margin-top: 1rem;
+    text-align: center;
+    color: #666; /* Cinza escuro */
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInLink 0.8s ease-out forwards;
+    animation-delay: 1s;
+}
+
+.login-link a {
+    color: #42A5F5; /* Azul claro */
+    text-decoration: none;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Link "Esqueceu a senha?" */
+.forgot-password {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.forgot-password a {
+    color: #42A5F5; /* Azul claro */
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+/* Regra antiga de toggle-password (será sobrescrita pela regra mais específica abaixo, mas mantida para não alterar o arquivo) */
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #000; /* Cor preta para o ícone - ESTAVA AQUI TAMBÉM */
+    user-select: none;
+    display: none; /* O ícone fica oculto inicialmente */
+}
+
+.toggle-password:hover {
+    color: #0A4275;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .form-container {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .btn-primary {
+        padding: 1rem;
+    }
+}
+
+/* Keyframes para Animações */
+@keyframes fadeInBackground {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInContainer {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInSidebar {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInForm {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInInput {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInButton {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLink {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.password-wrapper {
+    position: relative;
+  }
+
+  /* Regra mais específica/última para o ícone de olho */
+  .toggle-password {
+    display: none; /* Oculta o olho inicialmente */
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #000; /* <<< ALTERADO DE #666 PARA #000 (PRETO) */
+  }
