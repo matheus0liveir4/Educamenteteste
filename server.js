@@ -59,7 +59,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.set('trust proxy', 1);
+
+
 app.use(expressSession({
     
   secret: process.env.SESSION_SECRET || 'YOUR_STRONG_SECRET_KEY_fallback_dev',
@@ -358,7 +359,6 @@ app.post('/login', async (req, res) => {
             req.session.nomeUsuario = usuario.nome;
             req.session.save(() => {
                 console.log('[LOGIN SESSION SALVA]', req.session);
-                res.redirect('/painel'); // ou a página desejada
             });
         
             // Define cookie acessível via JavaScript com o tipo e nome de usuário
