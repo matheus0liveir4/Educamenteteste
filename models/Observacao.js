@@ -1,20 +1,29 @@
 module.exports = (sequelize, DataTypes) => {
   const Observacao = sequelize.define("Observacao", {
+    id: { // Adicionando PK se não foi intencional omitir
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
+    },
     texto: {
       type: DataTypes.TEXT,
       allowNull: false
     },
     agendamentos_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: { 
+        model: 'agendamentos',
+        key: 'id'
+      }
     },
     criado_em: {
       type: DataTypes.DATE,
-      allowNull: true
+      defaultValue: DataTypes.NOW 
     }
   }, {
     tableName: 'observacoes',
-    timestamps: false // 👈 impede que o Sequelize procure createdAt/updatedAt
+    timestamps: false
   });
 
   Observacao.associate = models => {

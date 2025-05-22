@@ -23,8 +23,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   }, {
     tableName: 'Usuarios',
-    timestamps: false
+    timestamps: false 
   });
+
+  // Defina o método de associação AQUI
+  Usuario.associate = function(models) {
+    Usuario.hasMany(models.Solicitacao, {
+      foreignKey: 'usuario_id',
+      as: 'solicitacoes'
+    });
+  };
 
   return Usuario;
 };
