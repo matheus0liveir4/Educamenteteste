@@ -703,7 +703,10 @@ table tr:last-child td {
         .custom-toast-error { background-color: var(--custom-toast-error-bg); }
         .custom-toast-warning { background-color: var(--custom-toast-warning-bg); color: var(--custom-toast-warning-text); }
         .custom-toast-info { background-color: var(--custom-toast-info-bg); }
-
+        .custom-btn-success {
+            background-color:var(--primary);
+            color: #FFFFFF;
+        }
         .custom-tooltip-popup {
             position: absolute;
             padding: 8px 12px;
