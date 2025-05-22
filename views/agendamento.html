@@ -42,7 +42,13 @@
                     <div class="details-column">
                         <div class="input-group">
                             <label for="time">Escolha um horário:</label>
-                            <input type="time" id="time" name="time" required disabled>
+                            <div class="time-input-wrapper">
+                                <input type="time" id="time" name="time" required disabled
+                                       placeholder="HH:MM">
+                                <span class="time-picker-icon" id="timePickerIcon" title="Abrir seletor de horário">
+                                    <i class="fas fa-clock"></i>
+                                </span>
+                            </div>
                         </div>
                         <div class="input-group observations-group">
                             <label for="observations">Observações:</label>
@@ -120,16 +126,30 @@
             const nextMonthBtn = document.getElementById('next-month');
             const calendarValueInput = document.getElementById('calendar-value');
             const timeSelect = document.getElementById('time');
+            const timePickerIcon = document.getElementById('timePickerIcon');
 
-            if (!calendarGrid || !monthYearDisplay || !prevMonthBtn || !nextMonthBtn || !calendarValueInput || !timeSelect) {
+            if (!calendarGrid || !monthYearDisplay || !prevMonthBtn || !nextMonthBtn || !calendarValueInput || !timeSelect || !timePickerIcon) {
                  console.error("Erro Crítico: Elementos essenciais do calendário não encontrados no DOM.");
                  throw new Error("Elementos do calendário faltando.");
             }
 
-            if (timeSelect) {
-                timeSelect.addEventListener('click', function(event) {
-                    if (!this.disabled) { try { this.showPicker(); } catch (error) { this.focus(); } }
+            if (timePickerIcon && timeSelect) {
+                timePickerIcon.addEventListener('click', function() {
+                    if (!timeSelect.disabled) {
+                        try {
+                            // Tenta abrir o seletor de horário nativo
+                            timeSelect.showPicker();
+                        } catch (error) {
+                            // Fallback para navegadores que não suportam showPicker() ou se falhar
+                            console.warn("timeSelect.showPicker() não suportado ou falhou. Focando no campo.", error);
+                            timeSelect.focus(); // Focar no campo pode abrir o picker em alguns navegadores
+                        }
+                    }
                 });
+            }
+
+            if (timeSelect) {
+                // Você pode manter este listener se quiser que o campo perca o foco após a seleção
                 timeSelect.addEventListener('change', function(event) {
                      if (this.value) { this.blur(); }
                 });
@@ -208,9 +228,8 @@
 
             function handleDayClick(event) {
                 const selectedDay = event.target.closest('.calendar-day');
-                // Permite clicar mesmo que tenha 'appointment-details', desde que não seja 'past-day' ou explicitamente 'unavailable'
                 if (!selectedDay || selectedDay.classList.contains('past-day') || selectedDay.classList.contains('other-month')) return;
-
+                
                 const previouslySelected = calendarGrid.querySelector('.selected');
                 if (previouslySelected) { previouslySelected.classList.remove('selected'); }
 
@@ -221,23 +240,27 @@
 
                 if(timeSelect) {
                     timeSelect.disabled = false;
-                    timeSelect.value = '';
+                    timeSelect.value = ''; // Limpa o valor anterior
                     timeSelect.style.borderColor = 'var(--senai-secondary)';
                     timeSelect.style.backgroundColor = '#e7f3f8';
                     timeSelect.style.fontWeight = 'bold';
 
-                    // Opcional: Informar horários já ocupados para este dia
-                    // Você poderia popular uma pequena lista abaixo do seletor de horário
-                    // ou tentar desabilitar <option> no <select> se você gerasse horários.
-                    // Como é type="time", a validação final será no backend.
-                    if (appointmentsMap.has(selectedDateStr)) {
-                        const horariosOcupados = appointmentsMap.get(selectedDateStr);
-                        console.log(`Horários já ocupados para ${selectedDateStr}: ${horariosOcupados.join(', ')}`);
-                        // Aqui você poderia atualizar uma div com essa informação
-                        // Ex: document.getElementById('horarios-ocupados-info').textContent = `Ocupados: ${horariosOcupados.join(', ')}`;
-                    } else {
-                        // Ex: document.getElementById('horarios-ocupados-info').textContent = '';
+                    // Esconder ou mostrar o ícone baseado no estado disabled
+                    if (timePickerIcon) {
+                        timePickerIcon.style.display = 'inline-block'; // ou 'block' dependendo do seu CSS
                     }
+                    // ... (resto da lógica do timeSelect em handleDayClick) ...
+                }
+            }
+
+            // No início, quando a página carrega e nenhuma data está selecionada
+            if (!calendarValueInput.value && timeSelect) {
+                timeSelect.disabled = true;
+                timeSelect.style.borderColor = '';
+                timeSelect.style.backgroundColor = '';
+                timeSelect.style.fontWeight = '';
+                if (timePickerIcon) { // Esconder o ícone também se o campo estiver desabilitado
+                    timePickerIcon.style.display = 'none';
                 }
             }
 

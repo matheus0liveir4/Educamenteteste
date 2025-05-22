@@ -88,6 +88,39 @@ body {
     background-color: #005C8A; /* Azul escuro ao passar o mouse */
 }
 
+.time-input-wrapper {
+    position: relative; /* Para posicionar o ícone absolutamente em relação a este wrapper */
+    display: flex; /* Ajuda a alinhar o input e o ícone se necessário, mas não estritamente para este layout */
+    align-items: center; /* Alinha verticalmente o ícone com o campo se usar flex */
+}
+
+#time {
+    padding-right: 30px; /* Adiciona espaço à direita no input para o ícone não sobrepor o texto/setas nativas */
+    width: 100%; /* Faz o input ocupar a largura disponível */
+    box-sizing: border-box; /* Garante que padding não aumente a largura total */
+}
+
+.time-picker-icon {
+    position: absolute;
+    right: 10px; /* Posição do ícone a partir da direita */
+    top: 50%;
+    transform: translateY(-50%); /* Centraliza verticalmente */
+    cursor: pointer;
+    color: var(--senai-primary); /* Ou a cor que preferir */
+    font-size: 1.1em; /* Tamanho do ícone */
+    z-index: 2; /* Para garantir que fique acima do input se houver sobreposição */
+}
+
+.time-picker-icon:hover {
+    color: var(--senai-accent); /* Cor no hover */
+}
+
+/* Ajuste para quando o campo está desabilitado */
+#time:disabled + .time-picker-icon {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
 /* Responsividade */
 @media (max-width: 768px) {
     .container {
