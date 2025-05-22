@@ -15,6 +15,18 @@ body {
     background: linear-gradient(135deg, #0A4275, #1575A3, #D9E6F2); /* Gradiente azul SENAI */
 }
 
+/* removendo icon padrão do time :Chrome, Safari, Edge */
+input[type="time"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+
+/* removendo icon padrão do time :Firefox */
+input[type="time"] {
+  appearance: none;
+  -moz-appearance: none;
+}
+
 /* Contêiner Principal */
 .container {
     display: flex;
