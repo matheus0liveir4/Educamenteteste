@@ -205,10 +205,6 @@
       if (tipoUsuario === 'aluno') {
         labelName.textContent = 'Seu Nome Completo';
         const nomeAlunoLogado = getNomeUsuarioLogado();
-        if (nomeAlunoLogado) {
-          inputName.value = nomeAlunoLogado;
-          inputName.disabled = true; // Opcional: desabilitar se pré-preenchido
-        }
       } else { // Professor ou Psicopedagoga
         labelName.textContent = 'Nome Completo do Aluno';
         inputName.disabled = false; // Garantir que está habilitado
