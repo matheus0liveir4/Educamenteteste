@@ -25,6 +25,7 @@
     --gray-100: #f8f9fa;
     --gray-200: #e9ecef;
     --gray-300: #dee2e6;
+    --gray-500: #bdbebe;
     --gray-dark: #808088;
 
     /* --- Primary Variations --- */
@@ -43,7 +44,7 @@
     /* --- Modal Variables --- */
     --custom-modal-bg: var(--white);
     --custom-modal-text-color: var(--text-dark);
-    --custom-modal-header-border: var(--gray-300);
+    --custom-modal-header-border: var(--gray-500);
     --custom-modal-box-shadow: rgba(0, 0, 0, 0.1);
 
     /* --- Toast Variables --- */
@@ -77,7 +78,7 @@ body.dark {
     /* --- Modal Variable Overrides --- */
     --custom-modal-bg: #3a3a3a;
     --custom-modal-text-color: #eeeeee;
-    --custom-modal-header-border: #555555;
+    --custom-modal-header-border: #494949;
     --custom-modal-box-shadow: rgba(0, 0, 0, 0.3);
 
     /* --- Toast Variable Overrides --- */
@@ -233,8 +234,14 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     cursor: default;
     opacity: 0.65;
 }
-
-
+.btn-outline-secondary{
+  color: #073055;
+  border: #073055;
+}
+.btn-secondary{
+  color: white;
+  background-color:#073055;
+}
 /* --- Loading Spinner --- */
 .loading-spinner {
     width: 40px;
@@ -381,7 +388,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 .footer {
     background-color: var(--primary);
     padding: 20px 0;
-    border-top: 1px solid #4a5a6a; /* Consider a var if this color needs to change with primary */
+    border-top: 1px solid var(--gray-500); /* Consider a var if this color needs to change with primary */
     margin-top: 40px; /* Or auto if main content pushes it down */
 }
 .footer-content {
@@ -422,7 +429,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 /* --- Generic Card --- */
 .card {
     background-color: var(--white);
-    border: 1px solid #e0e0e0; /* Consider var(--gray-300) */
+    border: 1px solid var(--gray-500); 
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -432,7 +439,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 }
 .card-header {
     padding: 1rem 1.25rem;
-    border-bottom: 1px solid #e0e0e0; /* Consider var(--gray-300) */
+    border-bottom: 1px solid var(--gray-500);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -457,14 +464,14 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 }
 .card-footer {
     padding: 1rem 1.25rem;
-    border-top: 1px solid #e0e0e0; /* Consider var(--gray-300) */
+    border-top: 1px solid var(--gray-500);
     background-color: var(--gray-100);
 }
 
 /* --- History Cards Container (Layout for cards) --- */
 .history-cards-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
     gap: 1rem;
     padding-top: 1rem;
     align-items: stretch; /* Makes cards in the same row equal height if content differs */
@@ -472,14 +479,14 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 
 /* --- Appointment Card (Specific card type) --- */
 .appointment-card {
-    border: 1px solid #e0e0e0; /* var(--gray-300) */
+    border: 1px solid var(--gray-500);
     border-radius: 8px;
     padding: 1rem 1.25rem;
     background-color: var(--white);
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Ensures footer sticks to bottom */
+    flex-direction: column; 
+    /* justify-content: space-between; Ensures footer sticks to bottom */
 }
 .appointment-card-header {
     display: flex;
@@ -557,7 +564,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 /* --- Tabs --- */
 .tabs {
     display: flex;
-    border-bottom: 1px solid #e0e0e0; /* var(--gray-300) */
+    border-bottom: 1px solid var(--gray-500);
     margin-bottom: 1.5rem;
 }
 .tab {
@@ -588,14 +595,14 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 .search-filter-section {
     padding: 1rem 1.5rem;
     background-color: var(--white);
-    border-bottom: 1px solid var(--accent); /* Using accent color */
+    border-bottom: 1px solid var(--gray-500); /* Using accent color */
     margin-bottom: 1.5rem;
 }
 .search-bar-container {
     display: flex;
     align-items: center;
-    background-color: #f1f3f4; /* Light gray, consider var(--gray-100) or var(--gray-200) */
-    border: 1px solid transparent;
+    background-color: #f1f3f4;
+    border: 1px solid var(--gray-500);
     border-radius: 24px; /* Pill shape */
     padding: 0.65rem 1rem;
     margin-bottom: 1rem;
@@ -603,7 +610,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 }
 .search-bar-container:focus-within {
     background-color: var(--white);
-    border-color: #ccc; /* Light border on focus */
+    border-color: var(--gray-500); /* Light border on focus */
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 .search-bar-container i.fa-search {
@@ -664,7 +671,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.15);
     z-index: 10; /* Above other content */
     border-radius: 4px;
-    border: 1px solid var(--accent);
+    border: 1px solid var(--gray-500);
     margin-top: 5px; /* Space from button */
     max-height: 250px;
     overflow-y: auto;
@@ -679,7 +686,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     display: block;
     font-size: 0.875rem;
     white-space: nowrap;
-    border-bottom: 1px solid #F7F9FC; /* Very light separator */
+    border-bottom: 1px solid var(--gray-500); /* Very light separator */
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 .filter-dropdown a:last-child {
@@ -770,8 +777,6 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     pointer-events: auto;
     background-color: var(--custom-modal-bg);
     background-clip: padding-box;
-    border: 1px solid var(--custom-modal-header-border);
-    border-radius: 0.5rem;
     box-shadow: 0 0.5rem 1rem var(--custom-modal-box-shadow);
     color: var(--custom-modal-text-color);
     animation: fadeInModal 0.3s ease-out;
@@ -781,7 +786,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1.25rem;
-    border-bottom: 1px solid var(--custom-modal-header-border);
+    border-bottom: 1px solid var(--gray-500);
     border-top-left-radius: calc(0.5rem - 1px); /* Match content radius */
     border-top-right-radius: calc(0.5rem - 1px);
 }
@@ -827,7 +832,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     gap: 0.5rem;
     padding: 1rem 1.25rem;
     background-color: transparent; /* Or a very light bg */
-    border-top: 1px solid var(--custom-modal-header-border);
+    border-top: 1px solid var(--gray-500);
     border-bottom-right-radius: calc(0.5rem - 1px);
     border-bottom-left-radius: calc(0.5rem - 1px);
 }
@@ -859,11 +864,11 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 .custom-btn-secondary {
     color: var(--primary); /* Text color for secondary button */
     background-color: var(--gray-200);
-    border-color: var(--gray-300);
+    border-color: var(--gray-500);
 }
 .custom-btn-secondary:hover {
     background-color: var(--gray-300);
-    border-color: #c8ced3;
+    border-color: var(--gray-500);
 }
 .custom-btn-danger {
     color: var(--white);
@@ -928,7 +933,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 /* ============================================= */
 .sub-atendimentos-container {
     padding: 10px;
-    border-top: 1px solid #444; /* This color might need adjustment for light mode if it's too dark */
+    border-top: 1px solid var(--gray-500); /* This color might need adjustment for light mode if it's too dark */
     /* Light mode adjustment: */
     /* border-top: 1px solid var(--gray-300); */
 }
@@ -941,6 +946,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 .sub-atendimento:last-child {
     border-bottom: none;
 }
+
 
 
 /* ============================================= */
@@ -1146,6 +1152,11 @@ body.dark .custom-modal-body p {
     color: var(--custom-modal-text-color); /* Uses dark mode text color */
 }
 body.dark .custom-btn-secondary { /* Modal secondary button */
+    color: var(--custom-modal-text-color);
+    background-color: #5a5a5a;
+    border-color: #6c757d;
+}
+body.dark .btn-secondary { /* Modal secondary button */
     color: var(--custom-modal-text-color);
     background-color: #5a5a5a;
     border-color: #6c757d;

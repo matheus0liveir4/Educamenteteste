@@ -25,6 +25,7 @@
     --gray-100: #f8f9fa;
     --gray-200: #e9ecef;
     --gray-300: #dee2e6;
+    --gray-500: #bdbebe;
     --gray-dark: #808088;
 
     /* Componente Switch */
@@ -326,7 +327,7 @@ input:checked + .slider:before {
 /* --- Card Base --- */
 .card {
     background-color: var(--white);
-    border: 1px solid var(--gray-200);
+    border: 1px solid  var(--gray-500);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
@@ -336,7 +337,7 @@ input:checked + .slider:before {
 }
 .card-header {
     padding: 1rem 1.25rem;
-    border-bottom: 1px solid var(--gray-200);
+    border-bottom: 1px solid  var(--gray-500);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -362,7 +363,7 @@ input:checked + .slider:before {
 }
 .card-footer {
     padding: 1rem 1.25rem;
-    border-top: 1px solid var(--gray-200);
+    border-top: 1px solid  var(--gray-500);
     background-color: var(--gray-100);
 }
 
@@ -489,7 +490,7 @@ input:checked + .slider:before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--gray-200); /* Usando var para consistência */
+    border-bottom: 1px solid var(--gray-500); /* Usando var para consistência */
     padding: 1rem 1.25rem;
 }
 .modal-title {
@@ -526,7 +527,7 @@ input:checked + .slider:before {
     justify-content: flex-end;
     gap: 0.5rem;
     padding: 1rem 1.25rem;
-    border-top: 1px solid var(--gray-200); /* Usando var para consistência */
+    border-top: 1px solid var(--gray-500); /* Usando var para consistência */
     background-color: var(--gray-100);
 }
 #agendar-atendimento-modal-btn { order: -1; }
@@ -541,7 +542,7 @@ input:checked + .slider:before {
     letter-spacing: 0.5px;
     margin-bottom: 0.75rem;
     padding-bottom: 0.3rem;
-    border-bottom: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-500);
 }
 .detail-row {
     display: flex;
@@ -843,7 +844,7 @@ input:checked + .slider:before {
 .footer {
     background-color: var(--primary);
     padding: 1rem 0;
-    border-top: 1px solid var(--gray-300);
+    border-top: 1px solid var(--gray-500);
     margin-top: auto;
 }
 .footer-content {
@@ -878,7 +879,7 @@ input:checked + .slider:before {
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 0;
-    border-bottom: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-500);
     transition: background-color 0.2s;
 }
 .request-item-dashboard:last-child { border-bottom: none; padding-bottom: 0; }
@@ -910,7 +911,7 @@ input:checked + .slider:before {
     text-align: center;
     padding: 10px 12px;
     cursor: pointer;
-    border-bottom: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-500);
     transition: background-color 0.15s ease-in-out;
 }
 .clickable-student-item:last-child { border-bottom: none; }
@@ -940,7 +941,7 @@ input:checked + .slider:before {
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem 0;
-    border-bottom: 1px solid var(--gray-200);
+    border-bottom: 1px solid var(--gray-500);
 }
 .summary-item:last-child { border-bottom: none; padding-bottom: 0; }
 .summary-icon { color: var(--secondary); flex-shrink: 0; width: 1.2em; text-align: center; }
@@ -972,7 +973,7 @@ input:checked + .slider:before {
 }
 .calendar-days {
     display: flex; justify-content: space-around; margin-bottom: 1rem;
-    padding-bottom: 0.75rem; border-bottom: 1px solid var(--gray-200);
+    padding-bottom: 0.75rem; border-bottom: 1px solid var(--gray-500);
     overflow-x: auto; -webkit-overflow-scrolling: touch;
 }
 .day-item {
@@ -988,7 +989,7 @@ input:checked + .slider:before {
     transform: translateX(-50%); width: 5px; height: 5px;
     background-color: var(--secondary); border-radius: 50%;
 }
-.day-item:hover { background-color: var(--gray-200); border-color: var(--gray-300); }
+.day-item:hover { background-color: var(--gray-200); border-color: var(--gray-500) }
 .day-item.active { background-color: var(--primary); color: var(--white); border-color: var(--primary); }
 .day-item.active .day-name, .day-item.active .day-number { color: var(--white); }
 .day-item.active.has-appointments::after { background-color: var(--white); }
@@ -1003,7 +1004,7 @@ input:checked + .slider:before {
 .compact-appointment-item {
     display: flex; align-items: center; padding: 0.7rem 0.8rem;
     margin-bottom: 0.6rem; background-color: var(--gray-100);
-    border: 1px solid var(--gray-200); border-radius: 6px;
+    border: 1px solid var(--gray-500); border-radius: 6px;
     transition: all 0.2s; gap: 0.75rem; cursor: pointer;
     box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }
