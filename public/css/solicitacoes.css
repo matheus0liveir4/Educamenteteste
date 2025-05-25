@@ -37,6 +37,10 @@ body {
     margin: 0;
     padding: 0;
     color: #333;
+    display: flex;
+    flex-direction: column; /* Empilha os filhos verticalmente */
+    min-height: 100vh; /* Garante que o body ocupe no mínimo toda a altura da viewport */
+    /* Se você estiver usando html height 100%, pode usar min-height: 100%; aqui também */
 }
 
 /* TEMA DARK */
