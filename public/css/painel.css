@@ -1154,7 +1154,7 @@ body.dark .calendar-days { border-color: var(--gray-200); }
 body.dark .summary-label,
 body.dark .request-name-dashboard { color: var(--text-dark); }
 
-body.dark .summary-value { color: var(--accent); }
+body.dark .summary-value { color: var(--text-light); }
 body.dark .request-time { color: var(--accent); }
 
 body.dark .text-light,
