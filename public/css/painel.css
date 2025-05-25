@@ -150,6 +150,18 @@ main {
     }
 }
 
+/* Ajuste no container .grid principal para alinhar as colunas */
+.main-content > .container > .grid {
+    align-items: stretch; /* Garante que as colunas do grid (grid-column) tenham a mesma altura */
+}
+
+/* Ajuste na coluna da direita (Agenda) para ser um container flex */
+.grid-column#calendar {
+    display: flex; /* Permite que o .card filho use flex-grow */
+    flex-direction: column;
+}
+
+
 /* ==========================================================================
    3. Componentes
    ========================================================================== */
@@ -356,10 +368,10 @@ input:checked + .slider:before {
 }
 .card-body {
     padding: 1.25rem;
-    flex-grow: 1;
+    flex-grow: 1; /* Permite que o corpo do card cresça e ocupe espaço */
     position: relative;
-    display: flex;
-    flex-direction: column;
+    display: flex; /* Torna o card-body um flex container */
+    flex-direction: column; /* Empilha os filhos do card-body verticalmente */
 }
 .card-footer {
     padding: 1rem 1.25rem;
@@ -862,109 +874,149 @@ input:checked + .slider:before {
    4. Estilos Específicos de Página/Seção (Dashboard)
    ========================================================================== */
 
-/* --- Próximo Agendamento (Dashboard) --- */
-/* Note: .summary-item, .summary-label, .summary-value são genéricos e usados aqui */
-#next-appointment-details .summary-item {
-    /* Semelhante ao .summary-item, mas pode ter padding específico se necessário */
-    /* padding: 0.5rem 0; */
-}
-#next-appointment-details .btn-outline {
-    margin-top: 1rem;
-    float: right; /* Considerar usar flex no container do footer do card */
+/* --- Cards na Coluna da Esquerda (Solicitações Recentes e Resumo do Dia) --- */
+.grid-column:not(#calendar) > .card:nth-child(1) { /* Card "Solicitações Recentes" */
+    flex-grow: 2; /* Ocupa 2 partes do espaço disponível na coluna esquerda */
+    flex-basis: 0; /* Importante para o flex-grow funcionar como esperado */
+    min-height: 280px; /* Altura mínima para o card de solicitações */
 }
 
-/* --- Lista de Solicitações (Dashboard e solicitacoes.html) --- */
-.request-item-dashboard {
+.grid-column:not(#calendar) > .card:nth-child(2) { /* Card "Resumo do Dia" */
+    flex-grow: 1; /* Ocupa 1 parte do espaço disponível na coluna esquerda */
+    flex-basis: 0;
+    min-height: 235px; /* << VALOR AUMENTADO (era 180px) - Para garantir espaço para "Novas Solicitações" */
+}
+.grid-column:not(#calendar) > .card:nth-child(1) > .card-body { /* card-body de Solicitações */
+    overflow: hidden; /* Para conter a lista de solicitações com scroll */
+}
+.grid-column:not(#calendar) > .card:nth-child(2) > .card-body {
+    padding-bottom: 3.5rem; /* Valor original era 1.25rem. Ajuste este valor (ex: 2rem, 2.5rem, 3rem) conforme o espaço desejado. */
+}
+
+/* --- Card de Solicitações Recentes --- */
+.card-body#pending-requests {
+    overflow: hidden; /* Impede que #urgent-requests-list estoure este container */
+}
+
+#urgent-requests-list {
+    flex-grow: 1; /* Faz a lista ocupar o espaço disponível no .card-body#pending-requests */
+    overflow-y: auto; /* Adiciona scroll vertical se o conteúdo exceder a altura */
+    min-height: 100px; /* Garante uma área mínima para scroll, mesmo com poucos itens */
+}
+
+/* --- Card de Agenda Semanal --- */
+
+.grid-column#calendar > .card {
+    flex-grow: 1; /* Permite que o card cresça para preencher a coluna */
+    display: flex; /* Torna o card um flex container */
+    flex-direction: column; /* Para que o .card-body possa usar flex-grow */
+    max-height: 570px; 
+}
+.grid-column#calendar > .card > .card-body {
+    flex-grow: 1;
     display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 0;
-    border-bottom: 1px solid var(--gray-500);
-    transition: background-color 0.2s;
+    flex-direction: column;
+    overflow: hidden; /* MUITO IMPORTANTE AQUI para conter o .time-slots-wrapper */
+    padding-top: 1.25rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    padding-bottom: 0.5rem; /* Ou 0, se preferir menos espaço antes do footer */
+    min-height: 0;
+}
+
+.grid-column#calendar > .card > .card-body > .calendar-controls {
+    flex-shrink: 0; /* IMPORTANTE: Para não encolher */
+    /* Mantenha as margens/paddings existentes, ex: margin-bottom: 1rem; */
+}
+
+.grid-column#calendar > .card > .card-body > .calendar-days {
+    flex-shrink: 0; /* IMPORTANTE: Para não encolher */
+    /* Mantenha as margens/paddings existentes, ex: margin-bottom: 1rem; */
+}
+
+.time-slots-wrapper {
+    flex-grow: 1; /* CRUCIAL: Faz a lista de agendamentos ocupar o espaço disponível no .card-body */
+    overflow-y: auto; /* CRUCIAL: Adiciona scroll vertical se o conteúdo exceder a altura */
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    position: relative;
+    min-height: 100px;
+}
+
+/* Estilização da barra de scroll (Opcional, para navegadores Webkit como Chrome/Safari/Edge) */
+#urgent-requests-list::-webkit-scrollbar,
+.time-slots-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+#urgent-requests-list::-webkit-scrollbar-track,
+.time-slots-wrapper::-webkit-scrollbar-track {
+    background: var(--gray-200); /* Cor de fundo da trilha da scrollbar */
+    border-radius: 4px;
+}
+
+#urgent-requests-list::-webkit-scrollbar-thumb,
+.time-slots-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--gray-dark); /* Cor da própria barra de scroll */
+    border-radius: 4px;
+    border: 2px solid var(--gray-200); /* Cria um pequeno espaçamento entre a barra e a trilha */
+}
+
+/* --- Outros Estilos Específicos do Dashboard (já existentes no seu painel.css original) --- */
+/* Próximo Agendamento, Lista de Solicitações, Itens de Resumo, Componente de Calendário, etc. */
+#next-appointment-details .summary-item { }
+#next-appointment-details .btn-outline { margin-top: 1rem; float: right; }
+.request-item-dashboard {
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0;
+    border-bottom: 1px solid var(--gray-500); transition: background-color 0.2s;
 }
 .request-item-dashboard:last-child { border-bottom: none; padding-bottom: 0; }
 .request-item-dashboard:hover { background-color: var(--gray-100); }
 .request-icon-dashboard { color: var(--primary); flex-shrink: 0; width: 1em; text-align: center; }
 .request-details-dashboard { flex-grow: 1; min-width: 0; }
 .request-name-dashboard {
-    font-weight: 500;
-    font-size: 0.9rem;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-weight: 500; font-size: 0.9rem; display: block;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .request-time {
-    font-size: 0.8rem;
-    color: var(--text-light);
-    margin-left: auto;
-    flex-shrink: 0;
-    white-space: nowrap;
+    font-size: 0.8rem; color: var(--text-light); margin-left: auto;
+    flex-shrink: 0; white-space: nowrap;
 }
 #pending-requests.card-body { padding-bottom: 0.5rem; }
-
-/* Lista de estudantes clicáveis */
 .clickable-student-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 10px 12px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--gray-500);
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--gray-500);
     transition: background-color 0.15s ease-in-out;
 }
 .clickable-student-item:last-child { border-bottom: none; }
 .clickable-student-item .student-name-in-list {
-    color: var(--text-dark);
-    font-size: 0.9rem;
-    flex-grow: 1;
-    text-align: center;
+    color: var(--text-dark); font-size: 0.9rem; flex-grow: 1; text-align: center;
 }
 .clickable-student-item .request-date-in-list {
-    font-size: 0.8rem;
-    color: var(--text-light);
-    white-space: nowrap;
-    margin-left: 10px;
-    text-align: center;
+    font-size: 0.8rem; color: var(--text-light); white-space: nowrap;
+    margin-left: 10px; text-align: center;
 }
 .clickable-student-item:hover { background-color: var(--gray-100); }
 #pending-requests.has-items-for-list { padding: 0 !important; }
 #requests-count-summary { display: inline-flex; align-items: center; min-width: 90px; box-sizing: border-box; }
 #requests-count-summary .pending-label { opacity: 0.9; flex-grow: 1; }
 #requests-count-summary .pending-value { font-weight: bold; margin-left: 5px; flex-shrink: 0; }
-
-
-/* --- Itens de Resumo Geral (Dashboard) --- */
 .summary-item {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 0;
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0;
     border-bottom: 1px solid var(--gray-500);
 }
 .summary-item:last-child { border-bottom: none; padding-bottom: 0; }
 .summary-icon { color: var(--secondary); flex-shrink: 0; width: 1.2em; text-align: center; }
 .summary-label { font-size: 0.9rem; color: var(--text-dark); flex-grow: 1; }
 .summary-value { font-size: 1rem; font-weight: 700; color: var(--primary); }
-
-
-/* --- Componente de Calendário (Dashboard) --- */
 .calendar-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
-    background-color: var(--gray-100);
-    border-radius: 6px;
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
+    padding: 0.5rem; background-color: var(--gray-100); border-radius: 6px;
 }
 .calendar-nav-btn {
     background: none; border: none; padding: 0; cursor: pointer;
     color: var(--primary); line-height: 1; border-radius: 50%;
     width: 32px; height: 32px; display: inline-flex;
-    align-items: center; justify-content: center;
-    transition: background-color 0.2s;
+    align-items: center; justify-content: center; transition: background-color 0.2s;
 }
 .calendar-nav-btn:hover { background-color: var(--gray-200); color: #0b5ed7; }
 .week-range-display {
@@ -995,11 +1047,6 @@ input:checked + .slider:before {
 .day-item.active.has-appointments::after { background-color: var(--white); }
 .day-name { font-size: 0.65rem; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.1rem; }
 .day-number { font-size: 0.9rem; font-weight: 500; line-height: 1; }
-
-.time-slots-wrapper {
-    flex-grow: 1; overflow-y: auto; max-height: 280px;
-    padding: 0.5rem 0.5rem 0 0.5rem; position: relative;
-}
 .compact-appointment-list { list-style: none; padding: 0; margin: 0; }
 .compact-appointment-item {
     display: flex; align-items: center; padding: 0.7rem 0.8rem;
@@ -1033,7 +1080,6 @@ input:checked + .slider:before {
     opacity: 0.7; transition: opacity 0.2s;
 }
 .compact-appointment-item:hover .chevron-icon { opacity: 1; }
-
 .no-appointments-message {
     text-align: center; padding: 2rem 1rem; font-size: 0.9rem;
     color: var(--text-light); display: flex; flex-direction: column;
@@ -1074,35 +1120,32 @@ body.dark .dark-mode-toggle-wrapper i { color: #f0f0f0; }
 body.dark #icon-sun { display: none; }
 body.dark #icon-moon { display: inline-block; }
 
-body.dark .welcome-name { color: var(--text-dark); } /* Usa var(--text-dark) do dark mode */
-body.dark .welcome-date { color: var(--text-light); } /* Usa var(--text-light) do dark mode */
+body.dark .welcome-name { color: var(--text-dark); }
+body.dark .welcome-date { color: var(--text-light); }
 
 body.dark .card {
-    background-color: #333; /* Considerar var(--gray-100) do dark mode para consistência */
-    border-color: var(--gray-200); /* Corrigido para usar var do dark mode */
+    background-color: #333;
+    border-color: var(--gray-200);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 body.dark .card-header,
 body.dark .card-footer {
-    border-color: var(--gray-200); /* Corrigido para usar var do dark mode */
-    background-color: var(--gray-100); /* Corrigido para usar var do dark mode */
+    border-color: var(--gray-200);
+    background-color: var(--gray-100);
 }
-/* === INÍCIO DA CORREÇÃO PARA LINK NO CARD FOOTER === */
 body.dark .card-footer a,
 body.dark .card-footer a:link,
 body.dark .card-footer a:visited {
-    color: var(--accent); /* Usa a var --accent do dark mode para o link */
+    color: var(--accent);
     text-decoration: underline;
 }
 body.dark .card-footer a:hover,
 body.dark .card-footer a:focus {
-    color: var(--white); /* Mais claro no hover/focus */
+    color: var(--white);
 }
-/* === FIM DA CORREÇÃO PARA LINK NO CARD FOOTER === */
 
 body.dark .card-title { color: var(--text-dark); }
 body.dark .card-subtitle { color: var(--text-light); }
-
 
 body.dark .summary-item,
 body.dark .request-item-dashboard,
@@ -1111,12 +1154,12 @@ body.dark .calendar-days { border-color: var(--gray-200); }
 body.dark .summary-label,
 body.dark .request-name-dashboard { color: var(--text-dark); }
 
-body.dark .summary-value { color: var(--accent); } /* Usa var(--accent) do dark mode */
-body.dark .request-time { color: var(--accent); } /* Usa var(--accent) do dark mode */
+body.dark .summary-value { color: var(--accent); }
+body.dark .request-time { color: var(--accent); }
 
-body.dark .text-light, /* Seletor genérico para texto claro */
+body.dark .text-light,
 body.dark .compact-appointment-item .details .type,
-body.dark .compact-appointment-item .chevron-icon { color: #aaa; } /* Manter #aaa ou usar var(--text-light) */
+body.dark .compact-appointment-item .chevron-icon { color: #aaa; }
 
 body.dark .request-item-dashboard:hover { background-color: #3f3f3f; }
 body.dark .summary-icon { color: var(--secondary); }
@@ -1142,23 +1185,23 @@ body.dark .day-item:hover { background-color: var(--gray-200); }
 body.dark .day-item.active { background-color: var(--primary-dark); border-color: var(--primary-dark);}
 body.dark .day-item.active .day-name,
 body.dark .day-item.active .day-number { color: var(--white); }
-body.dark .day-item.has-appointments::after { background-color: var(--accent); } /* Usar var(--accent) do dark mode */
-body.dark .day-item.active.has-appointments::after { background-color: #333; } /* Cor de fundo do card */
+body.dark .day-item.has-appointments::after { background-color: var(--accent); }
+body.dark .day-item.active.has-appointments::after { background-color: #333; }
 
 /* Lista de Agendamentos Compacta Dark Mode */
 body.dark .compact-appointment-item {
     background-color: var(--gray-200);
-    border-color: #5f5f5f; /* Considerar var(--gray-300) */
-    color: #e0e0e0; /* Considerar var(--text-dark) */
+    border-color: #5f5f5f;
+    color: #e0e0e0;
     box-shadow: none;
 }
 body.dark .compact-appointment-item:hover {
-    background-color: #5f5f5f; /* Considerar var(--gray-300) */
+    background-color: #5f5f5f;
 }
 body.dark .compact-appointment-item .time { color: var(--accent); }
-body.dark .compact-appointment-item .details .name { color: #f0f0f0; } /* Considerar var(--text-dark) */
+body.dark .compact-appointment-item .details .name { color: #f0f0f0; }
 
-body.dark .no-appointments-message { color: #aaa; } /* Considerar var(--text-light) */
+body.dark .no-appointments-message { color: #aaa; }
 
 /* Modal Genérico Dark Mode */
 body.dark .modal-content { background-color: #3b3b3b; color: var(--text-dark); border-color: #444; }
@@ -1181,7 +1224,7 @@ body.dark .status-badge-modal.pendente  { background-color: var(--custom-toast-w
 body.dark .status-badge-modal.aprovado  { background-color: var(--custom-toast-success-bg); }
 body.dark .status-badge-modal.rejeitado { background-color: var(--custom-toast-error-bg); }
 body.dark .status-badge-modal.finalizado{ background-color: #545b62; }
-body.dark .status-badge-modal.agendado  { background-color: var(--custom-toast-info-bg); } /* Usando var de info toast */
+body.dark .status-badge-modal.agendado  { background-color: var(--custom-toast-info-bg); }
 
 /* Lista de Estudantes Clicáveis Dark Mode */
 body.dark .clickable-student-item { border-bottom-color: #444; }
@@ -1190,12 +1233,10 @@ body.dark .clickable-student-item .request-date-in-list { color: var(--text-ligh
 body.dark .clickable-student-item:hover { background-color: var(--gray-100); }
 
 
-/* Custom Modal Dark Mode (Variáveis já definidas em body.dark, como --custom-modal-bg, etc.) */
-body.dark .custom-modal-title { color: var(--accent); } /* Consistência com título do modal genérico */
-/* .custom-modal-close e .custom-modal-body p já usam --custom-modal-text-color */
+/* Custom Modal Dark Mode */
+body.dark .custom-modal-title { color: var(--accent); }
 
 /* Custom Buttons Dark Mode */
-/* .custom-btn-primary usa --primary, que não muda. Se precisar de variação, use --primary-dark */
 body.dark .custom-btn-secondary {
     color: var(--custom-modal-text-color);
     background-color: #5a5a5a;
@@ -1205,7 +1246,6 @@ body.dark .custom-btn-secondary:hover {
     background-color: #656565;
     border-color: #787878;
 }
-/* .custom-btn-danger usa --danger, que não muda. */
 body.dark .custom-btn-warning {
     color: var(--custom-toast-warning-text);
     background-color: var(--custom-toast-warning-bg);
@@ -1223,7 +1263,20 @@ body.dark .custom-tooltip-popup.type-warning  { background-color: var(--custom-t
 body.dark .custom-tooltip-popup.type-secondary{ background-color: #5a5a5a; color: var(--custom-modal-text-color); --tooltip-arrow-color: #5a5a5a; }
 body.dark .custom-tooltip-popup.type-success  { background-color: var(--custom-toast-success-bg); --tooltip-arrow-color: var(--custom-toast-success-bg); }
 body.dark .custom-tooltip-popup.type-info     { background-color: var(--custom-toast-info-bg);    --tooltip-arrow-color: var(--custom-toast-info-bg); }
-/* .custom-tooltip-popup (default) usa --tooltip-default-bg, que já é ajustada em body.dark */
+
+
+/* Scrollbar Dark Mode */
+body.dark #urgent-requests-list::-webkit-scrollbar-track,
+body.dark .time-slots-wrapper::-webkit-scrollbar-track {
+    background: #4a4a4a;
+    border-color: #4a4a4a;
+}
+
+body.dark #urgent-requests-list::-webkit-scrollbar-thumb,
+body.dark .time-slots-wrapper::-webkit-scrollbar-thumb {
+    background-color: #787878; /* Um cinza um pouco mais claro para o thumb no dark mode */
+    border-color: #4a4a4a;
+}
 
 
 /* ==========================================================================

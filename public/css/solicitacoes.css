@@ -731,9 +731,9 @@ body.dark .custom-modal-body p { color: var(--custom-modal-text-color); }
 }
 .custom-btn-primary {
     color: #fff; background-color: var(--primary);
-    border-color: var(--gray-500); /* MODIFICADO de var(--primary) - Isso mudará a cor da borda do botão! */
+    border-color: var(--primary); /* MODIFICADO de var(--primary) - Isso mudará a cor da borda do botão! */
 }
-.custom-btn-primary:hover { background-color: #083864; border-color: var(--gray-500); /* Mantém a borda cinza no hover também */ }
+.custom-btn-primary:hover { background-color: #083864; border-color: #083864; /* Mantém a borda cinza no hover também */ }
 
 .custom-btn-secondary {
     color: var(--primary); background-color: var(--gray-200, #e9ecef);
