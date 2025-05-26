@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamento - EDUCA MENTE</title>
+    <link rel="shortcut icon" href="img/faviconeducamente.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style_agendamento.css">
+
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Agendamento</h1>
+        </header>
+        <main class="form-container">
+            <form id="agendamentoForm">
+                <input type="hidden" id="solicitacao_id_hidden_field" name="solicitacoes_id" value="">
+                <input type="hidden" id="calendar-value" name="calendar" required>
+                <div class="appointment-layout">
+                    <div class="calendar-column">
+                        <div class="calendar-wrapper input-group">
+                            <label>Escolha uma data disponível:</label>
+                            <div class="calendar-custom-wrapper">
+                                <div class="calendar-header">
+                                    <button type="button" id="prev-month" title="Mês anterior"><i class="fas fa-chevron-left"></i></button>
+                                    <span class="month-year" id="month-year-display"></span>
+                                    <button type="button" id="next-month" title="Próximo mês"><i class="fas fa-chevron-right"></i></button>
+                                </div>
+                                <div class="calendar-body">
+                                    <div class="weekdays">
+                                        <div>Dom</div> <div>Seg</div> <div>Ter</div> <div>Qua</div> <div>Qui</div> <div>Sex</div> <div>Sáb</div>
+                                    </div>
+                                    <div class="calendar-grid" id="calendar-grid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="details-column">
+                        <div class="input-group">
+                            <label for="time">Escolha um horário:</label>
+                            <input type="time" id="time" name="time" required disabled>
+                        </div>
+                        <div class="input-group observations-group">
+                            <label for="observations">Observações:</label>
+                            <textarea id="observations" name="observations" rows="3" placeholder="Escreva observações, se necessário."></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">Confirmar Agendamento</button>
+                        <a href="/solicitacoes" class="link-voltar"><strong>Voltar para Solicitações</strong></a>
+                    </div>
+                </div>
+            </form>
+        </main>
+    </div>
+       <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const solicitacaoId = urlParams.get('id');
+            const alunoNome = decodeURIComponent(urlParams.get('aluno') || 'Aluno não especificado');
+            const solicitacaoIdInputHidden = document.getElementById('solicitacao_id_hidden_field');
+
+            if (solicitacaoId && solicitacaoIdInputHidden) {
+                solicitacaoIdInputHidden.value = solicitacaoId;
+                console.log('[Agendamento] ID da Solicitação preenchido:', solicitacaoId);
+            } else {
+                console.warn('[Agendamento] ID da Solicitação não encontrado na URL ou campo hidden não encontrado.');
+                const submitButton = document.querySelector('#agendamentoForm button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Erro: Dados da Solicitação Incompletos';
+                }
+                alert('Erro crítico: ID da solicitação não encontrado. Não é possível prosseguir.');
+                return;
+            }
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            let appointmentsMap = new Map(); // Mapa de data (YYYY-MM-DD) para array de horários ocupados [ "HH:MM", "HH:MM" ]
+
+            async function fetchCalendarData(year, month) {
+                console.log(`Buscando dados do calendário para ${year}-${String(month + 1).padStart(2, '0')}`);
+                if(calendarGrid) calendarGrid.innerHTML = '<div class="calendar-loading-indicator" style="text-align:center; padding:20px; grid-column: 1 / -1;">Carregando datas...</div>';
+                try {
+                    const response = await fetch(`/api/calendario/disponibilidade?ano=${year}&mes=${month + 1}`);
+                    if (!response.ok) {
+                        throw new Error(`Falha ao buscar dados do calendário (status: ${response.status})`);
+                    }
+                    const data = await response.json();
+                    appointmentsMap.clear();
+                    if (data.agendamentos) {
+                        for (const dateKey in data.agendamentos) {
+                            if (data.agendamentos.hasOwnProperty(dateKey)) {
+                                // Armazena um array de horários (strings HH:MM) para cada data
+                                appointmentsMap.set(dateKey, data.agendamentos[dateKey].map(app => app.time));
+                            }
+                        }
+                    }
+                    console.log("AppointmentsMap atualizado:", appointmentsMap);
+                } catch (error) {
+                    console.error("Erro ao buscar dados de agendamentos:", error);
+                    appointmentsMap.clear();
+                    if(calendarGrid) calendarGrid.innerHTML = '<div class="calendar-error-indicator" style="text-align:center; color:red; padding:20px; grid-column: 1 / -1;">Erro ao carregar datas.</div>';
+                } finally {
+                    renderCalendar(currentMonth, currentYear);
+                }
+            }
+
+            let currentMonth = today.getMonth();
+            let currentYear = today.getFullYear();
+            let selectedDateStr = null;
+
+            const calendarGrid = document.getElementById('calendar-grid');
+            const monthYearDisplay = document.getElementById('month-year-display');
+            const prevMonthBtn = document.getElementById('prev-month');
+            const nextMonthBtn = document.getElementById('next-month');
+            const calendarValueInput = document.getElementById('calendar-value');
+            const timeSelect = document.getElementById('time');
+
+            if (!calendarGrid || !monthYearDisplay || !prevMonthBtn || !nextMonthBtn || !calendarValueInput || !timeSelect) {
+                 console.error("Erro Crítico: Elementos essenciais do calendário não encontrados no DOM.");
+                 throw new Error("Elementos do calendário faltando.");
+            }
+
+            if (timeSelect) {
+                timeSelect.addEventListener('click', function(event) {
+                    if (!this.disabled) { try { this.showPicker(); } catch (error) { this.focus(); } }
+                });
+                timeSelect.addEventListener('change', function(event) {
+                     if (this.value) { this.blur(); }
+                });
+            }
+
+            const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+            function renderCalendar(month, year) {
+                if (!calendarGrid || !monthYearDisplay) return;
+                calendarGrid.innerHTML = '';
+                monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    const emptyCell = document.createElement('div');
+                    emptyCell.classList.add('calendar-day', 'other-month');
+                    calendarGrid.appendChild(emptyCell);
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayCell = document.createElement('div');
+                    dayCell.classList.add('calendar-day');
+                    const dayNumberSpan = document.createElement('span');
+                    dayNumberSpan.className = 'day-number';
+                    dayNumberSpan.textContent = day;
+                    dayCell.appendChild(dayNumberSpan);
+
+                    const currentDate = new Date(year, month, day);
+                    currentDate.setHours(0,0,0,0);
+                    const currentDateStr = formatDate(currentDate);
+                    dayCell.dataset.date = currentDateStr;
+
+                    let cellTitle = `Clique para agendar em ${currentDateStr}`;
+
+                    if (currentDate < today) {
+                        dayCell.classList.add('unavailable', 'past-day'); // Marca como indisponível e passado
+                        dayCell.setAttribute('title', "Data passada");
+                    } else {
+                        // DIA NÃO É PASSADO - PODE SER CLICADO
+                        dayCell.classList.add('available'); // Torna o dia clicável por padrão
+                        dayCell.addEventListener('click', handleDayClick);
+
+                        // Mostra quantos agendamentos existem, mas NÃO impede o clique
+                        if (appointmentsMap.has(currentDateStr) && appointmentsMap.get(currentDateStr).length > 0) {
+                            const horariosAgendados = appointmentsMap.get(currentDateStr);
+                            const detailsSpan = document.createElement('span');
+                            detailsSpan.className = 'appointment-details';
+                            detailsSpan.textContent = `${horariosAgendados.length} Agend.`;
+                            dayCell.appendChild(detailsSpan);
+                            cellTitle += `\nHorários já ocupados: ${horariosAgendados.join(', ')}`;
+                            // Poderia adicionar uma classe visual diferente se quisesse, ex: 'partially-booked'
+                            // dayCell.classList.add('partially-booked');
+                        } else {
+                             cellTitle += `\nNenhum horário agendado neste dia.`;
+                        }
+                        dayCell.setAttribute('title', cellTitle.trim());
+                    }
+
+                    if (currentDate.getTime() === today.getTime()) { dayCell.classList.add('today'); }
+                    if (currentDateStr === selectedDateStr) { dayCell.classList.add('selected'); }
+                    calendarGrid.appendChild(dayCell);
+                }
+                if (prevMonthBtn) {
+                    const isCurrentMonthAndYear = (year === today.getFullYear() && month === today.getMonth());
+                    prevMonthBtn.disabled = isCurrentMonthAndYear;
+                }
+            }
+
+            function formatDate(date) {
+                const y = date.getFullYear();
+                const m = String(date.getMonth() + 1).padStart(2, '0');
+                const d = String(date.getDate()).padStart(2, '0');
+                return `${y}-${m}-${d}`;
+            }
+
+            function handleDayClick(event) {
+                const selectedDay = event.target.closest('.calendar-day');
+                // Permite clicar mesmo que tenha 'appointment-details', desde que não seja 'past-day' ou explicitamente 'unavailable'
+                if (!selectedDay || selectedDay.classList.contains('past-day') || selectedDay.classList.contains('other-month')) return;
+
+                const previouslySelected = calendarGrid.querySelector('.selected');
+                if (previouslySelected) { previouslySelected.classList.remove('selected'); }
+
+                selectedDay.classList.add('selected');
+                selectedDateStr = selectedDay.dataset.date;
+                calendarValueInput.value = selectedDateStr;
+                console.log("Data selecionada no calendário:", selectedDateStr);
+
+                if(timeSelect) {
+                    timeSelect.disabled = false;
+                    timeSelect.value = '';
+                    timeSelect.style.borderColor = 'var(--senai-secondary)';
+                    timeSelect.style.backgroundColor = '#e7f3f8';
+                    timeSelect.style.fontWeight = 'bold';
+
+                    // Opcional: Informar horários já ocupados para este dia
+                    // Você poderia popular uma pequena lista abaixo do seletor de horário
+                    // ou tentar desabilitar <option> no <select> se você gerasse horários.
+                    // Como é type="time", a validação final será no backend.
+                    if (appointmentsMap.has(selectedDateStr)) {
+                        const horariosOcupados = appointmentsMap.get(selectedDateStr);
+                        console.log(`Horários já ocupados para ${selectedDateStr}: ${horariosOcupados.join(', ')}`);
+                        // Aqui você poderia atualizar uma div com essa informação
+                        // Ex: document.getElementById('horarios-ocupados-info').textContent = `Ocupados: ${horariosOcupados.join(', ')}`;
+                    } else {
+                        // Ex: document.getElementById('horarios-ocupados-info').textContent = '';
+                    }
+                }
+            }
+
+            if(prevMonthBtn) prevMonthBtn.addEventListener('click', () => {
+                currentMonth--; if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+                fetchCalendarData(currentYear, currentMonth);
+            });
+            if(nextMonthBtn) nextMonthBtn.addEventListener('click', () => {
+                currentMonth++; if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+                fetchCalendarData(currentYear, currentMonth);
+            });
+
+            fetchCalendarData(currentYear, currentMonth);
+
+            if (!calendarValueInput.value && timeSelect) {
+                timeSelect.disabled = true;
+                timeSelect.style.borderColor = '';
+                timeSelect.style.backgroundColor = '';
+                timeSelect.style.fontWeight = '';
+            }
+
+            const agendamentoForm = document.getElementById('agendamentoForm');
+            const confirmarBtn = agendamentoForm ? agendamentoForm.querySelector('button[type="submit"]') : null;
+
+            if (agendamentoForm && confirmarBtn) {
+                agendamentoForm.addEventListener('submit', async (event) => {
+                    event.preventDefault();
+                    const solicitacaoIdAtual = solicitacaoIdInputHidden.value;
+                    if (!solicitacaoIdAtual) { alert('Erro: ID da solicitação não está definido.'); return; }
+                    confirmarBtn.disabled = true;
+                    const originalButtonText = confirmarBtn.textContent;
+                    confirmarBtn.textContent = 'Processando...';
+                    const dataAgendamento = calendarValueInput.value;
+                    const horaAgendamento = timeSelect.value;
+                    const observacoesTextarea = document.getElementById('observations');
+                    const observacoesParaEnvio = observacoesTextarea ? observacoesTextarea.value : '';
+
+                    if (!dataAgendamento || dataAgendamento === "") { alert('Por favor, selecione uma data no calendário.'); confirmarBtn.disabled = false; confirmarBtn.textContent = originalButtonText; return; }
+                    if (!horaAgendamento) { alert('Por favor, preencha a hora do agendamento.'); confirmarBtn.disabled = false; confirmarBtn.textContent = originalButtonText; return; }
+
+                    const dadosParaBackend = {
+                        solicitacaoId: parseInt(solicitacaoIdAtual),
+                        data: dataAgendamento,
+                        hora: horaAgendamento,
+                        observacoes: observacoesParaEnvio
+                    };
+
+                    console.log('[Agendamento] Enviando dados para o backend:', JSON.stringify(dadosParaBackend));
+                    try {
+                        const response = await fetch('/api/agendar', { // URL da API já estava correta
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', },
+                            body: JSON.stringify(dadosParaBackend)
+                        });
+
+                        if (!response.ok) {
+                            let errorMsg = `Falha ao confirmar o agendamento. Status: ${response.status}`;
+                            let errorDetail = '';
+                            try {
+                                const errJson = await response.json();
+                                errorDetail = errJson.message || errJson.error || JSON.stringify(errJson);
+                            } catch (e) {
+                                errorDetail = await response.text();
+                            }
+                            if (errorDetail) errorMsg += ` Detalhe: ${errorDetail.substring(0, 200)}`;
+                            // Specific check for 409 (Conflict)
+                            if (response.status === 409 && errorDetail.toLowerCase().includes("ocupado")) {
+                                errorMsg = `Conflito: ${errorDetail}`; // Usa a mensagem do backend diretamente
+                            }
+                            throw new Error(errorMsg);
+                        }
+
+                        const responseData = await response.json();
+                        const partesData = dataAgendamento.split('-');
+                        const dataObj = new Date(Date.UTC(parseInt(partesData[0]), parseInt(partesData[1]) - 1, parseInt(partesData[2])));
+                        const dataFormatada = dataObj.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+                        const mensagemToast = responseData.message || `Agendamento para ${alunoNome} confirmado para ${dataFormatada} às ${horaAgendamento}.`;
+
+                        sessionStorage.setItem('toastOnNextLoad_message', mensagemToast);
+                        sessionStorage.setItem('toastOnNextLoad_type', 'success');
+                        sessionStorage.setItem('focusTabOnLoad', 'upcoming');
+                        window.location.href = '/solicitacoes';
+                    } catch (error) {
+                        console.error('[Agendamento] Erro no processo de agendamento:', error);
+                        alert(`${error.message}`);
+                        confirmarBtn.disabled = false;
+                        confirmarBtn.textContent = originalButtonText;
+                    }
+                });
+            } else { console.error('[Agendamento] Formulário ou botão de submit não encontrado.'); }
+        } catch (error) {
+            console.error("Erro crítico durante a inicialização da página de Agendamento:", error);
+            const errorDisplayContainer = document.querySelector('.form-container') || document.body;
+            if (errorDisplayContainer) {
+                errorDisplayContainer.innerHTML = `<p style="color:red; background:white; padding:1em; border:2px solid red; text-align:center; font-weight:bold;">ERRO CRÍTICO AO CARREGAR A PÁGINA DE AGENDAMENTO.<br>${error.message}<br>Verifique o console (F12).</p>`;
+            }
+        }
+    });
+    </script>
+</body>
+</html>

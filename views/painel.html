@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel - EDUCA MENTE</title>
+    <link rel="shortcut icon" href="img/faviconeducamente.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="css/styles.css"> 
+    <link rel="stylesheet" href="css/painel.css">
+
+    <script src="js/utils.js"></script>
+    <script src="js/icons.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+     <nav class="navbar">
+       <div class="container navbar-container">
+         <a href="/painel" class="navbar-brand" data-tooltip="Página Inicial Educa Mente" data-tooltip-type="default">Educa Mente</a>
+         <ul class="navbar-menu">
+           <li class="navbar-item"> 
+             <a href="/painel" class="navbar-link active" data-tooltip="Ir para o Painel Principal" data-tooltip-type="info"> 
+               <span class="navbar-icon" id="icon-home"></span> <span>Painel</span> 
+             </a> 
+           </li>
+           <li class="navbar-item"> 
+             <a href="/historico" class="navbar-link" data-tooltip="Visualizar Histórico de Atendimentos e Alunos" data-tooltip-type="info"> 
+               <span class="navbar-icon" id="icon-history"></span> <span>Histórico</span> 
+             </a> 
+           </li>
+           <li class="navbar-item"> 
+             <a href="/solicitacoes" class="navbar-link" data-tooltip="Gerenciar Solicitações" data-tooltip-type="info"> 
+               <span class="navbar-icon" id="icon-requests"></span> <span>Solicitações</span> 
+             </a> 
+           </li>
+         </ul>
+         
+         <!-- Controles da Direita (Dark Mode e Logout) -->
+         <div class="navbar-right-controls">
+             <div class="dark-mode-toggle-wrapper">
+               <i class="fas fa-sun" id="icon-sun" data-tooltip="Alternar para Modo Claro" data-tooltip-type="warning"></i>
+               <i class="fas fa-moon" id="icon-moon" data-tooltip="Alternar para Modo Escuro" data-tooltip-type="info"></i>
+               <label class="switch" data-tooltip="Ativar/Desativar Modo Escuro" data-tooltip-type="default">
+                 <input type="checkbox" id="toggle-dark-mode">
+                 <span class="slider"></span>
+               </label>
+             </div>
+             <a href="/" class="navbar-logout-button" id="logout-nav-link" data-tooltip="Sair (deslogar)" data-tooltip-type="danger">
+               <i class="fas fa-sign-out-alt"></i>
+             </a>
+         </div>
+       </div>
+     </nav>
+
+    <!-- Modal de Detalhes (já existente no painel.html) -->
+    <div class="modal" id="appointment-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title">Detalhes</h2>
+          <button class="modal-close" id="close-modal" data-tooltip="Fechar detalhes" data-tooltip-type="secondary">×</button> 
+        </div>
+         <div class="loading-spinner" id="modal-loading" style="display: none; margin: 2rem auto;"></div>
+        <div class="modal-body" id="appointment-details">
+            <!-- Conteúdo será carregado aqui -->
+        </div>
+        <div class="modal-footer">
+          <!-- Botão Agendar será adicionado dinamicamente com data-tooltip -->
+          <button class="btn btn-primary" id="close-appointment" data-tooltip="Fechar janela de detalhes" data-tooltip-type="primary">Fechar</button> 
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content (conteúdo específico do painel) -->
+    <main class="main-content">
+      <div class="container">
+        <div class="welcome-header"> <h1 class="welcome-name" id="welcome-name">Olá,...</h1> <p class="welcome-date" id="welcome-date">...</p> </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3">
+          <div class="grid-column" style="grid-column: span 1 / span 1; display: flex; flex-direction: column; gap: 32px;">
+            <!-- Card Solicitações Recentes -->
+            <div class="card"> 
+                <div class="card-header"> 
+                    <h2 class="card-title">Solicitações Recentes</h2> 
+                    <span class="badge badge-warning" id="requests-count-summary" data-tooltip="Número de solicitações pendentes" data-tooltip-type="warning">...</span> 
+                </div> 
+                <div class="card-body" id="pending-requests"> 
+                    <div id="urgent-requests-loading" class="loading-spinner" style="display: block; margin: 20px auto;"></div>
+                    <div id="urgent-requests-list" style="display: none;"> 
+                        <!-- Nomes dos alunos e datas serão inseridos aqui pelo JS -->
+                    </div>
+                    <p class="text-center text-gray-500" id="no-urgent-requests-message" style="display: none; padding: 20px;">Nenhuma solicitação pendente.</p> 
+                </div> 
+                <div class="card-footer" style="text-align: center;"> 
+                    <a href="/solicitacoes" class="footer-link" data-tooltip="Ver todas as solicitações na tela de gerenciamento" data-tooltip-type="info">Ver Todas Solicitações</a> 
+                </div> 
+            </div>
+            <div class="card"> <div class="card-header"> <h2 class="card-title">Resumo do Dia</h2> </div> <div class="card-body"> <div id="daily-summary-loading" class="loading-spinner" style="display: none;"></div> <div id="daily-summary-content"> <p class="text-center text-gray-500">Carregando resumo...</p> </div> </div> </div>
+          </div>
+          <div class="grid-column" style="grid-column: span 2 / span 2;" id="calendar">
+            <div class="card"> 
+                <div class="card-header"> <div> <h2 class="card-title">Agenda Semanal</h2> </div> </div> 
+                <div class="card-body"> 
+                    <div class="calendar-controls"> 
+                        <button class="btn calendar-nav-btn" id="prev-week" data-tooltip="Ver semana anterior" data-tooltip-type="secondary"> 
+                            <span id="icon-chevron-left"></span> 
+                        </button> 
+                        <div class="week-range-display" id="week-range">Carregando...</div> 
+                        <button class="btn calendar-nav-btn" id="next-week" data-tooltip="Ver próxima semana" data-tooltip-type="secondary"> 
+                            <span id="icon-chevron-right"></span> 
+                        </button> 
+                    </div> 
+                    <div class="calendar-days" id="calendar-days"> 
+                        <div class="loading-spinner" style="width: 20px; height: 20px; margin: 0.5rem auto;"></div> 
+                    </div> 
+                    <div class="time-slots-wrapper" id="time-slots"> 
+                        <div class="loading-spinner" id="calendar-loading"></div> 
+                        <ul class="compact-appointment-list" id="compact-appointment-list" style="display: none;"></ul> 
+                        <div id="no-appointments-for-day" style="display: none;" class="no-appointments-message"> <i class="far fa-calendar-times"></i> <span>Nenhum atendimento agendado para este dia.</span> </div> 
+                        <div id="calendar-error" style="display: none; color: red; text-align: center; padding: 1rem;">Erro ao carregar horários.</div> 
+                    </div> 
+                </div> 
+                <div class="card-footer flex justify-end"> 
+                    <button class="btn btn-secondary" id="new-appointment" data-tooltip="Ver próximos atendimentos na tela de solicitações" data-tooltip-type="secondary"> 
+                        <span style="margin-right: 8px"></span> <span>Próximos Atendimentos</span> 
+                    </button> 
+                </div> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer"> <div class="container footer-content"> <p class="footer-text">© 2025 Educa Mente - Sistema de Gestão para Psicopedagogos</p> </div> </footer>
+    
+    <script src="js/painel.js"></script> 
+
+    <script>
+        // Funções auxiliares do Modal e formatação de data (do painel.js original)
+        function openCustomModal(title, contentHTML, solicitacao) { 
+            const modal = document.getElementById('appointment-modal');
+            const modalTitleEl = modal.querySelector('.modal-title');
+            const modalDetailsEl = document.getElementById('appointment-details');
+            const modalLoadingEl = document.getElementById('modal-loading');
+            const modalFooter = modal.querySelector('.modal-footer');
+            if (!modal || !modalTitleEl || !modalDetailsEl || !modalLoadingEl || !modalFooter) { return; }
+            modalTitleEl.textContent = title;
+            modalDetailsEl.innerHTML = contentHTML || '';
+            modalLoadingEl.style.display = 'none';
+            const existingAgendarBtn = modalFooter.querySelector('#agendar-atendimento-modal-btn');
+            if (existingAgendarBtn) existingAgendarBtn.remove();
+            const closeBtn = modalFooter.querySelector('#close-appointment');
+            if (solicitacao && (solicitacao.status === 'Pendente' || solicitacao.status === 'Aprovado')) {
+                const agendarBtn = document.createElement('button');
+                agendarBtn.id = 'agendar-atendimento-modal-btn';
+                agendarBtn.classList.add('btn', 'btn-primary'); 
+                agendarBtn.innerHTML = `<i class="fas fa-calendar-plus" style="margin-right: 5px;"></i> Agendar`;
+                agendarBtn.setAttribute('data-tooltip', 'Ir para a tela de agendamento desta solicitação');
+                agendarBtn.setAttribute('data-tooltip-type', 'primary'); 
+                agendarBtn.addEventListener('click', () => {
+                    const params = new URLSearchParams({
+                        id: solicitacao.id, // CORREÇÃO APLICADA AQUI
+                        aluno: solicitacao.nome || '',
+                        curso: solicitacao.curso || '',
+                        unidade: solicitacao.instituicao || '',
+                        telefone: solicitacao.telefone || ''
+                    });
+                    window.location.href = `/agendamento?${params.toString()}`;
+                });
+                if (closeBtn) modalFooter.insertBefore(agendarBtn, closeBtn);
+                else modalFooter.appendChild(agendarBtn);
+            }
+            modal.style.display = 'flex';
+        }
+        function showCustomModalLoading(title = 'Carregando...') { 
+            const modal = document.getElementById('appointment-modal');
+            const modalTitleEl = modal.querySelector('.modal-title');
+            const modalDetailsEl = document.getElementById('appointment-details');
+            const modalLoadingEl = document.getElementById('modal-loading');
+            const modalFooter = modal.querySelector('.modal-footer');
+            if (!modal || !modalTitleEl || !modalDetailsEl || !modalLoadingEl || !modalFooter) { return; }
+            modalTitleEl.textContent = title;
+            modalDetailsEl.innerHTML = '';
+            modalLoadingEl.style.display = 'block';
+            const existingAgendarBtn = modalFooter.querySelector('#agendar-atendimento-modal-btn');
+            if (existingAgendarBtn) existingAgendarBtn.remove();
+            modal.style.display = 'flex';
+        }
+        function closeCustomModal() { 
+            const modal = document.getElementById('appointment-modal');
+            if (modal) modal.style.display = 'none'; 
+        }
+        function formatDateForDisplay(dateString) { 
+            if (!dateString) return 'N/A';
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) { 
+                const parts = dateString.split('-');
+                if (parts.length === 3) {
+                    const utcDate = new Date(Date.UTC(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2])));
+                     if (!isNaN(utcDate.getTime())) return utcDate.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'UTC' });
+                } return dateString; 
+            } return date.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' }); 
+        }
+        async function showRequestDetailsInModal(solicitacaoId) { 
+            showCustomModalLoading('Carregando Detalhes...');
+            try {
+                const response = await fetch(`/api/solicitacoes/${solicitacaoId}`);
+                if (!response.ok) { const errorData = await response.json().catch(() => ({ message: `Erro HTTP ${response.status}` })); throw new Error(errorData.message); }
+                const solicitacao = await response.json(); 
+                const modalTitleText = solicitacao.status === 'Agendado' ? 'Detalhes do Atendimento Agendado' : 'Detalhes da Solicitação';
+                const dataNascimentoStr = formatDateForDisplay(solicitacao.data_nascimento);
+                const statusClasseModal = solicitacao.status ? solicitacao.status.toLowerCase() : 'pendente';
+                let htmlContent = `<p><strong>Nome:</strong> ${solicitacao.nome || 'N/A'}</p> <p><strong>Data de Nascimento:</strong> ${dataNascimentoStr}</p> <p><strong>Curso:</strong> ${solicitacao.curso || 'N/A'}</p> <p><strong>Turno:</strong> ${solicitacao.turno || 'N/A'}</p> <p><strong>Turma:</strong> ${solicitacao.turma || 'N/A'}</p> <p><strong>Unidade:</strong> ${solicitacao.instituicao || 'N/A'}</p> <p><strong>Telefone:</strong> ${solicitacao.telefone || 'N/A'}</p> <p><strong>Responsável:</strong> ${solicitacao.responsavel || 'N/A'}</p> <p><strong>Status:</strong> <span class="status-badge-modal ${statusClasseModal}">${solicitacao.status || 'N/A'}</span></p> <p><strong>Observações Iniciais:</strong> ${solicitacao.obser || 'Nenhuma'}</p>`;
+                if (solicitacao.laudo && solicitacao.imagem) htmlContent += `<p><strong>Laudo:</strong> <a href="/uploads/${solicitacao.imagem}" target="_blank" class="laudo-link" data-tooltip="Abrir laudo em nova aba" data-tooltip-type="info">Visualizar Laudo <i class="fas fa-external-link-alt fa-xs"></i></a></p>`; 
+                else if (solicitacao.laudo) htmlContent += `<p><strong>Laudo:</strong> Sim (arquivo não disponível)</p>`; else htmlContent += `<p><strong>Laudo:</strong> Não informado</p>`;
+                if (solicitacao.status === 'Agendado') {
+                    htmlContent += '<hr><h4>Detalhes do Agendamento:</h4>';
+                    const dataAgendadaStr = formatDateForDisplay(solicitacao.data_agendamento);
+                    htmlContent += `<p><strong>Data Agendada:</strong> ${dataAgendadaStr}</p>`;
+                    htmlContent += `<p><strong>Hora Agendada:</strong> ${solicitacao.hora_agendamento || 'N/A'}</p>`;
+                    if (solicitacao.agendamentos && solicitacao.agendamentos.length > 0 && solicitacao.agendamentos[0].obser_agendamento) htmlContent += `<p><strong>Observações do Agendamento:</strong> ${solicitacao.agendamentos[0].obser_agendamento}</p>`;
+                } openCustomModal(modalTitleText, htmlContent, solicitacao); 
+            } catch (error) { openCustomModal('Erro ao Carregar', `<p style="color: red;">Não foi possível carregar os detalhes: ${error.message}. Tente novamente.</p>`, null); }
+        }
+        async function loadAndDisplayRecentRequests() {
+            const listContainer = document.getElementById('urgent-requests-list'); 
+            const loadingSpinner = document.getElementById('urgent-requests-loading');
+            const countBadgeInHeader = document.getElementById('requests-count-summary'); 
+            const noItemsMessageElement = document.getElementById('no-urgent-requests-message'); 
+            const cardBody = document.getElementById('pending-requests'); 
+            if (!listContainer || !loadingSpinner || !countBadgeInHeader || !noItemsMessageElement || !cardBody) return;
+            loadingSpinner.style.display = 'block'; listContainer.innerHTML = ''; listContainer.style.display = 'none'; 
+            noItemsMessageElement.style.display = 'none'; countBadgeInHeader.innerHTML = '...'; cardBody.classList.remove('has-items-for-list'); 
+            try {
+                const response = await fetch('/api/solicitacoes/pendentes'); 
+                if (!response.ok) throw new Error(`Erro HTTP ${response.status} ao buscar solicitações recentes.`);
+                const requests = await response.json();
+                countBadgeInHeader.innerHTML = `<span class="pending-label">Pendentes</span><span class="pending-value">${requests.length}</span>`; 
+                if (requests.length === 0) { noItemsMessageElement.style.display = 'block'; cardBody.classList.remove('has-items-for-list'); } 
+                else {
+                    cardBody.classList.add('has-items-for-list'); 
+                    requests.forEach(request => {
+                        const itemElement = document.createElement('div'); 
+                        itemElement.classList.add('clickable-student-item'); 
+                        itemElement.setAttribute('data-id', request.id);
+                        itemElement.setAttribute('data-tooltip', `Clique para ver detalhes de ${request.nome}`);
+                        itemElement.setAttribute('data-tooltip-type', 'info'); 
+                        const studentNameSpan = document.createElement('span'); studentNameSpan.classList.add('student-name-in-list'); studentNameSpan.textContent = request.nome || 'Nome não disponível';
+                        const requestDateSpan = document.createElement('span'); requestDateSpan.classList.add('request-date-in-list'); requestDateSpan.textContent = formatDateForDisplay(request.criado_em); 
+                        itemElement.appendChild(studentNameSpan); itemElement.appendChild(requestDateSpan);
+                        itemElement.addEventListener('click', () => showRequestDetailsInModal(request.id));
+                        listContainer.appendChild(itemElement);
+                    });
+                } listContainer.style.display = 'block'; 
+            } catch (error) {
+                noItemsMessageElement.textContent = 'Falha ao carregar solicitações.'; 
+                noItemsMessageElement.style.color = 'red'; noItemsMessageElement.style.display = 'block';
+                listContainer.style.display = 'none'; countBadgeInHeader.innerHTML = "Erro"; cardBody.classList.remove('has-items-for-list');
+            } finally { loadingSpinner.style.display = 'none'; }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- INICIALIZAÇÃO DE ÍCONES DA NAVBAR ---
+            try {
+                if (typeof icons !== 'undefined' && icons.home && icons.history && icons.requests) {
+                    const iconHomeEl = document.getElementById('icon-home');
+                    const iconHistoryEl = document.getElementById('icon-history');
+                    const iconRequestsEl = document.getElementById('icon-requests');
+                    if(iconHomeEl) iconHomeEl.innerHTML = icons.home;
+                    if(iconHistoryEl) iconHistoryEl.innerHTML = icons.history;
+                    if(iconRequestsEl) iconRequestsEl.innerHTML = icons.requests;
+                    
+                    if (document.getElementById('icon-chevron-left') && icons.chevronLeft) document.getElementById('icon-chevron-left').innerHTML = icons.chevronLeft;
+                    if (document.getElementById('icon-chevron-right') && icons.chevronRight) document.getElementById('icon-chevron-right').innerHTML = icons.chevronRight;
+                } else { console.warn("Objeto 'icons' (de js/icons.js) não definido ou incompleto para a navbar."); }
+            } catch (e) { console.error("Erro ao carregar ícones:", e); }
+
+            loadAndDisplayRecentRequests(); 
+
+            const closeModalButtonOriginal = document.getElementById('close-modal');
+            const closeAppointmentButtonOriginal = document.getElementById('close-appointment');
+            const modalElement = document.getElementById('appointment-modal');
+            if(closeModalButtonOriginal) closeModalButtonOriginal.addEventListener('click', closeCustomModal);
+            if(closeAppointmentButtonOriginal) closeAppointmentButtonOriginal.addEventListener('click', closeCustomModal);
+            if(modalElement) modalElement.addEventListener('click', function(event) { if (event.target === modalElement) closeCustomModal(); });
+
+            const originalButton = document.getElementById('new-appointment');
+            if (originalButton) { 
+                const clonedButton = originalButton.cloneNode(true); 
+                if (originalButton.parentNode) {
+                    originalButton.parentNode.replaceChild(clonedButton, originalButton);
+                     clonedButton.addEventListener('click', function(event) {
+                        event.preventDefault(); 
+                        sessionStorage.setItem('focusTabOnLoad', 'upcoming');
+                        window.location.href = '/solicitacoes'; 
+                    });
+                }
+            }
+
+            const toggleDarkMode = document.getElementById('toggle-dark-mode');
+            const iconSun = document.getElementById('icon-sun');
+            const iconMoon = document.getElementById('icon-moon');
+
+            if (toggleDarkMode && iconSun && iconMoon) {
+                const applyDarkModePreference = (isDark) => {
+                    document.body.classList.add('no-transitions');
+                    document.body.classList.toggle('dark', isDark);
+                    iconSun.style.display = isDark ? 'none' : 'inline-block';
+                    iconMoon.style.display = isDark ? 'inline-block' : 'none';
+                    requestAnimationFrame(() => {
+                        requestAnimationFrame(() => {
+                            document.body.classList.remove('no-transitions');
+                        });
+                    });
+                };
+
+                const darkModeUserPreference = localStorage.getItem('darkMode') === 'enabled';
+                toggleDarkMode.checked = darkModeUserPreference;
+                applyDarkModePreference(darkModeUserPreference);
+
+                toggleDarkMode.addEventListener('change', function() {
+                    const isDarkEnabled = this.checked;
+                    applyDarkModePreference(isDarkEnabled);
+                    localStorage.setItem('darkMode', isDarkEnabled ? 'enabled' : 'disabled');
+                    if (typeof window.updateCalendarTheme === 'function') { 
+                        window.updateCalendarTheme(isDarkEnabled);
+                    }
+                });
+            } else {
+                console.warn("Elementos do Dark Mode (toggle, sol, lua) não encontrados.");
+            }
+
+            const logoutButton = document.getElementById('logout-nav-link');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function(event) {
+                    event.preventDefault(); 
+                    const logoutUrl = this.getAttribute('href'); 
+                    
+                    if (typeof window.showConfirmationModal === 'function') {
+                        window.showConfirmationModal(
+                            'Confirmar Saída', 
+                            'Tem certeza que deseja sair da sua conta e retornar à tela inicial?', 
+                            () => { window.location.href = logoutUrl; }, 
+                            null, 
+                            'Sim, Sair', 
+                            'custom-btn-danger' 
+                        );
+                    } else {
+                        console.warn('Função window.showConfirmationModal não definida. Usando confirm padrão do navegador.');
+                        if (confirm('Tem certeza que deseja sair da sua conta e retornar à tela inicial?')) {
+                            window.location.href = logoutUrl;
+                        }
+                    }
+                });
+            } else {
+                console.warn("Elemento #logout-nav-link não encontrado.");
+            }
+        });
+    </script>
+
+    <!-- SCRIPT PARA MODAL DE CONFIRMAÇÃO E TOAST (COPIADO DE SOLICITACOES.HTML) -->
+    <script>
+    (function() {
+        'use strict';
+        let modalElement, modalTitleElement, modalBodyElement, confirmBtn, cancelBtn, closeBtnModal, currentConfirmCallback, currentCancelCallback, toastContainerElement;
+        
+        function initializeModalDOM() {
+            if (document.getElementById('confirmationModal_generated')) return; 
+            const modalHTML = `
+                <div id="confirmationModal_generated" class="custom-modal" aria-modal="true" role="dialog">
+                    <div class="custom-modal-content">
+                        <div class="custom-modal-header">
+                            <h5 class="custom-modal-title" id="modalTitle_generated">Confirmar Ação</h5>
+                            <button type="button" class="custom-modal-close" id="modalCloseBtn_generated" aria-label="Fechar" data-tooltip="Fechar esta caixa de diálogo" data-tooltip-type="secondary">×</button>
+                        </div>
+                        <div class="custom-modal-body" id="modalBodyText_generated"><p>Você tem certeza?</p></div>
+                        <div class="custom-modal-footer">
+                            <button type="button" class="custom-btn custom-btn-secondary" id="modalCancelBtn_generated" data-tooltip="Cancelar ação e fechar">Cancelar</button>
+                            <button type="button" class="custom-btn custom-btn-primary" id="modalConfirmBtn_generated" data-tooltip="Confirmar e executar ação">Confirmar</button>
+                        </div>
+                    </div>
+                </div>`;
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            modalElement = document.getElementById('confirmationModal_generated'); 
+            modalTitleElement = document.getElementById('modalTitle_generated'); 
+            modalBodyElement = document.getElementById('modalBodyText_generated'); 
+            confirmBtn = document.getElementById('modalConfirmBtn_generated'); 
+            cancelBtn = document.getElementById('modalCancelBtn_generated'); 
+            closeBtnModal = document.getElementById('modalCloseBtn_generated');
+            
+            confirmBtn.addEventListener('click', () => { if (currentConfirmCallback) currentConfirmCallback(); hideModal(); });
+            const closeModalActions = () => { if (currentCancelCallback) currentCancelCallback(); hideModal(); };
+            cancelBtn.addEventListener('click', closeModalActions); 
+            closeBtnModal.addEventListener('click', closeModalActions); 
+            modalElement.addEventListener('click', (event) => { if (event.target === modalElement) closeModalActions(); }); 
+            document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modalElement && modalElement.classList.contains('show')) closeModalActions(); });
+        }
+        function hideModal() { if (!modalElement) return; modalElement.classList.remove('show'); currentConfirmCallback = null; currentCancelCallback = null; }
+        
+        window.showConfirmationModal = function(title, message, confirmCallback, cancelCallback, confirmButtonText = 'Confirmar', confirmButtonClass = 'custom-btn-primary') {
+            if (!modalElement) initializeModalDOM(); 
+            modalTitleElement.textContent = title; 
+            modalBodyElement.innerHTML = `<p>${message.replace(/\n/g, "<br>")}</p>`; 
+            confirmBtn.textContent = confirmButtonText; 
+            confirmBtn.className = `custom-btn ${confirmButtonClass}`;
+            confirmBtn.setAttribute('data-tooltip', `${confirmButtonText} e executar ação`); 
+            
+            currentConfirmCallback = confirmCallback; 
+            currentCancelCallback = cancelCallback; 
+            modalElement.classList.add('show'); 
+            if(confirmBtn) confirmBtn.focus();
+        }
+
+        function initializeToastContainerDOM() {
+            if (document.getElementById('toastContainer_generated')) return; 
+            const toastContainerHTML = `<div id="toastContainer_generated" class="custom-toast-container"></div>`;
+            document.body.insertAdjacentHTML('beforeend', toastContainerHTML); 
+            toastContainerElement = document.getElementById('toastContainer_generated');
+        }
+        window.showToast = function(message, type = 'info', duration = 3500) {
+            if (!toastContainerElement) initializeToastContainerDOM(); 
+            const toast = document.createElement('div'); 
+            toast.className = `custom-toast custom-toast-${type}`; 
+            let iconClass = '';
+            switch (type) { 
+                case 'success': iconClass = 'fas fa-check-circle'; break; 
+                case 'error': iconClass = 'fas fa-times-circle'; break; 
+                case 'warning': iconClass = 'fas fa-exclamation-triangle'; break; 
+                case 'info': iconClass = 'fas fa-info-circle'; break; 
+            }
+            toast.innerHTML = (iconClass ? `<i class="${iconClass} custom-toast-icon"></i>` : '') + `<span>${message}</span>`;
+            toastContainerElement.prepend(toast); 
+            requestAnimationFrame(() => { requestAnimationFrame(() => { toast.classList.add('show'); }); });
+            setTimeout(() => { 
+                toast.classList.remove('show'); 
+                toast.addEventListener('transitionend', () => { 
+                    if (toast.parentNode === toastContainerElement) { toastContainerElement.removeChild(toast); } 
+                }, { once: true }); 
+            }, duration);
+        }
+    })();
+    </script>
+
+    <!-- SCRIPT PARA TOOLTIP PERSONALIZADO (COPIADO DE SOLICITACOES.HTML) -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let tooltipElement;
+        const tooltipOffset = 10; 
+
+        function createTooltipElement() {
+            if (document.getElementById('global-custom-tooltip')) {
+                tooltipElement = document.getElementById('global-custom-tooltip');
+                return;
+            }
+            tooltipElement = document.createElement('div');
+            tooltipElement.id = 'global-custom-tooltip';
+            tooltipElement.className = 'custom-tooltip-popup';
+            document.body.appendChild(tooltipElement);
+        }
+
+        createTooltipElement(); 
+
+        function showTooltip(event) {
+            const target = event.currentTarget;
+            const tooltipText = target.getAttribute('data-tooltip');
+            
+            if (!tooltipText || !tooltipElement) return;
+
+            tooltipElement.textContent = tooltipText;
+
+            let tooltipType = target.getAttribute('data-tooltip-type') || 'default';
+            if (tooltipType === 'default') { 
+                const typeRegex = /(?:btn-|custom-btn-)(primary|danger|warning|secondary|success|info)/;
+                let typeFound = false;
+                target.classList.forEach(cls => {
+                    const match = cls.match(typeRegex);
+                    if (match && match[1]) {
+                        tooltipType = match[1];
+                        typeFound = true;
+                    }
+                });
+                 if (!typeFound) { 
+                    if (target.classList.contains('badge-warning')) tooltipType = 'warning';
+                    else if (target.classList.contains('footer-link')) tooltipType = 'info';
+                    else if (target.classList.contains('active') && target.classList.contains('navbar-link')) tooltipType = 'info';
+                    else if (target.classList.contains('laudo-link')) tooltipType = 'info';
+                    else if (target.classList.contains('clickable-student-item')) tooltipType = 'info';
+                    else if (target.classList.contains('calendar-nav-btn')) tooltipType = 'secondary';
+                    else if (target.classList.contains('modal-close')) tooltipType = 'secondary';
+                 }
+            }
+            
+            tooltipElement.className = 'custom-tooltip-popup visible'; 
+            tooltipElement.classList.add(`type-${tooltipType}`);
+            tooltipElement.style.setProperty('--tooltip-arrow-color', getComputedStyle(tooltipElement).backgroundColor);
+
+            const targetRect = target.getBoundingClientRect();
+            
+            tooltipElement.style.display = 'block'; 
+            const tooltipRect = tooltipElement.getBoundingClientRect();
+            tooltipElement.style.display = ''; 
+
+            let top = targetRect.top - tooltipRect.height - tooltipOffset;
+            let left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
+            tooltipElement.classList.remove('arrow-bottom');
+
+            if (top - window.scrollY < 5) { 
+                top = targetRect.bottom + tooltipOffset;
+                tooltipElement.classList.add('arrow-bottom');
+            }
+
+            if (left < 5) { left = 5; } 
+            else if (left + tooltipRect.width > window.innerWidth - 5) { left = window.innerWidth - tooltipRect.width - 5; }
+            
+            tooltipElement.style.left = `${left}px`;
+            tooltipElement.style.top = `${top + window.scrollY}px`;
+        }
+
+        function hideTooltip() {
+            if (tooltipElement) {
+                tooltipElement.className = 'custom-tooltip-popup'; 
+            }
+        }
+
+        document.body.addEventListener('mouseenter', event => {
+            const target = event.target.closest('[data-tooltip]');
+            if (target) {
+                if (target.hasAttribute('title') && target.getAttribute('title') !== target.getAttribute('data-tooltip')) { 
+                     target.setAttribute('data-original-title', target.getAttribute('title'));
+                     target.removeAttribute('title');
+                }
+                showTooltip({ currentTarget: target });
+            }
+        }, true);
+
+        document.body.addEventListener('mouseleave', event => {
+            const target = event.target.closest('[data-tooltip]');
+            if (target) {
+                if (target.hasAttribute('data-original-title')) { 
+                    target.setAttribute('title', target.getAttribute('data-original-title'));
+                    target.removeAttribute('data-original-title');
+                }
+                hideTooltip();
+            }
+        }, true);
+    });
+    </script>
+</body>
+</html>

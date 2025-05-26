@@ -1,0 +1,379 @@
+/* Reset e Fonte Geral */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Corpo da página de login */
+body { /* Estilo padrão para o body, será sobrescrito na página de erro se a classe error-page-body for usada */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0A4275, #1575A3, #D9E6F2);
+    animation: fadeInBackground 1s ease-out;
+}
+
+/* Contêiner Principal da página de login */
+.container {
+    display: flex;
+    width: 900px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: slideInContainer 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+/* Sidebar da página de login */
+.sidebar {
+    width: 40%;
+    background-color: #0A4275;
+    color: #fff;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInSidebar 0.8s ease-out forwards;
+}
+
+.sidebar h1 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-family: 'Audiowide', cursive;
+    color: #fff;
+}
+
+.sidebar p {
+    font-size: 1.1rem;
+    color: #D9E6F2;
+    margin-bottom: 2rem;
+}
+
+/* Formulário da página de login */
+.form-container {
+    width: 60%;
+    padding: 2rem;
+    background-color: #F7F9FC;
+    border-left: 2px solid #D9E6F2;
+    opacity: 0;
+    animation: fadeInForm 0.8s ease-out forwards;
+    animation-delay: 0.2s;
+}
+
+.form-container h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: #0A4275;
+}
+
+/* Grupos de Entrada da página de login */
+.input-group {
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInInput 0.6s ease-out forwards;
+    animation-delay: 0.2s;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #0A4275;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #1575A3;
+    border-radius: 4px;
+    margin-top: 0.3rem;
+    color: #333;
+    outline: none;
+    font-size: 18px;
+}
+
+/* Botão Principal da página de login */
+.btn-primary {
+    width: 100%;
+    padding: 1rem;
+    background-color: #1575A3;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInButton 0.8s ease-out forwards;
+    animation-delay: 0.8s;
+}
+
+.btn-primary:hover {
+    background-color: #0A4275;
+}
+
+/* Estilo para o campo de senha com o ícone na página de login */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 2.5rem;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #000;
+    user-select: none;
+    /* display: none;  Comentado para que o JS possa controlar. Se não houver JS, pode precisar ajustar. */
+    top: 50%; /* Ajuste para centralizar verticalmente se necessário */
+    transform: translateY(-50%); /* Ajuste para centralizar verticalmente se necessário */
+}
+
+/* Para garantir que o ícone seja visível quando o input tiver foco ou valor, caso o JS falhe (opcional) */
+/* Se o seu JS já controla isso, pode remover estas linhas abaixo */
+.password-wrapper input:not(:placeholder-shown) + .toggle-password {
+    display: inline-block; /* Mostra o ícone se o input não estiver vazio */
+}
+.password-wrapper input:focus + .toggle-password {
+    display: inline-block; /* Mostra o ícone se o input estiver em foco */
+}
+
+
+.toggle-password:hover {
+    color: #0A4275;
+}
+
+/* Responsividade da página de login */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        width: 100%;
+        margin: 1rem; /* Adiciona margem para não colar nas bordas */
+        padding: 0; /* Remove padding do container, pois os filhos terão */
+    }
+
+    .sidebar, .form-container {
+        width: 100%;
+        padding: 1.5rem; /* Ajusta padding interno */
+        border-left: none; /* Remove borda no mobile */
+    }
+    
+    .sidebar {
+      border-radius: 8px 8px 0 0; /* Arredonda cantos superiores */
+    }
+    .form-container {
+      border-radius: 0 0 8px 8px; /* Arredonda cantos inferiores */
+    }
+
+    .btn-primary {
+        padding: 1rem;
+    }
+}
+
+/* Keyframes para Animações */
+@keyframes fadeInBackground {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInContainer {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInSidebar {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInForm {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInInput {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInButton {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.forgot-password {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.forgot-password a {
+    color: #42A5F5;
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+/* Mensagem de erro no formulário de login (Preencha todos os campos) */
+.error-message {
+    background-color: #ffebee; /* Fundo vermelho claro */
+    color: #c62828; /* Texto vermelho escuro */
+    padding: 10px;
+    margin-top: 15px;
+    border-radius: 4px;
+    border: 1px solid #ef9a9a; /* Borda vermelha mais clara */
+    text-align: center;
+    font-size: 0.9em;
+}
+
+.error-message i {
+    margin-right: 5px;
+}
+
+
+/* ===================================================== */
+/* ESTILOS PARA A PÁGINA DE ERRO (USUÁRIO NÃO ENCONTRADO) */
+/* ===================================================== */
+
+/* Corpo da página de erro */
+.error-page-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0A4275, #1575A3, #D9E6F2); /* Mesmo fundo da página de login */
+    animation: fadeInBackground 1s ease-out; /* Reutiliza a animação de fade-in do fundo */
+    padding: 1rem; /* Adiciona um padding para evitar que o conteúdo cole nas bordas em telas menores */
+    font-family: Arial, sans-serif; /* Garante a fonte padrão */
+}
+
+/* Contêiner da mensagem de erro */
+.error-page-container {
+    background-color: #fff; /* Fundo branco para o card */
+    padding: 2.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    max-width: 500px; /* Limita a largura máxima */
+    width: 90%; /* Responsivo */
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideInContainer 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) forwards; /* Reutiliza animação */
+}
+
+/* Ícone de erro */
+.error-page-icon {
+    font-size: 3rem; /* Tamanho grande para o ícone */
+    color: #E53935; /* Cor vermelha para erro */
+    margin-bottom: 1rem;
+}
+
+.error-page-icon .fas { /* Para Font Awesome */
+    line-height: 1;
+}
+
+/* Título da mensagem de erro */
+.error-page-title {
+    font-family: 'Audiowide', cursive; /* Mesma fonte do título principal */
+    font-size: 2rem;
+    color: #0A4275; /* Cor principal do tema */
+    margin-bottom: 1rem;
+}
+
+/* Texto da mensagem de erro */
+.error-page-message {
+    font-size: 1.1rem;
+    color: #333; /* Cor de texto padrão */
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+/* Botão na página de erro */
+.error-page-button {
+    display: inline-block;
+    padding: 0.8rem 1.5rem;
+    background-color: #1575A3; /* Cor do botão primário */
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.error-page-button:hover {
+    background-color: #0A4275; /* Cor de hover do botão primário */
+}
+
+/* Ajustes de responsividade para a página de erro */
+@media (max-width: 600px) {
+    .error-page-container { /* Seletor mais específico para evitar conflito com .container da pág de login */
+        padding: 2rem 1.5rem;
+    }
+    .error-page-title {
+        font-size: 1.5rem;
+    }
+    .error-page-message {
+        font-size: 1rem;
+    }
+    .error-page-button {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+    }
+}
