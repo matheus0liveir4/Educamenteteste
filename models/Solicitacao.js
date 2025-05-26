@@ -1,7 +1,7 @@
 // Arquivo: models/Solicitacao.js (ou onde você define seus modelos Sequelize)
 
 module.exports = (sequelize, DataTypes) => {
-  const Solicitacao = sequelize.define('Solicitacao', {
+  const Solicitacao = sequelize.define('solicitacao', {
     // Seus campos da tabela Solicitacoes
     usuario_id: {
       type: DataTypes.INTEGER,
@@ -54,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
     }
   }, {
-    tableName: 'Solicitacoes',
+    tableName: 'solicitacoes',
     timestamps: true, // HABILITA os timestamps
     createdAt: 'criado_em', // Mapeia createdAt para a coluna 'criado_em'
     updatedAt: 'atualizado_em' // Mapeia updatedAt para uma coluna 'atualizado_em' (VOCÊ PRECISA CRIAR ESSA COLUNA NO BANCO)
