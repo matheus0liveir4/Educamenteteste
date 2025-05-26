@@ -228,3 +228,39 @@ body {
             margin-top: 3px;
             color: #666;
         }
+
+        .feedback-message {
+            padding: 12px 18px;
+            margin-top: 10px;
+            margin-bottom: 20px; /* Aumentar um pouco a margem inferior */
+            border-radius: 5px;
+            font-size: 0.95em; /* Um pouco maior para legibilidade */
+            text-align: center;
+            border: 1px solid transparent; /* Borda padrão transparente */
+            display: none; /* Inicialmente oculto */
+            transition: opacity 0.3s ease-in-out; /* Efeito suave de aparição */
+        }
+        .feedback-message.visible { /* Classe para mostrar a mensagem */
+            display: block;
+            opacity: 1;
+        }
+        .feedback-message.error {
+            background-color: #f8d7da; /* Vermelho claro para erro */
+            color: #721c24; /* Texto escuro para contraste */
+            border-color: #f5c6cb; /* Borda sutil */
+        }
+        .feedback-message.success {
+            background-color: #d4edda; /* Verde claro para sucesso */
+            color: #155724; /* Texto escuro para contraste */
+            border-color: #c3e6cb; /* Borda sutil */
+        }
+        .feedback-message.info { /* Para mensagens de 'processando' */
+            background-color: #e2e3e5;
+            color: #383d41;
+            border-color: #d6d8db;
+        }
+        .feedback-message a { /* Estilo para links dentro da mensagem de feedback */
+            color: inherit; /* Herda a cor do texto da mensagem */
+            font-weight: bold;
+            text-decoration: underline;
+        }

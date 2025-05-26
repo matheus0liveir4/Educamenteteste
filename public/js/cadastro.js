@@ -1,7 +1,4 @@
-// 1. INICIALIZAÇÃO COM SEU USER ID (não use a API Key aqui!)
-emailjs.init('Z4WSvr5f7dERB2XxT'); // 👈 Substitua pelo SEU User ID (começa com 'user_')
-
- // Validação do campo nome
+// Validação do campo nome
 document.getElementById('name').addEventListener('input', function(e) {
     this.value = this.value.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s]/g, '');
 });
@@ -33,7 +30,7 @@ document.getElementById('cadastroForm').addEventListener('submit', function (e) 
 
     if (currentPasswordStrength < minRequiredStrength) {
         e.preventDefault(); // Impede o envio do formulário
-        alert('A senha fornecida é muito fraca. Por favor, escolha uma senha mais forte seguindo os critérios indicados.');
+        alert('A senha fornecida é muito fraca. Por favor, escolha uma senha mais forte seguindo os critérios indicados. \n\nCritérios: \nNúmeros, Letras Maiusculas, Minusculas e Simbolos');
         // Opcional: Focar no campo de senha para facilitar a correção
         document.getElementById('password').focus();
         return;

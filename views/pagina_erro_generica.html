@@ -1,0 +1,44 @@
+      
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- O título será definido pelo JavaScript -->
+    <title>Erro - Educa Mente</title>
+    <link rel="shortcut icon" href="/img/faviconeducamente.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/css/login_psico.css">
+    <!-- Importar a fonte Audiowide (usada em alguns erros) -->
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> <!-- Usando versão mais recente do Font Awesome como em alguns dos seus exemplos -->
+    <style>
+        /* Classe para aplicar a fonte Audiowide via JS, se necessário */
+        .audiowide-font {
+            font-family: 'Audiowide', cursive;
+        }
+    </style>
+</head>
+<body class="error-page-body">
+    <div class="error-page-container">
+        <div class="error-page-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <!-- Título do erro será inserido aqui -->
+        <h1 id="errorTitle" class="error-page-title"></h1>
+        <!-- Mensagem de erro será inserida aqui -->
+        <p id="errorMessage" class="error-page-message"></p>
+
+        <!-- Botão de ação principal -->
+        <a id="errorActionButton" href="#" class="error-page-button"></a>
+
+        <!-- Link para voltar à página inicial (presente em todos os exemplos) -->
+        <div id="homeLinkContainer" style="margin-top: 20px; font-size: 0.9em;">
+            <a href="/" style="color: #1575A3; text-decoration: none; font-weight: 500;">Voltar para a página inicial</a>
+        </div>
+    </div>
+
+    <script src="/js/erro_handler.js"></script>
+</body>
+</html>
+
+    

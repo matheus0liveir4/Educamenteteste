@@ -378,6 +378,8 @@ app.get('/agendamento', requireLogin(['psicopedagoga']), (req, res) => { res.sen
 app.get('/detalhes', requireLogin(['psicopedagoga']), (req, res) => { res.sendFile(path.join(__dirname, 'views', 'detalhes.html')); });
 app.get('/historico_aluno', requireLogin(['psicopedagoga']), (req, res) => { res.sendFile(path.join(__dirname, 'views', 'historico_aluno.html')); });
 
+app.get('/erro', (req, res) => { res.sendFile(path.join(__dirname, 'views', 'pagina_erro_generica.html')); });
+
 app.get('/aluno/:id', requireLogin(['psicopedagoga']), (req, res) => {
     const htmlPath = path.join(__dirname, 'views', 'detalhes_aluno_template.html');
     if (fs.existsSync(htmlPath)) {
@@ -400,15 +402,29 @@ app.post('/logout', (req, res) => {
 
 // Função auxiliar para enviar página de erro ou fallback
 function sendErrorPage(res, statusCode, pageName, fallbackMessage) {
+    // Se pageName for um tipo de erro para a nova página genérica
+    const tiposConhecidos = [
+        'cadastro_campos_obrigatorios', 'cadastro_email_existente',
+        'login_campos_obrigatorios', 'login_aluno_nao_encontrado', /* ... outros tipos ... */
+        'erro_interno', 'nao_autorizado', 'nao_encontrado'
+    ];
+
+    if (tiposConhecidos.includes(pageName)) {
+        // Se for um tipo conhecido, redireciona para a página de erro genérica
+        console.log(`[sendErrorPage] Redirecionando para /erro?tipo=${pageName}`);
+        return res.redirect(`/erro?tipo=${pageName}`);
+    }
     const errorPagePath = path.join(__dirname, 'views', pageName);
     if (fs.existsSync(errorPagePath)) {
-        console.log(`[sendErrorPage] Enviando página de erro: ${pageName}`);
+        console.log(`[sendErrorPage] Enviando página de erro específica: ${pageName}`);
         return res.status(statusCode).sendFile(errorPagePath);
     } else {
-        console.warn(`[sendErrorPage] Arquivo de erro não encontrado: ${pageName}. Usando fallback: "${fallbackMessage}"`);
-        return res.status(statusCode).send(fallbackMessage);
+        console.warn(`[sendErrorPage] Arquivo de erro não encontrado: ${pageName}. Usando fallback ou redirecionando para erro genérico.`);
+        // Fallback para a página genérica se o arquivo não for encontrado e não for um tipo conhecido
+        return res.status(statusCode).redirect(`/erro?tipo=desconhecido&msg=${encodeURIComponent(fallbackMessage)}`);
     }
 }
+
 
 // Cadastro de aluno
 app.post('/cadastro_aluno', async (req, res) => {
@@ -417,16 +433,16 @@ app.post('/cadastro_aluno', async (req, res) => {
 
     if (password !== confirmPassword) {
         console.warn(`[CADASTRO REJECT] Senhas não coincidem para: ${email}`);
-        return res.status(400).send('As senhas não coincidem.');
+        return res.redirect('/erro_cadastro?tipo=senhas_nao_coincidem');
     }
 
     if (!name || !email || !password) {
         console.warn("[CADASTRO REJECT] Campos de cadastro obrigatórios não preenchidos.");
-        return sendErrorPage(res, 400, 'erro_cadastro_campos_obrigatorios.html', 'Nome, e-mail e senha são obrigatórios.');
+        return res.redirect('/erro?tipo=cadastro_campos_obrigatorios');
     }
     if (!/\S+@\S+\.\S+/.test(email)) {
         console.warn(`[CADASTRO REJECT] Formato de email inválido: ${email}`);
-        return res.status(400).send('Formato de e-mail inválido.'); // Não há página específica listada
+        return res.status(400).send('Formato de e-mail inválido.');
     }
     if (password.length < 6) {
         console.warn(`[CADASTRO REJECT] Senha muito curta para: ${email}`);
@@ -437,7 +453,7 @@ app.post('/cadastro_aluno', async (req, res) => {
         const usuarioExistente = await Usuario.findOne({ where: { email } });
         if (usuarioExistente) {
             console.warn(`[CADASTRO REJECT] E-mail já cadastrado: ${email}`);
-            return sendErrorPage(res, 409, 'erro_cadastro_email_existente.html', `O e-mail ${email} já está cadastrado.`);
+            return res.redirect(`/erro?tipo=cadastro_email_existente&email=${encodeURIComponent(email)}`);
         }
         const senhaHash = await bcrypt.hash(password, saltRounds);
         const novoUsuario = await Usuario.create({ nome: name, email: email, senha: senhaHash, tipo: 'aluno' });
@@ -460,7 +476,7 @@ app.post('/login', async (req, res) => {
 
     if (!email || !password || !tipoEsperado) {
         console.warn("[LOGIN REJECT] Campos de login obrigatórios não preenchidos.");
-        return sendErrorPage(res, 400, 'erro_login_campos_obrigatorios.html', 'E-mail, senha e tipo são obrigatórios.');
+        return res.redirect('/erro?tipo=login_campos_obrigatorios');
     }
 
     const tiposValidos = ['aluno', 'professor', 'psicopedagoga'];
@@ -474,7 +490,7 @@ app.post('/login', async (req, res) => {
 
         if (!usuario) {
             console.warn(`[LOGIN FAIL] E-mail não encontrado: ${email} (tentativa ${tipoEsperado})`);
-            return sendErrorPage(res, 401, `erro_login_${tipoEsperado}.html`, "Usuário ou senha inválidos.");
+            return res.redirect(`/erro?tipo=login_usuario_nao_encontrado&contextoLogin=${encodeURIComponent(tipoEsperado)}`);
         }
 
         // Compara senha hasheada
@@ -492,7 +508,7 @@ app.post('/login', async (req, res) => {
 
         if (!match) {
             console.warn(`[LOGIN FAIL] Senha incorreta para ${email} (tentativa ${tipoEsperado})`);
-            return sendErrorPage(res, 401, `erro_senha_${tipoEsperado}.html`, "Usuário ou senha inválidos.");
+            return res.redirect(`/erro?tipo=login_senha_incorreta&contextoLogin=${encodeURIComponent(tipoEsperado)}`);
         }
 
         if (usuario.tipo !== tipoEsperado) {
@@ -501,20 +517,14 @@ app.post('/login', async (req, res) => {
             let userTypeName = {'psicopedagoga':'Psicopedagoga','professor':'Professor(a)','aluno':'Aluno(a)'}[usuario.tipo] || 'Desconhecido';
             let attemptedLoginArea = tipoEsperado.charAt(0).toUpperCase() + tipoEsperado.slice(1);
 
-            // Tenta enviar a página 'erro_login_tipo_incorreto.html'
-            // Se ela não for feita para receber variáveis, a mensagem será estática.
-            const errorPagePath = path.join(__dirname, 'views', 'erro_login_tipo_incorreto.html');
-            if (fs.existsSync(errorPagePath)) {
-
-                // Mantendo o HTML inline para permitir variáveis:
-                 return res.status(403).send(`
-                   <!DOCTYPE html>
-                    <html lang="pt-BR"> <head> <title>Acesso Negado - Educa Mente</title> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <link rel="shortcut icon" href="/img/faviconeducamente.ico" type="image/x-icon"> <link rel="stylesheet" href="/css/login_psico.css"> <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <style> body.error-page-body { background-color: #f4f4f4; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; font-family: 'Roboto', sans-serif; } .error-page-container { background-color: #fff; padding: 30px 40px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; max-width: 500px; width: 90%; } .error-page-icon { font-size: 3rem; color: #f0ad4e; margin-bottom: 15px; } .error-page-title { font-family: 'Audiowide', cursive; color: #333; margin-bottom: 10px; font-size: 1.8rem; } .error-page-message { color: #555; line-height: 1.6; margin-bottom: 20px; font-size: 0.95rem;} .error-page-message strong { color: #0A4275; } .error-page-message a { color: #1575A3; text-decoration: underline; font-weight: bold; } .error-page-message a:hover { color: #0A4275; } .error-page-home-link { margin-top: 25px; font-size: 0.9em; } .error-page-home-link a { color: #555; text-decoration: none; font-weight: normal; } .error-page-home-link a:hover { text-decoration: underline; } </style> </head> <body class="error-page-body"> <div class="error-page-container"> <div class="error-page-icon"> <i class="fas fa-exclamation-triangle"></i> </div> <h1 class="error-page-title">Acesso Negado</h1> <p class="error-page-message"> A conta associada ao e-mail <strong>${email}</strong> é do tipo <strong>${userTypeName}</strong>.<br> Você tentou fazer login na área de <strong>${attemptedLoginArea}</strong>. </p> <p class="error-page-message"> Por favor, utilize o <a href="${correctLoginPage}">Login correto aqui</a>. </p> <p class="error-page-home-link"> <a href="/">Voltar para a página inicial</a> </p> </div> </body> </html>
-                `);
-            } else {
-                 console.warn(`[LOGIN ERROR] Arquivo 'erro_login_tipo_incorreto.html' não encontrado.`);
-                 return res.status(403).send(`Acesso negado. A conta é do tipo ${userTypeName}. Você tentou acessar como ${attemptedLoginArea}. Use o <a href="${correctLoginPage}">login correto</a>.`);
-            }
+            const params = new URLSearchParams({
+                tipo: 'login_tipo_incorreto',
+                userEmail: encodeURIComponent(email),
+                userTypeName: encodeURIComponent(userTypeName),
+                attemptedArea: encodeURIComponent(attemptedLoginArea),
+                correctLoginPath: encodeURIComponent(correctLoginPage)
+            });
+            return res.redirect(`/erro?${params.toString()}`);
         }
 
         req.session.regenerate(err => {
@@ -552,7 +562,7 @@ app.post('/login', async (req, res) => {
         
     } catch (err) {
         console.error("[LOGIN CRITICAL]", err);
-        return sendErrorPage(res, 500, '500.html', 'Erro interno no servidor.');
+        return res.redirect('/erro?tipo=erro_interno');
     }
 });
 
@@ -1084,29 +1094,19 @@ app.get('/api/calendario/disponibilidade', requireLogin(['psicopedagoga']), asyn
 // --- Middlewares de Tratamento de Erro (Finais) ---
 app.use((req, res, next) => {
     console.warn(`[404 NOT FOUND] ${req.method} ${req.originalUrl}`);
-    const errorPagePath = path.join(__dirname, 'views', '404.html'); // Tenta enviar 404.html
-    if (fs.existsSync(errorPagePath)) {
-        return res.status(404).sendFile(errorPagePath);
-    }
-    res.status(404).send("Página Não Encontrada"); // Fallback
+    // Redireciona para a página de erro genérica
+    res.status(404).redirect('/erro?tipo=nao_encontrado');
 });
 
 app.use((err, req, res, next) => {
-    console.error("[500 INTERNAL SERVER ERROR]", {
-        message: err.message, name: err.name, status: err.status || 500,
-        url: req.originalUrl, method: req.method, ip: req.ip,
-        userId: req.session?.usuarioId || 'N/A', userType: req.session?.tipoUsuario || 'N/A'
-        // stack: process.env.NODE_ENV !== 'production' ? err.stack : undefined
-    });
+    console.error("[500 INTERNAL SERVER ERROR]", { /* ... seu log ... */ });
     const errorMessage = process.env.NODE_ENV === 'production' ? 'Erro inesperado.' : `Erro: ${err.message}`;
+    
     if (req.originalUrl.startsWith('/api/')) {
          return res.status(err.status || 500).json({ error: "Erro interno.", details: errorMessage });
     }
-    const errorPagePath = path.join(__dirname, 'views', '500.html'); // Tenta enviar 500.html
-    if (fs.existsSync(errorPagePath)) {
-        return res.status(500).sendFile(errorPagePath);
-    }
-    res.status(500).send(`Erro Interno no Servidor: ${errorMessage}`); // Fallback
+    // Redireciona para a página de erro genérica
+    res.status(err.status || 500).redirect('/erro?tipo=erro_interno');
 });
 
 // Inicialização do Servidor
