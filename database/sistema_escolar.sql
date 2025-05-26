@@ -28,7 +28,7 @@ CREATE TABLE solicitacoes (
     status ENUM('Pendente', 'Agendado', 'Rejeitado', 'Finalizado') DEFAULT 'Pendente',
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id) 
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) 
 );
 
 CREATE TABLE agendamentos (
@@ -38,7 +38,7 @@ CREATE TABLE agendamentos (
     horario TIME NOT NULL,
     obser_agendamento TEXT,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (solicitacoes_id) REFERENCES Solicitacoes(id) 
+    FOREIGN KEY (solicitacoes_id) REFERENCES solicitacoes(id) 
 );
 
 CREATE TABLE observacoes (
@@ -51,15 +51,15 @@ CREATE TABLE observacoes (
 
 -- VALOR TESTE PARA ALUNO
 insert into usuarios (nome, email, senha, tipo) 
-values ("matheus", "matheus@gmail.com", 123456, 'aluno');
+values ('matheus', 'matheus@gmail.com', 123456, 'aluno');
 
 -- VALOR TESTE PARA PSICOPEDAGOGA
 insert into usuarios (nome, email, senha, tipo) 
-values ("psicopedagoga", "psico@teste.com", 123456, 'psicopedagoga');
+values ('psicopedagoga', 'tcceducamente@gmail.com', 'educamenteTCC', 'psicopedagoga');
 
 -- VALOR TESTE PARA PROFESSOR
 insert into usuarios (nome, email, senha, tipo) 
-values ("professor", "prof@teste.com", 123456, 'professor');
+values ('professor', 'professor@teste.com', 'educamentePROFESSOR', 'professor');
 
 
 -- VALORES TESTES PARA SOLICITÇÕES
