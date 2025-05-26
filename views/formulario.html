@@ -7,7 +7,7 @@
   <title>Formulário - EDUCA MENTE</title>
   <link rel="shortcut icon" href="img/faviconeducamente.ico" type="image/x-icon">
   <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/style_formulario.css"/>
+  <link rel="stylesheet" href="css/formulario.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -27,7 +27,7 @@
 
         <div class="input-group">
           <label for="age">Data de Nascimento</label>
-          <input type="date" id="age" name="age" min="1900-01-01" max="2100-12-31" required />
+          <input type="date" id="age" name="age" min="1900-01-01" max="2009-12-31" required />
         </div>
 
         <div class="input-group">
@@ -92,7 +92,6 @@
             <option value="" disabled selected>Selecione a instituição</option>
             <option value="SENAI Lauro de Freitas">SENAI Lauro de Freitas</option>
             <option value="SENAI Camaçari">SENAI Camaçari</option>
-            <option value="SENAI CIMATEC">SENAI CIMATEC</option>
             <option value="SENAI Dendezeiros">SENAI Dendezeiros</option>
             <option value="SENAI Candeias">SENAI Candeias</option>
           </select>
@@ -206,10 +205,6 @@
       if (tipoUsuario === 'aluno') {
         labelName.textContent = 'Seu Nome Completo';
         const nomeAlunoLogado = getNomeUsuarioLogado();
-        if (nomeAlunoLogado) {
-          inputName.value = nomeAlunoLogado;
-          inputName.disabled = true; // Opcional: desabilitar se pré-preenchido
-        }
       } else { // Professor ou Psicopedagoga
         labelName.textContent = 'Nome Completo do Aluno';
         inputName.disabled = false; // Garantir que está habilitado

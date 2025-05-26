@@ -180,6 +180,178 @@ async function enviarEmailConfirmacaoAgendamento(emailDestinatario, nomeAluno, d
     }
 }
 
+async function enviarEmailConfirmacaoCadastro(emailDestinatario, nomeUsuario) {
+    if (!emailDestinatario || !/\S+@\S+\.\S+/.test(emailDestinatario)) {
+        console.error(`[EMAIL SEND REJECT - CADASTRO] E-mail do destinatário inválido/não fornecido: ${emailDestinatario}`);
+        return;
+    }
+    const remetenteEmail = process.env.SENDER_EMAIL || 'noreply@seu-dominio.com';
+    const transporter = await initializeEmailTransporter();
+    if (!transporter || typeof transporter.sendMail !== 'function') {
+        console.error("[EMAIL SEND FAIL - CADASTRO] Transporter não inicializado, e-mail não enviado.");
+        return;
+    }
+
+    try {
+        const mailOptions = {
+            from: `"Educa Mente" <${remetenteEmail}>`,
+            to: emailDestinatario,
+            subject: 'Bem-vindo(a) ao Educa Mente!',
+            text: `Olá ${nomeUsuario},\n\nSeu cadastro na plataforma Educa Mente foi realizado com sucesso!\n\nVocê já pode acessar nossos recursos.\n\nAtenciosamente,\nEquipe Educa Mente`,
+            html: `<div style="font-family:Arial,sans-serif;line-height:1.6;color:#333">
+                     <h2 style="color:#0A4275">Bem-vindo(a) ao Educa Mente!</h2>
+                     <p>Olá <strong>${nomeUsuario}</strong>,</p>
+                     <p>Seu cadastro na plataforma Educa Mente foi realizado com sucesso!</p>
+                     <p>Você já pode acessar nossos recursos utilizando seu e-mail e senha cadastrados.</p>
+                     <br>
+                     <p>Atenciosamente,<br><strong>Equipe Educa Mente</strong></p>
+                   </div>`
+        };
+        let info = await transporter.sendMail(mailOptions);
+        console.log(`[EMAIL CADASTRO SUCCESS] Para ${emailDestinatario}. ID: ${info.messageId}`);
+        if (nodemailer.getTestMessageUrl && nodemailer.getTestMessageUrl(info)) {
+            console.log('[EMAIL PREVIEW URL (Ethereal)]:', nodemailer.getTestMessageUrl(info));
+        }
+    } catch (error) {
+        console.error(`[EMAIL CADASTRO CRITICAL] Para ${emailDestinatario}:`, error);
+    }
+}
+
+// NOVA FUNÇÃO: E-mail de confirmação de envio de solicitação (para o usuário)
+async function enviarEmailConfirmacaoEnvioSolicitacao(emailDestinatario, nomeUsuario, nomeAlunoNaSolicitacao, solicitacaoId) {
+    if (!emailDestinatario || !/\S+@\S+\.\S+/.test(emailDestinatario)) {
+        console.error(`[EMAIL SEND REJECT - SOLICITACAO_USER] E-mail do destinatário inválido: ${emailDestinatario}`);
+        return;
+    }
+    const remetenteEmail = process.env.SENDER_EMAIL || 'noreply@seu-dominio.com';
+    const transporter = await initializeEmailTransporter();
+    if (!transporter || typeof transporter.sendMail !== 'function') {
+        console.error("[EMAIL SEND FAIL - SOLICITACAO_USER] Transporter não inicializado.");
+        return;
+    }
+
+    try {
+        const mailOptions = {
+            from: `"Educa Mente Solicitações" <${remetenteEmail}>`,
+            to: emailDestinatario,
+            subject: 'Sua Solicitação foi Recebida - Educa Mente',
+            text: `Olá ${nomeUsuario},\n\nConfirmamos o recebimento da sua solicitação para ${nomeAlunoNaSolicitacao} (ID: ${solicitacaoId}).\n\nNossa equipe irá analisá-la em breve. Você será notificado sobre quaisquer atualizações.\n\nAtenciosamente,\nEquipe Educa Mente`,
+            html: `<div style="font-family:Arial,sans-serif;line-height:1.6;color:#333">
+                     <h2 style="color:#0A4275">Solicitação Recebida!</h2>
+                     <p>Olá <strong>${nomeUsuario}</strong>,</p>
+                     <p>Confirmamos o recebimento da sua solicitação para o(a) aluno(a) <strong>${nomeAlunoNaSolicitacao}</strong> (ID da Solicitação: ${solicitacaoId}).</p>
+                     <p>Nossa equipe irá analisá-la em breve. Você será notificado sobre quaisquer atualizações de status diretamente por e-mail e também poderá acompanhar pela plataforma.</p>
+                     <br>
+                     <p>Atenciosamente,<br><strong>Equipe Educa Mente</strong></p>
+                   </div>`
+        };
+        let info = await transporter.sendMail(mailOptions);
+        console.log(`[EMAIL SOLICITACAO_USER SUCCESS] Para ${emailDestinatario}. ID: ${info.messageId}`);
+        if (nodemailer.getTestMessageUrl && nodemailer.getTestMessageUrl(info)) {
+            console.log('[EMAIL PREVIEW URL (Ethereal)]:', nodemailer.getTestMessageUrl(info));
+        }
+    } catch (error) {
+        console.error(`[EMAIL SOLICITACAO_USER CRITICAL] Para ${emailDestinatario}:`, error);
+    }
+}
+
+// NOVA FUNÇÃO: E-mail de notificação de nova solicitação (para a psicopedagoga)
+async function enviarEmailNotificacaoNovaSolicitacaoPsico(emailPsicopedagoga, nomeAlunoNaSolicitacao, solicitacaoId, nomeSolicitante) {
+    if (!emailPsicopedagoga || !/\S+@\S+\.\S+/.test(emailPsicopedagoga)) {
+        console.error(`[EMAIL SEND REJECT - NOVA_SOLICITACAO_PSICO] E-mail da psicopedagoga inválido: ${emailPsicopedagoga}`);
+        return;
+    }
+    const remetenteEmail = process.env.SENDER_EMAIL || 'noreply@seu-dominio.com';
+    const transporter = await initializeEmailTransporter();
+    if (!transporter || typeof transporter.sendMail !== 'function') {
+        console.error("[EMAIL SEND FAIL - NOVA_SOLICITACAO_PSICO] Transporter não inicializado.");
+        return;
+    }
+
+    try {
+        const mailOptions = {
+            from: `"Educa Mente Alertas" <${remetenteEmail}>`,
+            to: emailPsicopedagoga,
+            subject: `Nova Solicitação Recebida: ${nomeAlunoNaSolicitacao}`,
+            text: `Olá,\n\nUma nova solicitação de atendimento para o(a) aluno(a) ${nomeAlunoNaSolicitacao} (ID: ${solicitacaoId}) foi registrada por ${nomeSolicitante}.\n\nAcesse o painel para mais detalhes.\n\nEquipe Educa Mente`,
+            html: `<div style="font-family:Arial,sans-serif;line-height:1.6;color:#333">
+                     <h2 style="color:#1575A3">Nova Solicitação de Atendimento</h2>
+                     <p>Olá,</p>
+                     <p>Uma nova solicitação de atendimento para o(a) aluno(a) <strong>${nomeAlunoNaSolicitacao}</strong> (ID da Solicitação: ${solicitacaoId}) foi registrada por <strong>${nomeSolicitante}</strong>.</p>
+                     <p>Por favor, acesse o painel de controle para visualizar os detalhes da solicitação e tomar as ações necessárias.</p>
+                     <br>
+                     <p>Atenciosamente,<br><strong>Sistema Educa Mente</strong></p>
+                   </div>`
+        };
+        let info = await transporter.sendMail(mailOptions);
+        console.log(`[EMAIL NOVA_SOLICITACAO_PSICO SUCCESS] Para ${emailPsicopedagoga}. ID: ${info.messageId}`);
+        if (nodemailer.getTestMessageUrl && nodemailer.getTestMessageUrl(info)) {
+            console.log('[EMAIL PREVIEW URL (Ethereal)]:', nodemailer.getTestMessageUrl(info));
+        }
+    } catch (error) {
+        console.error(`[EMAIL NOVA_SOLICITACAO_PSICO CRITICAL] Para ${emailPsicopedagoga}:`, error);
+    }
+}
+
+// NOVA FUNÇÃO: E-mail de atualização de status da solicitação (para o usuário)
+async function enviarEmailAtualizacaoStatusSolicitacao(emailDestinatario, nomeAluno, novoStatus, solicitacaoId, nomePsicopedagoga = "Equipe Educa Mente", observacaoAdicional = "") {
+    if (!emailDestinatario || !/\S+@\S+\.\S+/.test(emailDestinatario)) {
+        console.error(`[EMAIL SEND REJECT - STATUS_UPDATE] E-mail do destinatário inválido: ${emailDestinatario}`);
+        return;
+    }
+    const remetenteEmail = process.env.SENDER_EMAIL || 'noreply@seu-dominio.com';
+    const transporter = await initializeEmailTransporter();
+    if (!transporter || typeof transporter.sendMail !== 'function') {
+        console.error("[EMAIL SEND FAIL - STATUS_UPDATE] Transporter não inicializado.");
+        return;
+    }
+
+    let subject = `Atualização da sua Solicitação (ID: ${solicitacaoId}) - Educa Mente`;
+    let statusMensagem = `O status da sua solicitação para o(a) aluno(a) <strong>${nomeAluno}</strong> (ID: ${solicitacaoId}) foi atualizado para: <strong>${novoStatus}</strong>.`;
+
+    if (novoStatus === 'Agendado') {
+        statusMensagem += "<br>Em breve, entraremos em contato para agendar o atendimento ou você será notificado sobre o agendamento.";
+    } else if (novoStatus === 'Rejeitado') {
+        statusMensagem += "<br>Motivo: " + (observacaoAdicional || "Consulte a plataforma ou entre em contato para mais detalhes.");
+        subject = `Informação Importante sobre sua Solicitação (ID: ${solicitacaoId}) - Educa Mente`;
+    } else if (novoStatus === 'Finalizado') {
+        statusMensagem += "<br>O acompanhamento referente a esta solicitação foi concluído.";
+    } else if (novoStatus === 'Agendado') {
+        // Este caso geralmente é coberto pelo enviarEmailConfirmacaoAgendamento,
+        // mas podemos ter uma notificação genérica aqui se necessário.
+        // Para evitar duplicidade, idealmente o `enviarEmailConfirmacaoAgendamento` seria chamado diretamente
+        // quando um agendamento é feito E o status muda para 'Agendado'.
+        // Se esta função for chamada após um agendamento, `observacaoAdicional` pode conter data/hora.
+        statusMensagem += `<br>Um atendimento foi agendado. ${observacaoAdicional}`;
+    }
+
+
+    try {
+        const mailOptions = {
+            from: `"Educa Mente Atualizações" <${remetenteEmail}>`,
+            to: emailDestinatario,
+            subject: subject,
+            text: `Olá,\n\n${statusMensagem.replace(/<br>/g, "\n").replace(/<strong>/g, "").replace(/<\/strong>/g, "")}\n\n${observacaoAdicional ? 'Observações: ' + observacaoAdicional + '\n\n' : ''}Atenciosamente,\n${nomePsicopedagoga}`,
+            html: `<div style="font-family:Arial,sans-serif;line-height:1.6;color:#333">
+                     <h2 style="color:#0A4275">Atualização da sua Solicitação</h2>
+                     <p>Olá,</p>
+                     <p>${statusMensagem}</p>
+                     ${observacaoAdicional ? `<p style="padding:10px;border-left:3px solid #f0ad4e;background-color:#fff8e7;"><strong>Observações:</strong> ${observacaoAdicional}</p>` : ''}
+                     <p>Para mais detalhes, acesse a plataforma Educa Mente.</p>
+                     <br>
+                     <p>Atenciosamente,<br><strong>${nomePsicopedagoga}</strong></p>
+                   </div>`
+        };
+        let info = await transporter.sendMail(mailOptions);
+        console.log(`[EMAIL STATUS_UPDATE SUCCESS] Para ${emailDestinatario} (Status: ${novoStatus}). ID: ${info.messageId}`);
+        if (nodemailer.getTestMessageUrl && nodemailer.getTestMessageUrl(info)) {
+            console.log('[EMAIL PREVIEW URL (Ethereal)]:', nodemailer.getTestMessageUrl(info));
+        }
+    } catch (error) {
+        console.error(`[EMAIL STATUS_UPDATE CRITICAL] Para ${emailDestinatario} (Status: ${novoStatus}):`, error);
+    }
+}
+
 // --- Middleware de Autenticação ---
 function requireLogin(tiposPermitidos = []) {
     return (req, res, next) => {
@@ -243,10 +415,10 @@ function sendErrorPage(res, statusCode, pageName, fallbackMessage) {
     ];
 
     if (tiposConhecidos.includes(pageName)) {
+        // Se for um tipo conhecido, redireciona para a página de erro genérica
         console.log(`[sendErrorPage] Redirecionando para /erro?tipo=${pageName}`);
         return res.redirect(`/erro?tipo=${pageName}`);
     }
-    
     const errorPagePath = path.join(__dirname, 'views', pageName);
     if (fs.existsSync(errorPagePath)) {
         console.log(`[sendErrorPage] Enviando página de erro específica: ${pageName}`);
@@ -266,7 +438,7 @@ app.post('/cadastro_aluno', async (req, res) => {
 
     if (password !== confirmPassword) {
         console.warn(`[CADASTRO REJECT] Senhas não coincidem para: ${email}`);
-        return res.status(400).send('As senhas não coincidem.');
+        return res.redirect('/erro_cadastro?tipo=senhas_nao_coincidem');
     }
 
     if (!name || !email || !password) {
@@ -289,8 +461,12 @@ app.post('/cadastro_aluno', async (req, res) => {
             return res.redirect(`/erro?tipo=cadastro_email_existente&email=${encodeURIComponent(email)}`);
         }
         const senhaHash = await bcrypt.hash(password, saltRounds);
-        await Usuario.create({ nome: name, email: email, senha: senhaHash, tipo: 'aluno' }); // IMPLEMENTAR HASH
+        const novoUsuario = await Usuario.create({ nome: name, email: email, senha: senhaHash, tipo: 'aluno' });
         console.log(`[CADASTRO SUCCESS] Aluno: ${email}`);
+        if (novoUsuario && novoUsuario.email) {
+            enviarEmailConfirmacaoCadastro(novoUsuario.email, novoUsuario.nome)
+                .catch(err => console.error("[CADASTRO_ALUNO EMAIL_ERROR] Falha ao enviar e-mail de confirmação de cadastro:", err));
+        }
         res.redirect('/login?tipo=aluno&cadastro=sucesso');
 
     } catch (err) {
@@ -342,12 +518,10 @@ app.post('/login', async (req, res) => {
 
         if (usuario.tipo !== tipoEsperado) {
             console.warn(`[LOGIN FAIL] Tipo de conta incorreto para ${email}. Tentou ${tipoEsperado}, é ${usuario.tipo}.`);
-            let correctLoginPage = {'psicopedagoga':'/login_psico','professor':'/login_professor','aluno':'/login_aluno'}[usuario.tipo] || '/';
+            let correctLoginPage = {'psicopedagoga':'/login?tipo=psicopedagoga','professor':'/login?tipo=professor','aluno':'/login?tipo=aluno'}[usuario.tipo] || '/';
             let userTypeName = {'psicopedagoga':'Psicopedagoga','professor':'Professor(a)','aluno':'Aluno(a)'}[usuario.tipo] || 'Desconhecido';
             let attemptedLoginArea = tipoEsperado.charAt(0).toUpperCase() + tipoEsperado.slice(1);
 
-            // Tenta enviar a página 'erro_login_tipo_incorreto.html'
-            // Se ela não for feita para receber variáveis, a mensagem será estática.
             const params = new URLSearchParams({
                 tipo: 'login_tipo_incorreto',
                 userEmail: encodeURIComponent(email),
@@ -359,14 +533,11 @@ app.post('/login', async (req, res) => {
         }
 
         req.session.regenerate(err => {
-            if (err) { console.error('[LOGIN SESSION ERROR]', err); return res.redirect('/erro?tipo=erro_interno'); }
+            if (err) { console.error('[LOGIN SESSION ERROR]', err); return res.status(500).send('Erro ao iniciar sessão.'); }
         
             req.session.usuarioId = usuario.id;
             req.session.tipoUsuario = usuario.tipo;
             req.session.nomeUsuario = usuario.nome;
-            req.session.save(() => {
-                console.log('[LOGIN SESSION SALVA]', req.session);
-            });
         
             // Define cookie acessível via JavaScript com o tipo e nome de usuário
             res.cookie('tipoUsuario', usuario.tipo, {
@@ -418,6 +589,31 @@ app.post('/enviar_solicitacao', requireLogin(['aluno', 'psicopedagoga', 'profess
             usuario_id: req.session.usuarioId, status: 'Pendente',
         });
         console.log(`[SOLICITACAO SUCCESS] ID: ${novaSolicitacao.id} por User ID: ${req.session.usuarioId}`);
+        
+        // Buscar e-mail do usuário que fez a solicitação
+        const usuarioSolicitante = await Usuario.findByPk(req.session.usuarioId, { attributes: ['email', 'nome'] });
+        if (usuarioSolicitante && usuarioSolicitante.email) {
+            enviarEmailConfirmacaoEnvioSolicitacao(
+                usuarioSolicitante.email,
+                usuarioSolicitante.nome,
+                novaSolicitacao.nome, // Nome do aluno na solicitação
+                novaSolicitacao.id
+            ).catch(err => console.error("[ENVIAR_SOLICITACAO EMAIL_USER_ERROR]", err));
+        }
+
+        // Notificar todas as psicopedagogas
+        const psicopedagogas = await Usuario.findAll({ where: { tipo: 'psicopedagoga' }, attributes: ['email'] });
+        psicopedagogas.forEach(psico => {
+            if (psico.email) {
+                enviarEmailNotificacaoNovaSolicitacaoPsico(
+                    psico.email,
+                    novaSolicitacao.nome, // Nome do aluno na solicitação
+                    novaSolicitacao.id,
+                    usuarioSolicitante ? usuarioSolicitante.nome : "Usuário da plataforma" // Nome de quem enviou
+                ).catch(err => console.error("[ENVIAR_SOLICITACAO EMAIL_PSICO_ERROR]", err));
+            }
+        });
+
         res.redirect('/confirmacao');
     } catch (err) {
         console.error(`[SOLICITACAO CRITICAL] User ID ${req.session.usuarioId}:`, err);
@@ -498,13 +694,19 @@ app.get('/api/solicitacoes/:id', requireLogin(['psicopedagoga']), async (req, re
 
 app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (req, res) => {
     const id = parseInt(req.params.id);
-    const { status: novoStatus } = req.body;
-    const validStatus = ['Pendente', 'Aprovado', 'Rejeitado', 'Agendado', 'Finalizado'];
+    const { status: novoStatus, observacao_rejeicao } = req.body;
+    const validStatus = ['Pendente', 'Agendado', 'Rejeitado', 'Finalizado'];
     if (isNaN(id)) return res.status(400).json({ error: 'ID inválido.' });
     if (!novoStatus || !validStatus.includes(novoStatus)) return res.status(400).json({ error: `Status inválido. Válidos: ${validStatus.join(', ')}` });
 
     try {
-        const solicitacao = await Solicitacao.findByPk(id);
+        const solicitacao = await Solicitacao.findByPk(id, {
+            include: [{
+                model: Usuario,
+                as: 'usuario', 
+                attributes: ['email', 'nome']
+            }]
+        });
         if (!solicitacao) return res.status(404).json({ message: 'Solicitação não encontrada.' });
         const statusAntigo = solicitacao.status;
         if (statusAntigo === novoStatus) return res.status(200).json({ message: `Status já é ${novoStatus}` });
@@ -520,6 +722,23 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
             await Solicitacao.update({ status: novoStatus }, { where: { id } });
             console.log(`[STATUS CHANGE] ${id}: ${statusAntigo} -> ${novoStatus}. User: ${req.session.usuarioId}`);
         }
+
+        if (solicitacao.usuario && solicitacao.usuario.email && novoStatus !== 'Agendado') {
+            let obsAdicionalParaEmail = "";
+            if (novoStatus === 'Rejeitado' && observacao_rejeicao) { // Agora 'observacao_rejeicao' estará definida
+                obsAdicionalParaEmail = observacao_rejeicao;
+            }
+
+            enviarEmailAtualizacaoStatusSolicitacao(
+                solicitacao.usuario.email,
+                solicitacao.nome,
+                novoStatus,
+                solicitacao.id,
+                req.session.nomeUsuario || "Equipe Educa Mente",
+                obsAdicionalParaEmail
+        ).catch(err => console.error("[STATUS_CHANGE EMAIL_ERROR]", err));
+        }
+
         res.status(200).json({ message: `Status atualizado para ${novoStatus}`, agendamentosRemovidos });
     } catch (error) {
         console.error(`[API STATUS CHANGE CRITICAL] ID ${id}:`, error);
@@ -542,7 +761,7 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
         const solicitacaoParaAgendar = await Solicitacao.findByPk(solicitacaoIdNum, { include: [{ model: Usuario, as: 'usuario', attributes: ['email', 'nome'] }] });
         if (!solicitacaoParaAgendar) return res.status(404).json({ message: 'Solicitação não encontrada.' });
 
-        const statusPermitidosParaAgendar = ['Pendente', 'Aprovado', 'Agendado', 'Finalizado'];
+        const statusPermitidosParaAgendar = ['Pendente', 'Agendado', 'Finalizado'];
         if (!statusPermitidosParaAgendar.includes(solicitacaoParaAgendar.status)) {
              return res.status(409).json({ message: `Não é possível agendar solicitação com status "${solicitacaoParaAgendar.status}".` });
         }
@@ -880,11 +1099,8 @@ app.get('/api/calendario/disponibilidade', requireLogin(['psicopedagoga']), asyn
 // --- Middlewares de Tratamento de Erro (Finais) ---
 app.use((req, res, next) => {
     console.warn(`[404 NOT FOUND] ${req.method} ${req.originalUrl}`);
-    const errorPagePath = path.join(__dirname, 'views', '404.html'); // Tenta enviar 404.html
-    if (fs.existsSync(errorPagePath)) {
-        return res.status(404).sendFile(errorPagePath);
-    }
-    res.status(404).send("Página Não Encontrada"); // Fallback
+    // Redireciona para a página de erro genérica
+    res.status(404).redirect('/erro?tipo=nao_encontrado');
 });
 
 app.use((err, req, res, next) => {

@@ -1,4 +1,5 @@
 /* Variáveis de cores baseadas no tema Educa Mente */
+/* Gray 500 é para as bordas */
 :root {
   --primary: #0A4275;
   --secondary: #1575A3;
@@ -14,6 +15,8 @@
   --gray-200: #e9ecef;
   --gray-300: #dee2e6;
   --gray-dark: #808088;
+  --gray-500: #bdbebe;
+  --gray-600: #aeafaf;
 }
 
 /* Reset e estilos básicos */
@@ -31,7 +34,7 @@ body {
   font-size: 16px;
   line-height: 1.5;
   color: var(--text-dark);
-  background-color: var(--gray-100);
+  background-color: #FAF9F6;
   height: 100%;
   margin: 0;
   display: flex;
@@ -304,13 +307,13 @@ input:checked + .slider {
   background-color: var(--white);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--gray-300);
+  border: 1px solid var(--gray-500);
   margin-bottom: 24px;
 }
 
 .card-header {
   padding: 16px 20px;
-  border-bottom: 1px solid var(--gray-300);
+  border-bottom: 1px solid var(--gray-500);
 }
 
 .card-title {
@@ -331,7 +334,7 @@ input:checked + .slider {
 
 .card-footer {
   padding: 16px 20px;
-  border-top: 1px solid var(--gray-300);
+  border-top: 1px solid var(--gray-500);
 }
 
 /* Grid */
@@ -463,14 +466,14 @@ input:checked + .slider {
   padding: 16px;
   border-radius: 8px;
   background-color: var(--white);
-  border: 1px solid var(--gray-300);
+  border: 1px solid var(--gray-500);
   margin-bottom: 16px;
   transition: all 0.3s;
 }
 
 .appointment-card:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-color: var(--gray-200);
+  border-color: var(--gray-500);
 }
 
 /* Estilos para a grade de calendário */
@@ -543,7 +546,7 @@ input:checked + .slider {
 }
 
 .slot-content.empty {
-  border: 1px dashed var(--gray-300);
+  border: 1px dashed var(--gray-500);
   cursor: pointer;
 }
 
@@ -570,7 +573,7 @@ input:checked + .slider {
 /* Estilos para a página de histórico e solicitações */
 .request-item {
   padding: 16px;
-  border-bottom: 1px solid var(--gray-300);
+  border-bottom: 1px solid var(--gray-500);
 }
 
 .request-item:last-child {
@@ -606,7 +609,7 @@ input:checked + .slider {
 .footer {
   background-color: var(--primary);
   padding: 20px 0;
-  border-top: 1px solid var(--gray-300);
+  border-top: 1px solid var(--gray-500);
   margin-top: 40px;
   align-items: center;
 }
@@ -625,7 +628,7 @@ input:checked + .slider {
 /* Tabs */
 .tabs {
   display: flex;
-  border-bottom: 1px solid var(--gray-300);
+  border-bottom: 1px solid var(--gray-500);
   margin-bottom: 16px;
 }
 
@@ -734,7 +737,7 @@ input:checked + .slider {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  border-bottom: 1px solid var(--gray-300);
+  border-bottom: 1px solid var(--gray-500);
 }
 
 .modal-title {
@@ -764,7 +767,7 @@ input:checked + .slider {
   justify-content: flex-end;
   gap: 0.5rem;
   padding: 1rem;
-  border-top: 1px solid var(--gray-300);
+  border-top: 1px solid var(--gray-500);
 }
 
 .detail-row {
