@@ -528,7 +528,7 @@ app.post('/login', async (req, res) => {
         }
 
         req.session.regenerate(err => {
-            if (err) { console.error('[LOGIN SESSION ERROR]', err); return res.status(500).send('Erro ao iniciar sessão.'); }
+            if (err) { console.error('[LOGIN SESSION ERROR]', err); return res.redirect('/erro?tipo=erro_interno'); }
         
             req.session.usuarioId = usuario.id;
             req.session.tipoUsuario = usuario.tipo;
