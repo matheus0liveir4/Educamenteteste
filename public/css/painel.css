@@ -1,0 +1,1289 @@
+/* ==========================================================================
+   1. Variáveis Globais e Dark Mode
+   ========================================================================== */
+
+:root {
+    /* Cores Primárias e Secundárias */
+    --primary: #0A4275;
+    --secondary: #1575A3;
+    --accent: #D9E6F2; /* Usado para destaque em modo claro */
+    --primary-dark: #0a58ca; /* Usado no dark mode para botões, elementos ativos, etc. */
+
+    /* Cores de Texto */
+    --text-dark: #333333;
+    --text-light: #666666;
+    --text-white: #FFFFFF;
+    --text-dark-secondary: #555;
+
+    /* Cores Neutras e Feedback */
+    --white: #FFFFFF;
+    --success: #4CAF50;
+    --warning: #FFC107;
+    --danger: #F44336;
+
+    /* Tons de Cinza */
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --gray-500: #bdbebe;
+    --gray-dark: #808088;
+
+    /* Componente Switch */
+    --switch-bg-unchecked: #ccc;
+    --switch-bg-checked: var(--secondary, #1575A3);
+    --switch-slider-color: white;
+
+    /* Tooltip */
+    --tooltip-default-bg: #555;
+    --tooltip-arrow-color: var(--tooltip-default-bg);
+
+    /* Componentes Customizados (Modal/Toast) */
+    --custom-modal-bg: #ffffff;
+    --custom-modal-text-color: #333333;
+    --custom-modal-header-border: var(--gray-300, #dee2e6);
+    --custom-modal-box-shadow: rgba(0, 0, 0, 0.1);
+
+    --custom-toast-text-color: #ffffff;
+    --custom-toast-success-bg: var(--success, #4CAF50);
+    --custom-toast-error-bg: var(--danger, #F44336);
+    --custom-toast-warning-bg: var(--warning, #FFC107);
+    --custom-toast-warning-text: #333333;
+    --custom-toast-info-bg: var(--secondary, #1575A3);
+    --custom-toast-box-shadow: rgba(0,0,0,0.1);
+    --custom-toast-icon-spacing: 10px;
+}
+
+body.dark {
+    background-color: #222;
+    color: #eee;
+
+    /* Variáveis de Cores Dark Mode */
+    --text-dark: #eee;
+    --text-light: #bbb;
+    --text-dark-secondary: #ccc;
+
+    /* --primary e --secondary são mantidos, mas --primary-dark e --accent (dark) são usados para variações */
+    --accent: #58a6ff; /* Cor de destaque para links e elementos importantes no modo escuro */
+
+    --gray-100: #3a3a3a;
+    --gray-200: #4a4a4a;
+    --gray-300: #555555;
+    --gray-dark: #a0a0a0;
+
+    /* Componente Switch Dark Mode */
+    --switch-bg-unchecked: #555;
+    --switch-bg-checked: var(--primary-dark, #0a58ca);
+
+    /* Tooltip Dark Mode */
+    --tooltip-default-bg: #444;
+    --tooltip-arrow-color: var(--tooltip-default-bg);
+
+    /* Componentes Customizados (Modal/Toast) Dark Mode */
+    --custom-modal-bg: #3a3a3a;
+    --custom-modal-text-color: #eeeeee;
+    --custom-modal-header-border: #555555;
+    --custom-modal-box-shadow: rgba(0, 0, 0, 0.3);
+
+    --custom-toast-text-color: #ffffff;
+    --custom-toast-success-bg: #388E3C;
+    --custom-toast-error-bg: #C62828;
+    --custom-toast-warning-bg: #FFA000;
+    --custom-toast-warning-text: #222222;
+    --custom-toast-info-bg: #105A7F;
+    --custom-toast-box-shadow: rgba(255,255,255,0.1);
+}
+
+/* ==========================================================================
+   2. Estilos Globais e Layout Base
+   ========================================================================== */
+
+body {
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--gray-100);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-dark);
+}
+
+main {
+    flex-grow: 1;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Conteúdo Principal e Grid */
+.main-content {
+    padding-top: calc(64px + 2rem); /* 64px navbar + 2rem espaço */
+    padding-bottom: 2rem;
+}
+
+.welcome-header {
+    margin-bottom: 2rem;
+}
+.welcome-name {
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin: 0 0 0.25rem 0;
+}
+.welcome-date {
+    font-size: 1rem;
+    color: var(--text-light);
+    margin: 0;
+}
+
+.grid {
+    display: grid;
+    gap: 2rem;
+}
+.grid-cols-1 {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+@media (min-width: 1024px) {
+    .lg\:grid-cols-3 {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+/* Ajuste no container .grid principal para alinhar as colunas */
+.main-content > .container > .grid {
+    align-items: stretch; /* Garante que as colunas do grid (grid-column) tenham a mesma altura */
+}
+
+/* Ajuste na coluna da direita (Agenda) para ser um container flex */
+.grid-column#calendar {
+    display: flex; /* Permite que o .card filho use flex-grow */
+    flex-direction: column;
+}
+
+
+/* ==========================================================================
+   3. Componentes
+   ========================================================================== */
+
+/* --- Navbar --- */
+.navbar {
+    background-color: var(--primary);
+    border-bottom: 1px solid var(--primary);
+    padding: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 64px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.navbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+.navbar-brand {
+    font-family: 'Audiowide', sans-serif;
+    font-size: 1.6rem;
+    color: var(--white, #FFFFFF) !important;
+    text-decoration: none;
+    font-weight: normal;
+    padding: 0.25rem 0;
+}
+.navbar-menu {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+    gap: 1.5rem;
+}
+.navbar-link {
+    color: var(--white, #FFFFFF);
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 8px 0;
+    position: relative;
+    cursor: pointer;
+    transition: color 0.2s;
+    opacity: 0.85;
+    font-size: 0.9rem;
+}
+.navbar-link:after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--white, #FFFFFF);
+    transition: width 0.3s ease-in-out;
+}
+.navbar-link:hover,
+.navbar-link.active {
+    color: var(--white, #FFFFFF);
+    opacity: 1;
+}
+.navbar-link.active:after {
+    width: 100%;
+}
+.navbar-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+}
+.navbar-icon svg, .navbar-icon i {
+    width: 18px;
+    height: 18px;
+    color: var(--white, #FFFFFF);
+    vertical-align: middle;
+}
+
+/* Controles da Direita da Navbar (Dark Mode Toggle, Logout) */
+.navbar-right-controls {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+.dark-mode-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.dark-mode-toggle-wrapper i {
+    font-size: 1.4rem;
+    line-height: 1;
+    vertical-align: middle;
+    cursor: pointer;
+    color: var(--white, #FFFFFF);
+    transition: color 0.3s;
+}
+#icon-sun { display: inline-block; }
+#icon-moon { display: none; }
+
+.dark-mode-toggle-wrapper .switch { margin: 0; }
+
+.navbar-logout-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white, #FFFFFF);
+    font-size: 1.4rem;
+    text-decoration: none;
+    opacity: 0.85;
+    transition: opacity 0.2s ease-in-out, color 0.2s ease-in-out;
+    cursor: pointer;
+    margin-left: 1rem;
+}
+.navbar-logout-button:hover { opacity: 1; }
+
+
+/* --- Switch Component --- */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--switch-bg-unchecked);
+    transition: background-color .3s;
+    border-radius: 20px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: var(--switch-slider-color);
+    transition: transform .3s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: var(--switch-bg-checked);
+}
+input:checked + .slider:before {
+    transform: translateX(20px);
+}
+.label-text { display: none; }
+
+
+/* --- Card Base --- */
+.card {
+    background-color: var(--white);
+    border: 1px solid  var(--gray-500);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+}
+.card-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid  var(--gray-500);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin: 0;
+    margin-right: 0.5rem;
+}
+.card-subtitle {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-top: 0.25rem;
+}
+.card-body {
+    padding: 1.25rem;
+    flex-grow: 1; /* Permite que o corpo do card cresça e ocupe espaço */
+    position: relative;
+    display: flex; /* Torna o card-body um flex container */
+    flex-direction: column; /* Empilha os filhos do card-body verticalmente */
+}
+.card-footer {
+    padding: 1rem 1.25rem;
+    border-top: 1px solid  var(--gray-500);
+    background-color: var(--gray-100);
+}
+
+/* --- Loading Spinner --- */
+.loading-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 1rem auto;
+}
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* --- Badges --- */
+.badge {
+    display: inline-block;
+    padding: .35em .65em;
+    font-size: .75em;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--white);
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+}
+.badge-primary { background-color: var(--primary); }
+.badge-warning { background-color: var(--warning); color: #000; }
+.badge-success { background-color: var(--success); }
+.badge-danger  { background-color: var(--danger); }
+
+/* --- Buttons (Genéricos .btn) --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    border-radius: .25rem;
+    transition: all .15s ease-in-out;
+}
+.btn-sm {
+    padding: .25rem .5rem;
+    font-size: .875rem;
+    border-radius: .2rem;
+    min-height: calc(1.5em + .5rem + 2px);
+}
+.btn-primary {
+    color: var(--white);
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: var(--primary-dark);
+}
+.btn-secondary {
+    color: var(--white);
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+.btn-secondary:hover {
+    background-color: #5c636a;
+    border-color: #565e64;
+}
+.btn-outline {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+.btn-outline:hover {
+    color: var(--white);
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+
+/* --- Modal Genérico --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-color: rgba(0,0,0,0.6);
+    backdrop-filter: blur(3px);
+}
+.modal.visible {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.modal-content {
+    background-color: var(--white);
+    margin: auto;
+    padding: 0;
+    border: none;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+    overflow: hidden;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--gray-500); /* Usando var para consistência */
+    padding: 1rem 1.25rem;
+}
+.modal-title {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--primary);
+}
+.modal-close {
+    color: #999; /* Considerar var(--text-light) */
+    font-size: 24px;
+    font-weight: bold;
+    border: none;
+    background: none;
+    cursor: pointer;
+    line-height: 1;
+}
+.modal-close:hover,
+.modal-close:focus {
+    color: var(--text-dark);
+}
+.modal-body {
+    padding: 1.25rem;
+    overflow-y: auto;
+}
+.modal-body p { margin-bottom: 0.8rem; line-height: 1.6; }
+.modal-body hr { margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 1px solid var(--gray-300); }
+.modal-body h4 { margin-top: 0.5rem; margin-bottom: 0.5rem; font-weight: 500; }
+.modal-body a.laudo-link { color: var(--primary); text-decoration: none; }
+.modal-body a.laudo-link:hover { text-decoration: underline; }
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid var(--gray-500); /* Usando var para consistência */
+    background-color: var(--gray-100);
+}
+#agendar-atendimento-modal-btn { order: -1; }
+
+/* Detalhes dentro do Modal Genérico */
+.detail-group { margin-bottom: 1.25rem; }
+.detail-group-title {
+    font-weight: 500;
+    font-size: 0.7rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--gray-500);
+}
+.detail-row {
+    display: flex;
+    align-items: flex-start;
+    padding: 0.4rem 0;
+    margin-bottom: 0.2rem;
+    border: none;
+}
+.detail-icon {
+    width: 24px;
+    text-align: center;
+    margin-right: 0.8rem;
+    color: var(--primary);
+    font-size: 1em;
+    line-height: 1.5;
+    flex-shrink: 0;
+    margin-top: 0.1em;
+}
+.detail-info { flex-grow: 1; min-width: 0; }
+.detail-label {
+    font-weight: normal;
+    color: var(--text-light);
+    font-size: 0.75rem;
+    display: block;
+    margin-bottom: 0.1rem;
+}
+.detail-value {
+    color: var(--text-dark);
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: block;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+.detail-value[style*="white-space: pre-wrap"] {
+    background-color: var(--gray-100);
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-top: 0.2rem;
+    font-family: monospace;
+    font-size: 0.85rem;
+}
+.detail-value .badge {
+    font-size: 0.7em;
+    vertical-align: middle;
+    margin-left: 0.25rem;
+    padding: .25em .5em;
+}
+
+/* Badges de Status para Modal Genérico */
+.status-badge-modal {
+    padding: .2em .6em .3em;
+    font-size: .75em;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--white);
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+    display: inline-block;
+}
+.status-badge-modal.pendente, .status-badge-modal.pending    { background-color: var(--warning); color: #212529; }
+.status-badge-modal.aprovado, .status-badge-modal.approved   { background-color: var(--success); }
+.status-badge-modal.rejeitado, .status-badge-modal.rejected  { background-color: var(--danger); }
+.status-badge-modal.finalizado, .status-badge-modal.completed { background-color: #6c757d; }
+.status-badge-modal.agendado, .status-badge-modal.scheduled   { background-color: #17a2b8; }
+
+
+/* --- Custom Modal --- */
+.custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    outline: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    align-items: center;
+    justify-content: center;
+}
+.custom-modal.show { display: flex; }
+.custom-modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    max-width: 500px;
+    pointer-events: auto;
+    background-color: var(--custom-modal-bg);
+    background-clip: padding-box;
+    border: 1px solid var(--custom-modal-header-border);
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem var(--custom-modal-box-shadow);
+    color: var(--custom-modal-text-color);
+    animation: fadeInModal 0.3s ease-out;
+}
+@keyframes fadeInModal {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.custom-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--custom-modal-header-border);
+    border-top-left-radius: calc(0.5rem - 1px);
+    border-top-right-radius: calc(0.5rem - 1px);
+}
+.custom-modal-title {
+    margin-bottom: 0;
+    line-height: 1.5;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--primary);
+}
+.custom-modal-close {
+    padding: 0.25rem 0.5rem;
+    margin: -0.5rem -0.75rem -0.5rem auto;
+    background-color: transparent;
+    border: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--custom-modal-text-color);
+    opacity: .5;
+    cursor: pointer;
+    transition: opacity 0.15s ease-in-out;
+}
+.custom-modal-close:hover { opacity: .85; }
+.custom-modal-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 1.25rem;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+.custom-modal-body p {
+    margin-bottom: 0;
+    color: var(--custom-modal-text-color);
+}
+.custom-modal-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    padding: 1rem 1.25rem;
+    background-color: transparent;
+    border-top: 1px solid var(--custom-modal-header-border);
+    border-bottom-right-radius: calc(0.5rem - 1px);
+    border-bottom-left-radius: calc(0.5rem - 1px);
+}
+
+/* Botões Customizados (para .custom-modal) */
+.custom-btn {
+    display: inline-block;
+    font-weight: 500;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    border-radius: 0.3rem;
+    transition: all .15s ease-in-out;
+}
+.custom-btn-primary {
+    color: var(--white);
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+.custom-btn-primary:hover {
+    background-color: #083864;
+    border-color: #073055;
+}
+.custom-btn-secondary {
+    color: var(--primary);
+    background-color: var(--gray-200);
+    border-color: var(--gray-300);
+}
+.custom-btn-secondary:hover {
+    background-color: var(--gray-300);
+    border-color: #c8ced3;
+}
+.custom-btn-danger {
+    color: var(--white);
+    background-color: var(--danger);
+    border-color: var(--danger);
+}
+.custom-btn-danger:hover {
+    background-color: #D32F2F;
+    border-color: #c82333;
+}
+.custom-btn-warning {
+    color: #212529;
+    background-color: var(--warning);
+    border-color: var(--warning);
+}
+.custom-btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #d39e00;
+}
+
+/* --- Custom Tooltip --- */
+.custom-tooltip-popup {
+    position: absolute;
+    padding: 8px 12px;
+    background-color: var(--tooltip-default-bg);
+    color: var(--white);
+    border-radius: 5px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    z-index: 1070;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, transform 0.15s ease-out;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+    transform: translateY(5px);
+}
+.custom-tooltip-popup.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+.custom-tooltip-popup::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--tooltip-arrow-color) transparent transparent transparent;
+}
+.custom-tooltip-popup.arrow-bottom::after {
+    top: auto;
+    bottom: 100%;
+    border-color: transparent transparent var(--tooltip-arrow-color) transparent;
+}
+.custom-tooltip-popup.type-primary  { background-color: var(--primary);   --tooltip-arrow-color: var(--primary); }
+.custom-tooltip-popup.type-danger   { background-color: var(--danger);    --tooltip-arrow-color: var(--danger); }
+.custom-tooltip-popup.type-warning  { background-color: var(--warning);   color: #212529; --tooltip-arrow-color: var(--warning); }
+.custom-tooltip-popup.type-secondary{ background-color: var(--gray-200);  color: #333;    --tooltip-arrow-color: var(--gray-200); }
+.custom-tooltip-popup.type-success  { background-color: var(--success);   --tooltip-arrow-color: var(--success); }
+.custom-tooltip-popup.type-info     { background-color: var(--secondary); --tooltip-arrow-color: var(--secondary); }
+
+
+/* --- Custom Toast --- */
+.custom-toast-container {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    z-index: 1055;
+    width: auto;
+    max-width: 380px;
+}
+.custom-toast {
+    color: var(--custom-toast-text-color);
+    padding: 0.85rem 1.35rem;
+    margin-bottom: 1rem;
+    border: none;
+    border-radius: 0.3rem;
+    box-shadow: 0 0.35rem 0.85rem var(--custom-toast-box-shadow);
+    opacity: 0;
+    transform: translateX(110%);
+    transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+.custom-toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+.custom-toast-icon {
+    margin-right: var(--custom-toast-icon-spacing);
+    font-size: 1.3em;
+    line-height: 1;
+}
+.custom-toast-success { background-color: var(--custom-toast-success-bg); }
+.custom-toast-error   { background-color: var(--custom-toast-error-bg); }
+.custom-toast-warning { background-color: var(--custom-toast-warning-bg); color: var(--custom-toast-warning-text); }
+.custom-toast-info    { background-color: var(--custom-toast-info-bg); }
+
+
+/* --- Footer --- */
+.footer {
+    background-color: var(--primary);
+    padding: 1rem 0;
+    border-top: 1px solid var(--gray-500);
+    margin-top: auto;
+}
+.footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.footer-text {
+    color: var(--text-white);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+/* ==========================================================================
+   4. Estilos Específicos de Página/Seção (Dashboard)
+   ========================================================================== */
+
+/* --- Cards na Coluna da Esquerda (Solicitações Recentes e Resumo do Dia) --- */
+.grid-column:not(#calendar) > .card:nth-child(1) { /* Card "Solicitações Recentes" */
+    flex-grow: 2; /* Ocupa 2 partes do espaço disponível na coluna esquerda */
+    flex-basis: 0; /* Importante para o flex-grow funcionar como esperado */
+    min-height: 280px; /* Altura mínima para o card de solicitações */
+}
+
+.grid-column:not(#calendar) > .card:nth-child(2) { /* Card "Resumo do Dia" */
+    flex-grow: 1; /* Ocupa 1 parte do espaço disponível na coluna esquerda */
+    flex-basis: 0;
+    min-height: 235px; /* << VALOR AUMENTADO (era 180px) - Para garantir espaço para "Novas Solicitações" */
+}
+.grid-column:not(#calendar) > .card:nth-child(1) > .card-body { /* card-body de Solicitações */
+    overflow: hidden; /* Para conter a lista de solicitações com scroll */
+}
+.grid-column:not(#calendar) > .card:nth-child(2) > .card-body {
+    padding-bottom: 3.5rem; /* Valor original era 1.25rem. Ajuste este valor (ex: 2rem, 2.5rem, 3rem) conforme o espaço desejado. */
+}
+
+/* --- Card de Solicitações Recentes --- */
+.card-body#pending-requests {
+    overflow: hidden; /* Impede que #urgent-requests-list estoure este container */
+}
+
+#urgent-requests-list {
+    flex-grow: 1; /* Faz a lista ocupar o espaço disponível no .card-body#pending-requests */
+    overflow-y: auto; /* Adiciona scroll vertical se o conteúdo exceder a altura */
+    min-height: 100px; /* Garante uma área mínima para scroll, mesmo com poucos itens */
+}
+
+/* --- Card de Agenda Semanal --- */
+
+.grid-column#calendar > .card {
+    flex-grow: 1; /* Permite que o card cresça para preencher a coluna */
+    display: flex; /* Torna o card um flex container */
+    flex-direction: column; /* Para que o .card-body possa usar flex-grow */
+    max-height: 570px; 
+}
+.grid-column#calendar > .card > .card-body {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* MUITO IMPORTANTE AQUI para conter o .time-slots-wrapper */
+    padding-top: 1.25rem;
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+    padding-bottom: 0.5rem; /* Ou 0, se preferir menos espaço antes do footer */
+    min-height: 0;
+}
+
+.grid-column#calendar > .card > .card-body > .calendar-controls {
+    flex-shrink: 0; /* IMPORTANTE: Para não encolher */
+    /* Mantenha as margens/paddings existentes, ex: margin-bottom: 1rem; */
+}
+
+.grid-column#calendar > .card > .card-body > .calendar-days {
+    flex-shrink: 0; /* IMPORTANTE: Para não encolher */
+    /* Mantenha as margens/paddings existentes, ex: margin-bottom: 1rem; */
+}
+
+.time-slots-wrapper {
+    flex-grow: 1; /* CRUCIAL: Faz a lista de agendamentos ocupar o espaço disponível no .card-body */
+    overflow-y: auto; /* CRUCIAL: Adiciona scroll vertical se o conteúdo exceder a altura */
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    position: relative;
+    min-height: 100px;
+}
+
+/* Estilização da barra de scroll (Opcional, para navegadores Webkit como Chrome/Safari/Edge) */
+#urgent-requests-list::-webkit-scrollbar,
+.time-slots-wrapper::-webkit-scrollbar {
+    width: 8px;
+}
+
+#urgent-requests-list::-webkit-scrollbar-track,
+.time-slots-wrapper::-webkit-scrollbar-track {
+    background: var(--gray-200); /* Cor de fundo da trilha da scrollbar */
+    border-radius: 4px;
+}
+
+#urgent-requests-list::-webkit-scrollbar-thumb,
+.time-slots-wrapper::-webkit-scrollbar-thumb {
+    background-color: var(--gray-dark); /* Cor da própria barra de scroll */
+    border-radius: 4px;
+    border: 2px solid var(--gray-200); /* Cria um pequeno espaçamento entre a barra e a trilha */
+}
+
+/* --- Outros Estilos Específicos do Dashboard (já existentes no seu painel.css original) --- */
+/* Próximo Agendamento, Lista de Solicitações, Itens de Resumo, Componente de Calendário, etc. */
+#next-appointment-details .summary-item { }
+#next-appointment-details .btn-outline { margin-top: 1rem; float: right; }
+.request-item-dashboard {
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0;
+    border-bottom: 1px solid var(--gray-500); transition: background-color 0.2s;
+}
+.request-item-dashboard:last-child { border-bottom: none; padding-bottom: 0; }
+.request-item-dashboard:hover { background-color: var(--gray-100); }
+.request-icon-dashboard { color: var(--primary); flex-shrink: 0; width: 1em; text-align: center; }
+.request-details-dashboard { flex-grow: 1; min-width: 0; }
+.request-name-dashboard {
+    font-weight: 500; font-size: 0.9rem; display: block;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.request-time {
+    font-size: 0.8rem; color: var(--text-light); margin-left: auto;
+    flex-shrink: 0; white-space: nowrap;
+}
+#pending-requests.card-body { padding-bottom: 0.5rem; }
+.clickable-student-item {
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--gray-500);
+    transition: background-color 0.15s ease-in-out;
+}
+.clickable-student-item:last-child { border-bottom: none; }
+.clickable-student-item .student-name-in-list {
+    color: var(--text-dark); font-size: 0.9rem; flex-grow: 1; text-align: center;
+}
+.clickable-student-item .request-date-in-list {
+    font-size: 0.8rem; color: var(--text-light); white-space: nowrap;
+    margin-left: 10px; text-align: center;
+}
+.clickable-student-item:hover { background-color: var(--gray-100); }
+#pending-requests.has-items-for-list { padding: 0 !important; }
+#requests-count-summary { display: inline-flex; align-items: center; min-width: 90px; box-sizing: border-box; }
+#requests-count-summary .pending-label { opacity: 0.9; flex-grow: 1; }
+#requests-count-summary .pending-value { font-weight: bold; margin-left: 5px; flex-shrink: 0; }
+.summary-item {
+    display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0;
+    border-bottom: 1px solid var(--gray-500);
+}
+.summary-item:last-child { border-bottom: none; padding-bottom: 0; }
+.summary-icon { color: var(--secondary); flex-shrink: 0; width: 1.2em; text-align: center; }
+.summary-label { font-size: 0.9rem; color: var(--text-dark); flex-grow: 1; }
+.summary-value { font-size: 1rem; font-weight: 700; color: var(--primary); }
+.calendar-controls {
+    display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
+    padding: 0.5rem; background-color: var(--gray-100); border-radius: 6px;
+}
+.calendar-nav-btn {
+    background: none; border: none; padding: 0; cursor: pointer;
+    color: var(--primary); line-height: 1; border-radius: 50%;
+    width: 32px; height: 32px; display: inline-flex;
+    align-items: center; justify-content: center; transition: background-color 0.2s;
+}
+.calendar-nav-btn:hover { background-color: var(--gray-200); color: #0b5ed7; }
+.week-range-display {
+    font-weight: 500; color: var(--text-dark); text-align: center;
+    flex-grow: 1; font-size: 0.95rem;
+}
+.calendar-days {
+    display: flex; justify-content: space-around; margin-bottom: 1rem;
+    padding-bottom: 0.75rem; border-bottom: 1px solid var(--gray-500);
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+}
+.day-item {
+    background: none; border: 1px solid transparent; padding: 0.4rem;
+    text-align: center; cursor: pointer; border-radius: 50%;
+    width: 40px; height: 40px; display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    transition: all 0.2s; position: relative;
+}
+.day-item.today { border: 1px dashed var(--secondary); }
+.day-item.has-appointments::after {
+    content: ''; position: absolute; bottom: 4px; left: 50%;
+    transform: translateX(-50%); width: 5px; height: 5px;
+    background-color: var(--secondary); border-radius: 50%;
+}
+.day-item:hover { background-color: var(--gray-200); border-color: var(--gray-500) }
+.day-item.active { background-color: var(--primary); color: var(--white); border-color: var(--primary); }
+.day-item.active .day-name, .day-item.active .day-number { color: var(--white); }
+.day-item.active.has-appointments::after { background-color: var(--white); }
+.day-name { font-size: 0.65rem; text-transform: uppercase; color: var(--text-light); margin-bottom: 0.1rem; }
+.day-number { font-size: 0.9rem; font-weight: 500; line-height: 1; }
+.compact-appointment-list { list-style: none; padding: 0; margin: 0; }
+.compact-appointment-item {
+    display: flex; align-items: center; padding: 0.7rem 0.8rem;
+    margin-bottom: 0.6rem; background-color: var(--gray-100);
+    border: 1px solid var(--gray-500); border-radius: 6px;
+    transition: all 0.2s; gap: 0.75rem; cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+.compact-appointment-item:hover {
+    background-color: var(--gray-200);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transform: translateY(-1px);
+}
+.compact-appointment-item .time {
+    font-weight: 500; font-size: 0.85rem; color: var(--primary);
+    flex-shrink: 0; display: inline-flex; align-items: center;
+    gap: 0.25rem; width: 65px;
+}
+.compact-appointment-item .details { font-size: 0.85rem; flex-grow: 1; min-width: 0; }
+.compact-appointment-item .details .name {
+    display: block; font-weight: 500; white-space: nowrap;
+    overflow: hidden; text-overflow: ellipsis; margin-bottom: 0.1rem;
+}
+.compact-appointment-item .details .type {
+    display: inline-flex; align-items: center; gap: 0.25rem;
+    font-size: 0.75rem; color: var(--text-light);
+}
+.compact-appointment-item .details .type i { font-size: 0.8em; }
+.compact-appointment-item .chevron-icon {
+    color: var(--text-light); margin-left: auto; flex-shrink: 0;
+    opacity: 0.7; transition: opacity 0.2s;
+}
+.compact-appointment-item:hover .chevron-icon { opacity: 1; }
+.no-appointments-message {
+    text-align: center; padding: 2rem 1rem; font-size: 0.9rem;
+    color: var(--text-light); display: flex; flex-direction: column;
+    align-items: center; gap: 0.5rem;
+}
+.no-appointments-message i { font-size: 1.5rem; opacity: 0.7; }
+
+
+/* ==========================================================================
+   5. Utilitários
+   ========================================================================== */
+.text-center { text-align: center; }
+.py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+.py-4 { padding-top: 1rem; padding-bottom: 1rem; }
+.mt-4 { margin-top: 1rem; }
+
+.flex { display: flex; }
+.justify-between { justify-content: space-between; }
+.items-center { align-items: center; }
+.justify-end { justify-content: flex-end; }
+.items-start { align-items: flex-start; }
+
+
+/* ==========================================================================
+   6. Dark Mode Overrides Específicos
+   ========================================================================== */
+
+body.dark .navbar { background-color: #333; border-bottom-color: #444; }
+body.dark .navbar-brand { color: var(--white, #FFFFFF) !important; text-shadow: none; }
+body.dark .navbar-link { color: #ccc; }
+body.dark .navbar-link.active,
+body.dark .navbar-link:hover { color: var(--white); }
+body.dark .navbar-icon svg, body.dark .navbar-icon i { color: var(--white); }
+body.dark .navbar-logout-button { color: #f0f0f0; }
+body.dark .navbar-logout-button:hover { color: var(--white); }
+
+body.dark .dark-mode-toggle-wrapper i { color: #f0f0f0; }
+body.dark #icon-sun { display: none; }
+body.dark #icon-moon { display: inline-block; }
+
+body.dark .welcome-name { color: var(--text-dark); }
+body.dark .welcome-date { color: var(--text-light); }
+
+body.dark .card {
+    background-color: #333;
+    border-color: var(--gray-200);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+body.dark .card-header,
+body.dark .card-footer {
+    border-color: var(--gray-200);
+    background-color: var(--gray-100);
+}
+body.dark .card-footer a,
+body.dark .card-footer a:link,
+body.dark .card-footer a:visited {
+    color: var(--accent);
+    text-decoration: underline;
+}
+body.dark .card-footer a:hover,
+body.dark .card-footer a:focus {
+    color: var(--white);
+}
+
+body.dark .card-title { color: var(--text-dark); }
+body.dark .card-subtitle { color: var(--text-light); }
+
+body.dark .summary-item,
+body.dark .request-item-dashboard,
+body.dark .calendar-days { border-color: var(--gray-200); }
+
+body.dark .summary-label,
+body.dark .request-name-dashboard { color: var(--text-dark); }
+
+body.dark .summary-value { color: var(--text-light); }
+body.dark .request-time { color: var(--accent); }
+
+body.dark .text-light,
+body.dark .compact-appointment-item .details .type,
+body.dark .compact-appointment-item .chevron-icon { color: #aaa; }
+
+body.dark .request-item-dashboard:hover { background-color: #3f3f3f; }
+body.dark .summary-icon { color: var(--secondary); }
+
+body.dark .btn-primary { background-color: var(--primary-dark); border-color: var(--primary-dark); }
+body.dark .btn-primary:hover { background-color: #08427e; border-color: #073b6f; }
+body.dark .btn-secondary { background-color: #5c636a; border-color: #565e64; }
+body.dark .btn-secondary:hover { background-color: #495057; border-color: #434a50; }
+body.dark .btn-outline { color: #aaa; border-color: #aaa; }
+body.dark .btn-outline:hover { color: #222; background-color: #aaa; border-color: #aaa; }
+
+body.dark .footer { background-color: #333; border-top-color: #444; }
+body.dark .footer-text { color: #ccc; }
+
+/* Calendário Dark Mode */
+body.dark .calendar-controls { background-color: var(--gray-100); }
+body.dark .calendar-nav-btn { color: #aaa; }
+body.dark .calendar-nav-btn:hover { background-color: var(--gray-200); color: #ccc; }
+body.dark .week-range-display { color: var(--text-dark); }
+body.dark .day-name { color: var(--text-light); }
+body.dark .day-item.today { border-color: var(--secondary); }
+body.dark .day-item:hover { background-color: var(--gray-200); }
+body.dark .day-item.active { background-color: var(--primary-dark); border-color: var(--primary-dark);}
+body.dark .day-item.active .day-name,
+body.dark .day-item.active .day-number { color: var(--white); }
+body.dark .day-item.has-appointments::after { background-color: var(--accent); }
+body.dark .day-item.active.has-appointments::after { background-color: #333; }
+
+/* Lista de Agendamentos Compacta Dark Mode */
+body.dark .compact-appointment-item {
+    background-color: var(--gray-200);
+    border-color: #5f5f5f;
+    color: #e0e0e0;
+    box-shadow: none;
+}
+body.dark .compact-appointment-item:hover {
+    background-color: #5f5f5f;
+}
+body.dark .compact-appointment-item .time { color: var(--accent); }
+body.dark .compact-appointment-item .details .name { color: #f0f0f0; }
+
+body.dark .no-appointments-message { color: #aaa; }
+
+/* Modal Genérico Dark Mode */
+body.dark .modal-content { background-color: #3b3b3b; color: var(--text-dark); border-color: #444; }
+body.dark .modal-header,
+body.dark .modal-footer { border-color: #444; background-color: #444; }
+body.dark .modal-title { color: var(--white); }
+body.dark .modal-close { color: #ccc; }
+body.dark .modal-close:hover { color: var(--white); }
+body.dark .modal-body hr { border-top-color: #555; }
+body.dark .modal-body a.laudo-link { color: var(--accent); }
+
+body.dark .detail-group-title { color: var(--accent); border-bottom-color: #444; }
+body.dark .detail-icon { color: var(--accent); }
+body.dark .detail-label { color: var(--text-light); }
+body.dark .detail-value { color: var(--text-dark); }
+body.dark .detail-value[style*="white-space: pre-wrap"] { background-color: var(--gray-200); }
+
+/* Status Badges Modal Dark Mode */
+body.dark .status-badge-modal.pendente  { background-color: var(--custom-toast-warning-bg); color: var(--custom-toast-warning-text); }
+body.dark .status-badge-modal.aprovado  { background-color: var(--custom-toast-success-bg); }
+body.dark .status-badge-modal.rejeitado { background-color: var(--custom-toast-error-bg); }
+body.dark .status-badge-modal.finalizado{ background-color: #545b62; }
+body.dark .status-badge-modal.agendado  { background-color: var(--custom-toast-info-bg); }
+
+/* Lista de Estudantes Clicáveis Dark Mode */
+body.dark .clickable-student-item { border-bottom-color: #444; }
+body.dark .clickable-student-item .student-name-in-list { color: var(--text-dark); }
+body.dark .clickable-student-item .request-date-in-list { color: var(--text-light); }
+body.dark .clickable-student-item:hover { background-color: var(--gray-100); }
+
+
+/* Custom Modal Dark Mode */
+body.dark .custom-modal-title { color: var(--accent); }
+
+/* Custom Buttons Dark Mode */
+body.dark .custom-btn-secondary {
+    color: var(--custom-modal-text-color);
+    background-color: #5a5a5a;
+    border-color: #6c757d;
+}
+body.dark .custom-btn-secondary:hover {
+    background-color: #656565;
+    border-color: #787878;
+}
+body.dark .custom-btn-warning {
+    color: var(--custom-toast-warning-text);
+    background-color: var(--custom-toast-warning-bg);
+    border-color: var(--custom-toast-warning-bg);
+}
+body.dark .custom-btn-warning:hover {
+    background-color: #df8c00;
+    border-color: #d39e00;
+}
+
+/* Custom Tooltip Dark Mode */
+body.dark .custom-tooltip-popup.type-primary  { background-color: var(--primary);   --tooltip-arrow-color: var(--primary); }
+body.dark .custom-tooltip-popup.type-danger   { background-color: var(--danger);    --tooltip-arrow-color: var(--danger); }
+body.dark .custom-tooltip-popup.type-warning  { background-color: var(--custom-toast-warning-bg); color: var(--custom-toast-warning-text); --tooltip-arrow-color: var(--custom-toast-warning-bg); }
+body.dark .custom-tooltip-popup.type-secondary{ background-color: #5a5a5a; color: var(--custom-modal-text-color); --tooltip-arrow-color: #5a5a5a; }
+body.dark .custom-tooltip-popup.type-success  { background-color: var(--custom-toast-success-bg); --tooltip-arrow-color: var(--custom-toast-success-bg); }
+body.dark .custom-tooltip-popup.type-info     { background-color: var(--custom-toast-info-bg);    --tooltip-arrow-color: var(--custom-toast-info-bg); }
+
+
+/* Scrollbar Dark Mode */
+body.dark #urgent-requests-list::-webkit-scrollbar-track,
+body.dark .time-slots-wrapper::-webkit-scrollbar-track {
+    background: #4a4a4a;
+    border-color: #4a4a4a;
+}
+
+body.dark #urgent-requests-list::-webkit-scrollbar-thumb,
+body.dark .time-slots-wrapper::-webkit-scrollbar-thumb {
+    background-color: #787878; /* Um cinza um pouco mais claro para o thumb no dark mode */
+    border-color: #4a4a4a;
+}
+
+
+/* ==========================================================================
+   7. Helpers
+   ========================================================================== */
+
+/* --- CSS PARA EVITAR FLASH NA TROCA DE TEMA --- */
+.no-transitions * {
+    transition: none !important;
+}

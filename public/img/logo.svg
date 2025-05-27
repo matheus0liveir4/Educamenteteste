@@ -1,0 +1,6 @@
+<svg width="220" height="40" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .text { font-family: Arial, sans-serif; font-weight: bold; fill: #0A4275; }
+  </style>
+  <text x="10" y="30" class="text" font-size="24">EDUCA MENTE</text>
+</svg>
