@@ -1,0 +1,253 @@
+/* Reset e Fonte Geral */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Corpo da página */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0A4275, #1575A3, #D9E6F2);
+    animation: fadeInBackground 1s ease-out;
+}
+
+/* Contêiner Principal */
+.container {
+    display: flex;
+    width: 900px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: slideInContainer 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 40%;
+    background-color: #0A4275;
+    color: #fff;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    opacity: 0;
+    animation: fadeInSidebar 0.8s ease-out forwards;
+}
+
+.sidebar h1 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-family: 'Audiowide', cursive;
+    color: #fff;
+}
+
+.sidebar p {
+    font-size: 1.1rem;
+    color: #D9E6F2;
+    margin-bottom: 2rem;
+}
+
+/* Formulário */
+.form-container {
+    width: 60%;
+    padding: 2rem;
+    background-color: #F7F9FC;
+    border-left: 2px solid #D9E6F2;
+    opacity: 0;
+    animation: fadeInForm 0.8s ease-out forwards;
+    animation-delay: 0.2s;
+}
+
+.form-container h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: #0A4275;
+}
+
+/* Grupos de Entrada */
+.input-group {
+    margin-bottom: 1.5rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInInput 0.6s ease-out forwards;
+    animation-delay: 0.2s;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #0A4275;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #D9E6F2;
+    border-radius: 4px;
+    margin-top: 0.3rem;
+    color: #333;
+    outline: none;
+    font-size: 18px;
+}
+
+/* Botão Principal */
+.btn-primary {
+    width: 100%;
+    padding: 1rem;
+    background-color: #1575A3;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInButton 0.8s ease-out forwards;
+    animation-delay: 0.8s;
+}
+
+.btn-primary:hover {
+    background-color: #0A4275;
+}
+
+/* Estilo para o campo de senha com o ícone */
+.password-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-wrapper input {
+    width: 100%;
+    padding-right: 2.5rem;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    color: #000; /* Cor preta para o ícone */
+    user-select: none;
+    display: none; /* O ícone fica oculto inicialmente */
+}
+
+.toggle-password:hover {
+    color: #0A4275;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .form-container {
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .btn-primary {
+        padding: 1rem;
+    }
+}
+
+/* Keyframes para Animações */
+@keyframes fadeInBackground {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInContainer {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInSidebar {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInForm {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInInput {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInButton {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.forgot-password {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.forgot-password a {
+    color: #42A5F5; /* Azul claro */
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,266 @@
+/* Reset e Fonte Geral */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Corpo da página */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0A4275, #1575A3, #D9E6F2); /* Azul escuro, azul médio, cinza claro */
+}
+
+/* Contêiner Principal */
+.container {
+    display: flex;
+    width: 900px;
+    background-color: #FFFFFF; /* Branco */
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 40%;
+    background-color: #0A4275; /* Azul escuro SENAI */
+    color: #FFFFFF; /* Branco */
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.sidebar h1 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-family: 'Audiowide', cursive; /* Fonte Audiowide */
+    color: #FFFFFF; /* Branco */
+}
+
+.sidebar p {
+    font-size: 1.1rem;
+    color: #D9E6F2; /* Cinza claro */
+}
+
+/* Formulário */
+.form-container {
+    width: 60%;
+    padding: 2rem;
+    background-color: #F7F9FC; /* Cinza claro de fundo */
+    border-left: 2px solid #D9E6F2; /* Separador azul claro */
+}
+
+.form-container h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: #0A4275; /* Azul escuro */
+}
+
+/* Grupos de Entrada */
+.input-group {
+    margin-bottom: 1.5rem;
+}
+
+.input-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #0A4275; /* Azul escuro */
+}
+
+.input-group input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #1575A3; /* Cinza claro */
+    border-radius: 4px;
+    margin-top: 0.3rem;
+    color: #333; /* Texto preto */
+    outline: none;
+    font-size: 15px;
+}
+
+/* Botão Principal */
+.btn-primary {
+    width: 100%;
+    padding: 1rem;
+    background-color: #1575A3; /* Azul médio */
+    color: #FFFFFF; /* Branco */
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
+}
+
+.btn-primary:hover {
+    background-color: #0A4275; /* Azul escuro ao passar o mouse */
+}
+
+/* Link de Login */
+.login-link {
+    margin-top: 1rem;
+    text-align: center;
+    color: #666; /* Cinza escuro */
+}
+
+.login-link a {
+    color: #1575A3; /* Azul médio */
+    text-decoration: none;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+    color: #0A4275; /* Azul escuro */
+}
+
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    display: none;
+}
+
+.password-strength {
+    margin-top: 5px;
+    width: 100%;
+}
+
+.strength-bar {
+    height: 5px;
+    width: 0%;
+    background: #ddd;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.strength-text {
+    font-size: 12px;
+    margin-top: 3px;
+    color: #666;
+}
+
+.forgot-password {
+    margin-top: 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.forgot-password a {
+    color: #42A5F5; /* Azul claro */
+    text-decoration: none;
+}
+
+.forgot-password a:hover {
+    text-decoration: underline;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        width: 100%;
+        padding: 1rem;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 1.5rem;
+    }
+
+    .form-container {
+        width: 100%;
+        padding: 1.5rem;
+    }
+
+    .btn-primary {
+        padding: 1rem;
+    }
+}
+
+/* Adicionar estilos para posicionar o ícone do olho */
+        .password-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            display: none; /* Ocultar inicialmente */
+        }
+
+        /* Indicador de força da senha */
+        .password-strength {
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .strength-bar {
+            height: 5px;
+            width: 0%;
+            background: #ddd;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .strength-text {
+            font-size: 12px;
+            margin-top: 3px;
+            color: #666;
+        }
+
+        .feedback-message {
+            padding: 12px 18px;
+            margin-top: 10px;
+            margin-bottom: 20px; /* Aumentar um pouco a margem inferior */
+            border-radius: 5px;
+            font-size: 0.95em; /* Um pouco maior para legibilidade */
+            text-align: center;
+            border: 1px solid transparent; /* Borda padrão transparente */
+            display: none; /* Inicialmente oculto */
+            transition: opacity 0.3s ease-in-out; /* Efeito suave de aparição */
+        }
+        .feedback-message.visible { /* Classe para mostrar a mensagem */
+            display: block;
+            opacity: 1;
+        }
+        .feedback-message.error {
+            background-color: #f8d7da; /* Vermelho claro para erro */
+            color: #721c24; /* Texto escuro para contraste */
+            border-color: #f5c6cb; /* Borda sutil */
+        }
+        .feedback-message.success {
+            background-color: #d4edda; /* Verde claro para sucesso */
+            color: #155724; /* Texto escuro para contraste */
+            border-color: #c3e6cb; /* Borda sutil */
+        }
+        .feedback-message.info { /* Para mensagens de 'processando' */
+            background-color: #e2e3e5;
+            color: #383d41;
+            border-color: #d6d8db;
+        }
+        .feedback-message a { /* Estilo para links dentro da mensagem de feedback */
+            color: inherit; /* Herda a cor do texto da mensagem */
+            font-weight: bold;
+            text-decoration: underline;
+        }

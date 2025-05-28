@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico - EDUCA MENTE</title>
+    <link rel="shortcut icon" href="img/faviconeducamente.ico" type="image/x-icon">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/historico.css">
+    
+    <!-- utils.js e icons.js carregados primeiro -->
+    <script src="js/utils.js"></script> 
+    <script src="js/icons.js"></script>
+
+</head>
+<body>
+    <nav class="navbar">
+      <div class="container navbar-container">
+        <a href="/painel" class="navbar-brand" data-tooltip="Página Inicial Educa Mente" data-tooltip-type="default">
+          Educa Mente
+        </a>
+        <ul class="navbar-menu">
+          <li class="navbar-item"> 
+            <a href="/painel" class="navbar-link" data-tooltip="Ir para o Painel Principal" data-tooltip-type="info"> 
+              <span class="navbar-icon" id="icon-home"></span> <span>Painel</span> 
+            </a> 
+          </li>
+          <li class="navbar-item"> 
+            <a href="/historico" class="navbar-link active" data-tooltip="Visualizar Histórico de Atendimentos e Alunos" data-tooltip-type="info"> 
+              <span class="navbar-icon" id="icon-history"></span> <span>Histórico</span> 
+            </a> 
+          </li>
+          <li class="navbar-item"> 
+            <a href="/solicitacoes" class="navbar-link" data-tooltip="Gerenciar Solicitações" data-tooltip-type="info"> 
+              <span class="navbar-icon" id="icon-requests"></span> <span>Solicitações</span> 
+            </a> 
+          </li>
+        </ul>
+        
+        <div class="navbar-right-controls">
+            <div class="dark-mode-toggle-wrapper">
+              <i class="fas fa-sun" id="icon-sun" data-tooltip="Alternar para Modo Claro" data-tooltip-type="warning"></i>
+              <i class="fas fa-moon" id="icon-moon" data-tooltip="Alternar para Modo Escuro" data-tooltip-type="info"></i>
+              <label class="switch" data-tooltip="Ativar/Desativar Modo Escuro" data-tooltip-type="default">
+                <input type="checkbox" id="toggle-dark-mode">
+                <span class="slider"></span>
+              </label>
+            </div>
+            <a href="/" class="navbar-logout-button" id="logout-nav-link" data-tooltip="Sair (deslogar)" data-tooltip-type="danger">
+              <i class="fas fa-sign-out-alt"></i>
+            </a>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- Conteúdo específico da página Histórico -->
+        <div class="container">
+            <div class="page-header"> <h1 class="page-title">Histórico</h1> <p class="page-subtitle">Visualize os atendimentos anteriores</p> </div>
+            <div class="card">
+                <div class="card-body">
+                    
+
+                    <div class="tab-content active" id="tab-all-history">
+                        <section class="search-filter-section">
+                            <div class="search-bar-container"> 
+                                <i class="fas fa-search"></i> 
+                                <input type="text" id="all-history-search-input" placeholder="Pesquisar em Aluno, Curso ou Tipo..." data-tooltip="Digite para pesquisar nos atendimentos" data-tooltip-type="default"> 
+                            </div>
+                            <div class="filter-buttons-container">
+                                <div class="filter-button-wrapper">
+                                   <button class="filter-button" data-controls="all-history-unidade-dropdown" data-tooltip="Filtrar por unidade" data-tooltip-type="secondary">
+                                    <i class="fas fa-building"></i>
+                                    <span id="all-history-unidade-btn-text">Unidade</span>
+                                    <i class="fas fa-caret-down"></i>
+                                  </button>
+                                     <div class="filter-dropdown" id="all-history-unidade-dropdown">
+                                      <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="all">Mostrar Todas</a>
+                                      <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Lauro de Freitas">Lauro de Freitas</a>
+                                      <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Camaçari">Camaçari</a>
+                                      <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Dendezeiros">Dendezeiros</a>
+                                      <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Alagoinhas">Alagoinhas</a>
+                                       </div>
+                                  </div>
+                                <div class="filter-button-wrapper">
+                                   <button class="filter-button" data-controls="all-history-data-dropdown" data-tooltip="Ordenar por data" data-tooltip-type="secondary">
+                                    <i class="far fa-calendar-alt"></i>
+                                    <span id="all-history-data-btn-text">Data</span>
+                                    <i class="fas fa-caret-down"></i>
+                                  </button> 
+                                  <div class="filter-dropdown" id="all-history-data-dropdown">
+                                    <a href="#" class="sort-option" data-sort-order="desc">Mais recentes</a>
+                                    <a href="#" class="sort-option" data-sort-order="asc">Mais antigos</a>
+                                     </div>
+                                 </div>
+                            </div>
+                        </section>
+                        <div class="loading-spinner" id="history-loading" style="display: none;"></div>
+                        <div id="history-list" class="history-cards-container" style="display: none;">
+                        </div>
+                        <div id="no-history" style="display: none;" class="text-center py-12 text-gray-500"> Nenhum histórico encontrado. </div>
+                    </div>
+
+                    <div class="tab-content" id="tab-student-history">
+                        <section class="search-filter-section">
+                            <div class="search-bar-container"> 
+                                <i class="fas fa-search"></i> 
+                                <input type="text" id="student-search-input" placeholder="Pesquisar nome do aluno..." data-tooltip="Digite o nome do aluno para buscar seu histórico" data-tooltip-type="default"> 
+                            </div>
+                             <div class="filter-buttons-container">
+                                <div class="filter-button-wrapper">
+                                   <button class="filter-button" data-controls="student-history-unidade-dropdown" data-tooltip="Filtrar por unidade (para busca de aluno)" data-tooltip-type="secondary">
+                                    <i class="fas fa-building"></i>
+                                    <span id="student-history-unidade-btn-text">Unidade</span>
+                                    <i class="fas fa-caret-down"></i>
+                                  </button> 
+                                  <div class="filter-dropdown" id="student-history-unidade-dropdown">
+                                     <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="all">Mostrar Todas</a>
+                                    <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Lauro de Freitas">Lauro de Freitas</a>
+                                    <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Camaçari">Camaçari</a>
+                                    <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Dendezeiros">Dendezeiros</a>
+                                    <a href="#" class="filter-option" data-filter-type="unit" data-filter-value="SENAI Alagoinhas">Alagoinhas</a>
+                                    </div>
+                                  </div>
+                                <div class="filter-button-wrapper">
+                                   <button class="filter-button" data-controls="student-history-data-dropdown" data-tooltip="Ordenar histórico do aluno por data" data-tooltip-type="secondary">
+                                    <i class="far fa-calendar-alt"></i><span id="student-history-data-btn-text">Data</span><i class="fas fa-caret-down"></i></button> <div class="filter-dropdown" id="student-history-data-dropdown"> <a href="#" class="sort-option" data-sort-order="desc">Mais recentes</a> <a href="#" class="sort-option" data-sort-order="asc">Mais antigos</a> </div> </div>
+                             </div>
+                        </section>
+                         <div class="loading-spinner" id="student-history-loading" style="display: none;"></div>
+                         <div id="student-history-list" class="history-cards-container" style="display: none;">
+                         </div>
+                         <div id="no-student-history" style="display: none;" class="text-center py-12 text-gray-500"> Digite o nome do aluno para buscar. </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer"> <div class="container footer-content"> <p class="footer-text">© 2025 Educa Mente - Sistema de Gestão para Psicopedagogos</p> </div> </footer>
+    
+    <script src="js/historico.js"></script> 
+
+    <!-- SCRIPT PARA MODAL E TOAST (COPIADO DE SOLICITACOES.HTML) -->
+    <script>
+    (function() {
+        'use strict';
+        let modalElement, modalTitleElement, modalBodyElement, confirmBtn, cancelBtn, closeBtnModal, currentConfirmCallback, currentCancelCallback, toastContainerElement;
+        
+        function initializeModalDOM() {
+            if (document.getElementById('confirmationModal_generated')) {
+                modalElement = document.getElementById('confirmationModal_generated');
+                if (modalElement) { // Checagem extra
+                    modalTitleElement = document.getElementById('modalTitle_generated'); 
+                    modalBodyElement = document.getElementById('modalBodyText_generated'); 
+                    confirmBtn = document.getElementById('modalConfirmBtn_generated'); 
+                    cancelBtn = document.getElementById('modalCancelBtn_generated'); 
+                    closeBtnModal = document.getElementById('modalCloseBtn_generated');
+                } else { return; } // Se o modal não foi encontrado, não prossiga
+            } else {
+                const modalHTML = `
+                    <div id="confirmationModal_generated" class="custom-modal" aria-modal="true" role="dialog">
+                        <div class="custom-modal-content">
+                            <div class="custom-modal-header">
+                                <h5 class="custom-modal-title" id="modalTitle_generated">Confirmar Ação</h5>
+                                <button type="button" class="custom-modal-close" id="modalCloseBtn_generated" aria-label="Fechar" data-tooltip="Fechar esta caixa de diálogo" data-tooltip-type="secondary">×</button>
+                            </div>
+                            <div class="custom-modal-body" id="modalBodyText_generated"><p>Você tem certeza?</p></div>
+                            <div class="custom-modal-footer">
+                                <button type="button" class="custom-btn custom-btn-secondary" id="modalCancelBtn_generated" data-tooltip="Cancelar ação e fechar">Cancelar</button>
+                                <button type="button" class="custom-btn custom-btn-primary" id="modalConfirmBtn_generated" data-tooltip="Confirmar e executar ação">Confirmar</button>
+                            </div>
+                        </div>
+                    </div>`;
+                document.body.insertAdjacentHTML('beforeend', modalHTML);
+                initializeModalDOM(); // Re-chama para pegar os elementos recém-criados
+                return; 
+            }
+            
+            // Adiciona event listeners apenas se os botões existirem
+            if (confirmBtn) confirmBtn.addEventListener('click', () => { if (currentConfirmCallback) currentConfirmCallback(); hideModal(); });
+            const closeModalActions = () => { if (currentCancelCallback) currentCancelCallback(); hideModal(); };
+            if (cancelBtn) cancelBtn.addEventListener('click', closeModalActions); 
+            if (closeBtnModal) closeBtnModal.addEventListener('click', closeModalActions); 
+            if (modalElement) {
+                 modalElement.addEventListener('click', (event) => { if (event.target === modalElement) closeModalActions(); }); 
+                 document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modalElement.classList.contains('show')) closeModalActions(); });
+            }
+        }
+        function hideModal() { if (!modalElement) return; modalElement.classList.remove('show'); currentConfirmCallback = null; currentCancelCallback = null; }
+        
+        window.showConfirmationModal = function(title, message, confirmCallback, cancelCallback, confirmButtonText = 'Confirmar', confirmButtonClass = 'custom-btn-primary') {
+            if (!modalElement || !modalElement.classList) initializeModalDOM();
+            if (!modalElement || !modalTitleElement || !modalBodyElement || !confirmBtn) { 
+                console.error("Elementos do modal não encontrados ou não inicializados corretamente."); 
+                // Fallback para o confirm nativo se o modal falhar em inicializar
+                if (confirm(message)) { if(confirmCallback) confirmCallback(); } 
+                else { if(cancelCallback) cancelCallback(); }
+                return; 
+            }
+
+            modalTitleElement.textContent = title; 
+            modalBodyElement.innerHTML = `<p>${message.replace(/\n/g, "<br>")}</p>`; 
+            confirmBtn.textContent = confirmButtonText; 
+            confirmBtn.className = `custom-btn ${confirmButtonClass}`;
+            confirmBtn.setAttribute('data-tooltip', `${confirmButtonText} e executar ação`); 
+            
+            currentConfirmCallback = confirmCallback; 
+            currentCancelCallback = cancelCallback; 
+            modalElement.classList.add('show'); 
+            if(confirmBtn) confirmBtn.focus();
+        }
+
+        function initializeToastContainerDOM() {
+             if (document.getElementById('toastContainer_generated')) {
+                 toastContainerElement = document.getElementById('toastContainer_generated');
+             } else {
+                const toastContainerHTML = `<div id="toastContainer_generated" class="custom-toast-container"></div>`;
+                document.body.insertAdjacentHTML('beforeend', toastContainerHTML);
+                initializeToastContainerDOM(); 
+                return;
+            }
+        }
+        window.showToast = function(message, type = 'info', duration = 3500) {
+            if (!toastContainerElement || !toastContainerElement.prepend) initializeToastContainerDOM();
+            if (!toastContainerElement) { console.error("Container de toast não encontrado."); return; }
+
+            const toast = document.createElement('div'); 
+            toast.className = `custom-toast custom-toast-${type}`; 
+            let iconClass = '';
+            switch (type) { 
+                case 'success': iconClass = 'fas fa-check-circle'; break; 
+                case 'error': iconClass = 'fas fa-times-circle'; break; 
+                case 'warning': iconClass = 'fas fa-exclamation-triangle'; break; 
+                case 'info': iconClass = 'fas fa-info-circle'; break; 
+            }
+            toast.innerHTML = (iconClass ? `<i class="${iconClass} custom-toast-icon"></i>` : '') + `<span>${message}</span>`;
+            toastContainerElement.prepend(toast); 
+            requestAnimationFrame(() => { requestAnimationFrame(() => { toast.classList.add('show'); }); });
+            setTimeout(() => { 
+                toast.classList.remove('show'); 
+                toast.addEventListener('transitionend', () => { 
+                    if (toast.parentNode === toastContainerElement) { toastContainerElement.removeChild(toast); } 
+                }, { once: true }); 
+            }, duration);
+        }
+        // Inicializa o DOM do modal e do toast no carregamento inicial do script
+        initializeModalDOM();
+        initializeToastContainerDOM();
+    })();
+
+    // Script unificado para Tooltip, Dark Mode, Logout e outras inicializações da página
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- INICIALIZAÇÃO DE ÍCONES DA NAVBAR ---
+        try {
+            if (typeof icons !== 'undefined' && icons.home && icons.history && icons.requests) {
+                const iconHomeEl = document.getElementById('icon-home');
+                const iconHistoryEl = document.getElementById('icon-history');
+                const iconRequestsEl = document.getElementById('icon-requests');
+                if(iconHomeEl) iconHomeEl.innerHTML = icons.home;
+                if(iconHistoryEl) iconHistoryEl.innerHTML = icons.history;
+                if(iconRequestsEl) iconRequestsEl.innerHTML = icons.requests;
+            } else {
+                console.warn("Objeto 'icons' (de js/icons.js) não definido ou incompleto para a navbar.");
+            }
+        } catch (e) { console.error("Erro ao carregar ícones da navbar:", e); }
+
+        // --- DARK MODE ---
+        const toggleDarkMode = document.getElementById('toggle-dark-mode');
+        if (toggleDarkMode) {
+            const applyDarkModePreference = (isDark) => {
+                document.body.classList.add('no-transitions');
+                document.body.classList.toggle('dark', isDark);
+                const iconSun = document.getElementById('icon-sun');
+                const iconMoon = document.getElementById('icon-moon');
+                if (iconSun && iconMoon) {
+                    iconSun.style.display = isDark ? 'none' : 'inline-block';
+                    iconMoon.style.display = isDark ? 'inline-block' : 'none';
+                }
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        document.body.classList.remove('no-transitions');
+                    });
+                });
+            };
+            const darkModeUserPreference = localStorage.getItem('darkMode') === 'enabled';
+            toggleDarkMode.checked = darkModeUserPreference;
+            applyDarkModePreference(darkModeUserPreference);
+
+            toggleDarkMode.addEventListener('change', function() {
+                const isDarkEnabled = this.checked;
+                applyDarkModePreference(isDarkEnabled);
+                localStorage.setItem('darkMode', isDarkEnabled ? 'enabled' : 'disabled');
+            });
+        } else {
+            console.warn("Elemento #toggle-dark-mode não encontrado.");
+        }
+
+        // --- BOTÃO DE LOGOUT ---
+        const logoutButton = document.getElementById('logout-nav-link');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', function(event) {
+                event.preventDefault(); 
+                const logoutUrl = this.getAttribute('href'); 
+                
+                if (typeof window.showConfirmationModal === 'function') {
+                    window.showConfirmationModal(
+                        'Confirmar Saída', 
+                        'Tem certeza que deseja sair da sua conta e retornar à tela inicial?', 
+                        () => { window.location.href = logoutUrl; },
+                        null, 
+                        'Sim, Sair', 
+                        'custom-btn-danger' 
+                    );
+                } else {
+                    // Este console.warn agora é mais provável de ser visto se o modal não funcionar
+                    console.warn('Função window.showConfirmationModal não definida. Usando confirm padrão do navegador.');
+                    if (confirm('Tem certeza que deseja sair da sua conta e retornar à tela inicial?')) {
+                        window.location.href = logoutUrl;
+                    }
+                }
+            });
+        } else {
+            console.warn("Elemento #logout-nav-link não encontrado.");
+        }
+
+        // --- TOOLTIP PERSONALIZADO ---
+        let tooltipElement;
+        const tooltipOffset = 10; 
+        function createTooltipElement() {
+            if (document.getElementById('global-custom-tooltip')) {
+                tooltipElement = document.getElementById('global-custom-tooltip');
+                return;
+            }
+            tooltipElement = document.createElement('div');
+            tooltipElement.id = 'global-custom-tooltip';
+            tooltipElement.className = 'custom-tooltip-popup';
+            document.body.appendChild(tooltipElement);
+        }
+        createTooltipElement(); 
+        function showTooltip(event) {
+            const target = event.currentTarget;
+            const tooltipText = target.getAttribute('data-tooltip');
+            if (!tooltipText || !tooltipElement) return;
+            tooltipElement.textContent = tooltipText;
+            let tooltipType = target.getAttribute('data-tooltip-type') || 'default';
+            if (tooltipType === 'default') { 
+                const typeRegex = /(?:btn-|custom-btn-)(primary|danger|warning|secondary|success|info)/;
+                let typeFound = false;
+                target.classList.forEach(cls => {
+                    const match = cls.match(typeRegex);
+                    if (match && match[1]) { tooltipType = match[1]; typeFound = true; }
+                });
+                 if (!typeFound) { 
+                    if (target.classList.contains('active') && target.classList.contains('navbar-link')) tooltipType = 'info';
+                    else if (target.classList.contains('filter-button')) tooltipType = 'secondary'; 
+                    else if (target.classList.contains('tab')) tooltipType = 'info'; 
+                 }
+            }
+            tooltipElement.className = 'custom-tooltip-popup visible'; 
+            tooltipElement.classList.add(`type-${tooltipType}`);
+            tooltipElement.style.setProperty('--tooltip-arrow-color', getComputedStyle(tooltipElement).backgroundColor);
+            const targetRect = target.getBoundingClientRect();
+            tooltipElement.style.display = 'block'; 
+            const tooltipRect = tooltipElement.getBoundingClientRect();
+            tooltipElement.style.display = ''; 
+            let top = targetRect.top - tooltipRect.height - tooltipOffset;
+            let left = targetRect.left + (targetRect.width / 2) - (tooltipRect.width / 2);
+            tooltipElement.classList.remove('arrow-bottom');
+            if (top - window.scrollY < 5) { top = targetRect.bottom + tooltipOffset; tooltipElement.classList.add('arrow-bottom'); }
+            if (left < 5) { left = 5; } 
+            else if (left + tooltipRect.width > window.innerWidth - 5) { left = window.innerWidth - tooltipRect.width - 5; }
+            tooltipElement.style.left = `${left}px`;
+            tooltipElement.style.top = `${top + window.scrollY}px`;
+        }
+        function hideTooltip() {
+            if (tooltipElement) { tooltipElement.className = 'custom-tooltip-popup'; }
+        }
+        document.body.addEventListener('mouseenter', event => {
+            const target = event.target.closest('[data-tooltip]');
+            if (target) {
+                if (target.hasAttribute('title')) { 
+                     target.setAttribute('data-original-title', target.getAttribute('title'));
+                     target.removeAttribute('title');
+                }
+                showTooltip({ currentTarget: target });
+            }
+        }, true);
+        document.body.addEventListener('mouseleave', event => {
+            const target = event.target.closest('[data-tooltip]');
+            if (target) {
+                if (target.hasAttribute('data-original-title')) { 
+                    target.setAttribute('title', target.getAttribute('data-original-title'));
+                    target.removeAttribute('data-original-title');
+                }
+                hideTooltip();
+            }
+        }, true);
+    });
+    </script>
+</body>
+</html>

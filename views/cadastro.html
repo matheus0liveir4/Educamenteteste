@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - EDUCA MENTE</title>
+    <link rel="shortcut icon" href="img/faviconeducamente.ico" type="image/x-icon">
+
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/cadastro.css">
+    <!-- Link para a fonte de ícones (Font Awesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+</head>
+<body>
+    
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <h1 class="educa-mente">EDUCA MENTE</h1>
+            <p>Preencha suas informações para um cadastro rápido e seguro.</p>
+        </aside>
+
+        <!-- Formulário -->
+        <main class="form-container">
+            <h2>Cadastro</h2>
+            <p>Preencha os campos abaixo para se registrar.</p> 
+            <form action="/cadastro_aluno" method="post" id="cadastroForm">
+                <!-- Nome Completo -->
+                <div class="input-group">
+                    <label for="name">Nome Completo</label>
+                    <input type="text" id="name" name="name" placeholder="Digite seu nome completo" required>
+                </div>
+
+                <!-- E-mail -->
+                <div class="input-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                </div>
+
+                <!-- Senha -->
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Digite sua senha" required
+                        oninput="togglePasswordVisibility('password')">
+                        <!-- Ícone de olho (visível ao digitar a senha) -->
+                        <span class="toggle-password" onclick="togglePassword('password')">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar"></div>
+                        <div class="strength-text"></div>
+                    </div>
+                </div>
+
+                <!-- Confirmar Senha -->
+                <div class="input-group">
+                    <label for="confirm-password">Confirme a Senha</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="confirm-password" name="confirmPassword" placeholder="Confirme sua senha" required 
+                        oninput="togglePasswordVisibility('confirm-password')">
+                        <!-- Ícone de olho (visível ao digitar a senha) -->
+                        <span class="toggle-password" onclick="togglePassword('confirm-password')">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Botão de Cadastro -->
+                <button type="submit" class="btn-primary"><strong>Confirmar Cadastro</strong></button>
+            </form>
+
+            <p class="forgot-password"><a href="/"><strong>Voltar para o inicio</strong></a></p>
+            <p class="login-link">Já possui uma conta? <a href="/login?tipo=aluno">Faça login</a>.</p>
+        </main>
+    </div>
+    
+    <script src="js/cadastro.js"></script>
+</body>
+</html>

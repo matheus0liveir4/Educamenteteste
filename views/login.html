@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EDUCA MENTE</title>
+    <link rel="shortcut icon" href="img/faviconeducamente.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/login_aluno.css" id="loginStylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <h1 class="educa-mente">EDUCA MENTE</h1>
+            <p><strong>Bem-vindo de volta!</strong> <br> Faça login para acessar o sistema.</p>
+        </aside>
+
+        <main class="form-container">
+            <h2 id="loginTitle">Login</h2>
+            <form id="login-form" action="/login" method="post">
+                <div class="input-group">
+                    <label for="email" id="emailLabel">E-mail</label>
+                    <input type="email" id="email" name="email" placeholder="Digite seu e-mail" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="Digite sua senha" required oninput="togglePasswordVisibility('password')">
+                        <span class="toggle-password" onclick="togglePassword('password')">
+                            <i class="fas fa-eye"></i>
+                        </span>
+                    </div>
+                </div>
+                <input type="hidden" id="tipoEsperado" name="tipoEsperado" value="">
+                <button type="submit" class="btn-primary"><strong>Entrar</strong></button>
+                <p class="forgot-password"><a href="/"><strong>Voltar para o inicio</strong></a></p>
+
+                <!-- Mensagem de erro (para validateForm, se usado) -->
+                <div id="error-message" class="error-message" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i> <span id="errorMessageText">Preencha todos os campos.</span>
+                </div>
+            </form>
+            <!-- Link de cadastro (visível apenas para aluno) -->
+            <p class="login-link" id="cadastroLinkContainer" style="display: none;">Não possui uma conta? <a href="/cadastro"><strong>Cadastre-se</strong></a>.</p>
+        </main>
+    </div>
+
+    <script src="js/cadastro.js"></script> <!-- Supondo que togglePassword e validateForm estão aqui -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tipoUsuario = urlParams.get('tipo');
+
+            const loginTitle = document.getElementById('loginTitle');
+            const emailInput = document.getElementById('email');
+            const emailLabel = document.getElementById('emailLabel');
+            const tipoEsperadoInput = document.getElementById('tipoEsperado');
+            const cadastroLinkContainer = document.getElementById('cadastroLinkContainer');
+            const loginForm = document.getElementById('login-form');
+            const errorMessageText = document.getElementById('errorMessageText');
+            // const loginStylesheet = document.getElementById('loginStylesheet'); // Para mudar CSS
+
+            if (tipoUsuario) {
+                tipoEsperadoInput.value = tipoUsuario;
+
+                if (tipoUsuario === 'aluno') {
+                    loginTitle.textContent = 'Login Aluno';
+                    emailInput.placeholder = 'ex: usuario@ba.estudante.senai.br';
+                    emailLabel.textContent = 'E-mail';
+                    cadastroLinkContainer.style.display = 'block';
+                    // Se quiser usar o CSS específico do aluno:
+                    // loginStylesheet.href = 'css/style_login_aluno.css';
+                    // Remover onsubmit se o aluno não usa validateForm
+                    loginForm.removeAttribute('onsubmit');
+                } else if (tipoUsuario === 'professor') {
+                    loginTitle.textContent = 'Login Professor';
+                    emailInput.placeholder = 'ex: usuario@ba.docente.senai.br';
+                    emailLabel.textContent = 'E-mail Institucional';
+                    if (errorMessageText) errorMessageText.textContent = 'Preencha o campo e-mail e senha.'; // Ajuste da msg de erro
+                     loginForm.setAttribute('onsubmit', 'return validateForm()');
+                } else if (tipoUsuario === 'psicopedagoga') {
+                    loginTitle.textContent = 'Login Psicopedagoga';
+                    emailInput.placeholder = 'Digite seu e-mail';
+                    emailLabel.textContent = 'E-mail';
+                    if (errorMessageText) errorMessageText.textContent = 'Preencha todos os campos.';
+                     loginForm.setAttribute('onsubmit', 'return validateForm()');
+                } else {
+                    // Tipo desconhecido, pode redirecionar ou mostrar um erro genérico
+                    loginTitle.textContent = 'Login';
+                    // Esconder link de cadastro por segurança
+                    cadastroLinkContainer.style.display = 'none';
+                }
+            } else {
+                // Nenhum tipo especificado, talvez redirecionar para o index ou tratar como erro
+                loginTitle.textContent = 'Erro: Tipo de login não especificado';
+                console.error('Tipo de usuário não especificado na URL.');
+                // Esconder o formulário ou desabilitar o botão de submit
+                loginForm.style.display = 'none';
+                 alert('Erro: Tipo de login não especificado. Por favor, volte à página inicial e selecione um tipo de usuário.');
+                window.location.href = '/'; // Redireciona para a página inicial
+            }
+        });
+    </script>
+</body>
+</html>

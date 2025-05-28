@@ -1,0 +1,852 @@
+:root{
+    --gray-500: #bdbebe;
+      /* Cor das bordas */
+    --primary: #0A4275;
+    --secondary: #1575A3;
+    --switch-bg-unchecked: #ccc;
+    --switch-bg-checked: var(--secondary, #1575A3);
+    --switch-slider-color: white;
+    --white: #FFFFFF;
+    --success: #4CAF50;
+    --warning: #FFC107; /* Cor desejada para o tooltip de Pendentes */
+    --danger: #F44336;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --tooltip-default-bg: #555;
+
+    /* Variáveis do Modal - MODIFICADO para usar --gray-500 por padrão */
+    --custom-modal-bg: #ffffff;
+    --custom-modal-text-color: #333333;
+    --custom-modal-header-border: var(--gray-500); /* MODIFICADO de var(--gray-300, #dee2e6) */
+    --custom-modal-box-shadow: rgba(0, 0, 0, 0.1);
+    --custom-toast-text-color: #ffffff;
+    --custom-toast-success-bg: var(--success, #4CAF50);
+    --custom-toast-error-bg: var(--danger, #F44336);
+    --custom-toast-warning-bg: var(--warning, #FFC107);
+    --custom-toast-warning-text: #333333;
+    --custom-toast-info-bg: var(--secondary, #1575A3);
+    --custom-toast-box-shadow: rgba(0,0,0,0.1);
+    --custom-toast-icon-spacing: 10px;
+}
+/* ======================================== */
+/* Estilo Global (Cores Originais)        */
+/* ======================================== */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    display: flex;
+    flex-direction: column; /* Empilha os filhos verticalmente */
+    min-height: 100vh; /* Garante que o body ocupe no mínimo toda a altura da viewport */
+    /* Se você estiver usando html height 100%, pode usar min-height: 100%; aqui também */
+}
+
+/* TEMA DARK */
+body.dark{
+    background-color: rgb(49, 47, 47);
+    color: #FFFFFF;
+    border-bottom: 1px solid #7f8083;
+}
+body.dark .search-filter-section {
+    padding: 1rem 1.5rem 1rem 1.5rem;
+    background-color: rgb(78, 78, 78);
+    border-bottom: 1px solid #555; /* Consistência com outros dark mode borders */
+    font-family: Arial, sans-serif;
+}
+
+
+body.dark table th {
+    background-color: rgb(49, 47, 47);
+    text-align: center;
+    padding: 0.8rem;
+    color: #FFFFFF;
+    border-bottom: 1px solid #7f8083;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+body.dark table td { /* Separado para clareza, pois th já está acima */
+    text-align: center;
+    padding: 0.8rem;
+    border-bottom: 1px solid #7f8083;
+    vertical-align: middle;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* ======================================== */
+/* Container Principal (Cores Originais)  */
+/* ======================================== */
+.container-solicitacoes {
+    width: 90%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    /* Se precisar de uma borda aqui, adicione: border: 1px solid var(--gray-500); */
+}
+
+body.dark table tbody tr:hover {
+    background-color: #444548;
+}
+
+
+/* ======================================== */
+/* Cabeçalho (Cores Originais)           */
+/* ======================================== */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    color: #0A4275;
+    /* Se o header tiver uma borda no tema claro, adicione:
+    border-bottom: 1px solid var(--gray-500);
+    */
+}
+
+.header h1 {
+    font-size: 1.8rem;
+    margin: 0;
+}
+
+/* ======================================== */
+/* Botão Primário (Cores Originais)       */
+/* ======================================== */
+.btn-primary {
+    padding: 0.8rem 1.5rem;
+    background-color: #1575A3;
+    color: #FFFFFF;
+    border: none; /* Mantido como none, não será afetado */
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.9rem;
+}
+
+.btn-primary:hover {
+    background-color: #0A4275;
+}
+
+/* ============================================================ */
+/* Seção de Pesquisa e Filtro (Estrutura Google, Cores Tema) */
+/* ============================================================ */
+.search-filter-section {
+    padding: 1rem 1.5rem 1rem 1.5rem;
+    background-color: #FFFFFF;
+    border-bottom: 1px solid var(--gray-500); /* Já correto */
+    font-family: Arial, sans-serif;
+}
+
+.search-bar-container {
+    display: flex;
+    align-items: center;
+    background-color: #F7F9FC;
+    border: 1px solid var(--gray-500); /* Já correto */
+    border-radius: 24px;
+    padding: 0.65rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.search-bar-container i.fa-search {
+    color: #5F6368;
+    font-size: 1.125rem;
+    margin-right: 1rem;
+    line-height: 1;
+}
+
+.search-bar-container input[type="text"] {
+    flex-grow: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 1rem;
+    color: #333;
+    font-family: inherit;
+    padding: 0;
+}
+
+.search-bar-container input[type="text"]::placeholder {
+    color: #5F6368;
+    opacity: 1;
+}
+
+.filter-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.filter-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #F7F9FC;
+    border: 1px solid var(--gray-500); /* Já correto */
+    border-radius: 16px;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+    font-family: inherit;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.filter-button:hover {
+    background-color: #E3EDF7;
+}
+
+.filter-button i {
+    color: #5F6368;
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+.filter-button i.fa-caret-down {
+    margin-left: 0.3rem;
+    font-size: 0.7rem;
+}
+
+/* ======================================== */
+/* Estilos para Dropdowns e Interatividade */
+/* ======================================== */
+
+.filter-button-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.filter-dropdown {
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.15);
+    z-index: 10;
+    border-radius: 4px;
+    border: 1px solid var(--gray-500); /* MODIFICADO de #D9E6F2 */
+    margin-top: 5px;
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.filter-dropdown.active {
+    display: block;
+}
+
+.filter-dropdown a {
+    color: #333;
+    padding: 10px 15px;
+    text-decoration: none;
+    display: block;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--gray-500); /* MODIFICADO de #F7F9FC - Pode ser muito forte, considere var(--gray-200) ou var(--gray-100) se preferir mais sutil */
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+.filter-dropdown a:last-child {
+    border-bottom: none;
+}
+
+
+.filter-dropdown a:hover {
+    background-color: #cfd8e0;
+    color: #333;
+}
+
+.filter-button.active {
+    background-color: #E3EDF7;
+}
+
+/* --- Cores Hover Específicas para Status Dropdown --- */
+#status-dropdown a.filter-option[data-filter-value="all"]:hover {
+   background-color: #E3EDF7;
+   color: #333;
+}
+#status-dropdown a.filter-option[data-filter-value="Aprovado"]:hover {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+}
+#status-dropdown a.filter-option[data-filter-value="Rejeitado"]:hover {
+    background-color: #F44336;
+    color: #FFFFFF;
+}
+#status-dropdown a.filter-option[data-filter-value="Pendente"]:hover {
+    background-color: #FFEB3B;
+    color: #0A4275;
+}
+#status-dropdown a.filter-option[data-filter-value="Finalizado"]:hover {
+    background-color: #78909C;
+    color: #FFFFFF;
+}
+
+
+/* ======================================== */
+/* Conteúdo da Tabela (Cores Originais)   */
+/* ======================================== */
+.table-container {
+    padding: 1.5rem;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+}
+
+table th,
+table td {
+    text-align: center;
+    padding: 0.8rem;
+    border-bottom: 1px solid var(--gray-500); /* Já correto */
+    vertical-align: middle;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+table th {
+    background-color: #F7F9FC;
+    font-weight: bold;
+    color: #333;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    white-space: nowrap;
+}
+
+td.telefone-col,
+td.unidade-col {
+    white-space: nowrap;
+}
+
+table tr:hover {
+    background-color: #dee6ee;
+}
+
+table tr:last-child td {
+    border-bottom: none; /* Mantido como none */
+}
+
+/* ======================================== */
+/* Status Badges (Cores Originais + Novo) */
+/* ======================================== */
+.status {
+    font-weight: bold;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    text-align: center;
+    display: inline-block;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    white-space: nowrap;
+    min-width: 50px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease, color 0.3s ease, cursor 0.1s ease;
+    background-color: #0A4275;
+    color: #FFFFFF;
+    /* Se os status badges precisarem de borda no tema claro:
+    border: 1px solid var(--gray-500);
+    Mas geralmente badges não têm bordas ou a borda é da cor do background.
+    */
+}
+
+
+.status.pending {
+    background-color: #FFEB3B;
+    color: #0A4275;
+}
+
+.status.approved {
+    background-color: #4CAF50;
+    color: #FFFFFF;
+    cursor: pointer;
+}
+
+.status.rejected {
+    background-color: #F44336;
+    color: #FFFFFF;
+}
+
+/* Status.finalized abaixo foi refatorado com borda */
+
+
+/* ======================================== */
+/* Botões de Ação (Cores Originais)       */
+/* ======================================== */
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.btn-view, .btn-approve, .btn-reject, .btn-finalize, .btn-edit {
+    border: none; /* Mantido como none, não será afetado */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, opacity 0.3s;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.2;
+    font-weight: normal;
+}
+
+.btn-view { background-color: #FFEB3B; color: #0A4275; }
+.btn-approve { background-color: #4CAF50; color: #FFFFFF; }
+.btn-reject { background-color: #F44336; color: #FFFFFF; }
+.btn-finalize { background-color: #607D8B; color: #FFFFFF; }
+
+.btn-view:hover { background-color: #FDD835; }
+.btn-approve:hover:not(:disabled) { background-color: #388E3C; }
+.btn-reject:hover:not(:disabled) { background-color: #D32F2F; }
+.btn-finalize:hover:not(:disabled) { background-color: #455A64; }
+
+/* Estado desabilitado genérico */
+.btn-approve:disabled,
+.btn-reject:disabled,
+.btn-finalize:disabled {
+    background-color: #E3EDF7;
+    cursor: not-allowed;
+    color: #A1A5A8;
+    opacity: 0.7;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+.completed-cards-container, .upcoming-cards-container, .rejected-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1rem;
+    padding: 1rem 0;
+}
+.appointment-card {
+    border: 1px solid var(--gray-500); /* Já correto */
+    border-radius: 8px;
+    padding: 1rem;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+}
+.appointment-card-header {
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--gray-500); /* Já correto */
+}
+.appointment-card-header h3 {
+    margin: 0; font-size: 1.1rem; font-weight: bold; color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+body.dark .appointment-card-header h3 { color: #eee; }
+body.dark .appointment-card-header { border-bottom-color: #555; }
+
+.appointment-card-header h3 .view-details-icon {
+    margin-left: 15px;
+    text-decoration: none;
+    color: var(--primary);
+    font-size: 1.1em;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+.appointment-card-header h3 .view-details-icon:hover {
+    color: var(--secondary);
+    transform: scale(1.1);
+}
+
+body.dark .appointment-card-header h3 .view-details-icon {
+    color: #5cb9f0;
+}
+body.dark .appointment-card-header h3 .view-details-icon:hover {
+    color: #8ecff5;
+}
+
+.appointment-card-body { flex-grow: 1; }
+.appointment-card-body p { margin-bottom: 0.5rem; font-size: 0.9rem; color: #555; }
+.appointment-card-body p i { margin-right: 8px; color: var(--secondary); width: 16px; text-align: center; }
+body.dark .appointment-card-body p { color: #aaa; }
+body.dark .appointment-card-body p i { color: #aaa; }
+
+.appointment-card-footer {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--gray-500); /* MODIFICADO de var(--gray-200, #e9ecef) */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+body.dark .appointment-card-footer { border-top-color: #555; }
+
+.appointment-card-footer .custom-btn.btn-card-action {
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+}
+.text-light { color: #6c757d; } .font-medium { font-weight: 500; } .text-sm { font-size: 0.875rem; } .mt-1 { margin-top: 0.25rem; } .mt-4 { margin-top: 1rem; } .gap-1 { gap: 0.25rem; } .gap-3 { gap: 0.75rem; } .flex { display: flex; } .items-center { align-items: center; } .justify-between { justify-content: space-between; } .flex-col { flex-direction: column; } @media (min-width: 1024px) { .lg\:flex-row { flex-direction: row; } .lg\:items-center { align-items: center;} } @media (min-width: 640px) { .sm\:flex-row { flex-direction: row; } .sm\:items-center { align-items: center;} } .badge { display: inline-block; padding: .35em .65em; font-size: .75em; font-weight: 700; line-height: 1; color: #fff; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: .25rem; } .badge-primary { background-color: #0d6efd; }
+/* Estilos para badges de status nos cards e tabela */
+.status.pending, .badge.status-pendente { background-color: var(--warning); color: #212529; }
+.status.approved, .badge.status-aprovado { background-color: var(--success); }
+.status.rejected, .badge.status-rejeitado { background-color: var(--danger); }
+.badge.status-agendado { background-color: var(--secondary); }
+.badge.status-finalizado { background-color: var(--primary); }
+
+.status.finalized {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    box-sizing: border-box;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    min-height: 28px;
+    font-weight: 500;
+    border-radius: 0.3rem;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    color: var(--primary);
+    background-color: var(--gray-200, #e9ecef);
+    border: 1px solid var(--gray-500); /* MODIFICADO/GARANTIDO de var(--gray-300, var(--gray-500)) */
+    transition: all .15s ease-in-out;
+}
+
+.status.finalized:hover {
+    background-color: var(--gray-300, #dee2e6);
+    border-color: #a8adb1; /* Mantido, ou poderia ser var(--gray-500) se quiser consistência total no hover também */
+}
+
+.status.finalized i.fa-undo {
+    margin-right: 6px;
+    font-size: 0.9em;
+    line-height: 1;
+}
+
+body.dark .status.finalized {
+    color: var(--custom-modal-text-color, #eeeeee);
+    background-color: #5a5a5a;
+    border-color: #6c757d; /* Borda dark mode mantida */
+}
+
+body.dark .status.finalized:hover {
+    background-color: #656565;
+    border-color: #787878;
+}
+
+.py-12 { padding-top: 3rem; padding-bottom: 3rem; } .text-center { text-align: center; } .text-gray-500 { color: #6b7280; }
+.navbar-brand { font-family: 'Audiowide', sans-serif; font-size: 1.6rem; color: white !important; text-decoration: none; font-weight: normal; padding: 0.25rem 0; }
+.navbar {
+    background-color: var(--primary);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    height: 64px;
+    border-bottom: 1px solid var(--gray-500); /* MODIFICADO de var(--primary) - Isso mudará a cor da borda da navbar! */
+}
+
+.navbar-container { display: flex; justify-content: space-between; align-items: center; height: 100%; max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+
+.navbar-menu {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    margin: 0;
+    padding: 0;
+    gap: 1.5rem;
+}
+.navbar-link { color: var(--white, #FFFFFF); text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; padding: 8px 0; position: relative; cursor: pointer; transition: color 0.2s; opacity: 0.85; font-size: 0.9rem; }
+.navbar-link:after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 2px; background-color: var(--white, #FFFFFF); transition: width 0.3s ease-in-out; }
+.navbar-link.active, .navbar-link:hover { color: var(--white, #FFFFFF); opacity: 1; }
+.navbar-link.active:after { width: 100%; }
+.navbar-icon { width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; }
+.navbar-icon svg, .navbar-icon i { width: 18px; height: 18px; color: var(--white, #FFFFFF); vertical-align: middle; }
+
+/* DARK MODE specifics */
+body.dark { background-color: #222; color: #eee; }
+body.dark .navbar { background-color: #333; border-bottom-color: #444; } /* Borda dark mode mantida */
+body.dark .navbar-brand { color: white !important; text-shadow: none; }
+body.dark .navbar-link { color: #ccc; }
+body.dark .navbar-link.active, body.dark .navbar-link:hover { color: #fff; }
+body.dark .card { background-color: #333; border-color: #444; } /* Borda dark mode mantida */
+body.dark .card-header { border-bottom-color: #444; } /* Borda dark mode mantida */
+body.dark .page-title, body.dark .card-title { color: #eee; }
+body.dark .page-subtitle { color: #bbb; }
+body.dark .appointment-card { background-color: #444; border-color: #555; color: #ddd; } /* Borda dark mode mantida */
+body.dark .text-light { color: #aaa; }
+body.dark header.header { color: #eee; border-bottom-color: #555; } /* Borda dark mode mantida */
+body.dark main.table-container table th { background-color: #3a3a3a; border-bottom-color: #555;} /* Borda dark mode mantida */
+body.dark main.table-container table td { border-bottom-color: #555; } /* Borda dark mode mantida */
+body.dark main.table-container table tr:hover { background-color: #4a4a4a; }
+body.dark .search-filter-section { background-color: #3a3a3a; border-bottom-color: #555; } /* Borda dark mode mantida */
+body.dark .search-bar-container { background-color: #555; border-color: #6c757d; } /* Adicionado border-color para consistência se houver */
+body.dark .search-bar-container input { color: #eee; }
+body.dark .search-bar-container input::placeholder { color: #aaa; }
+body.dark .filter-button { background-color: #555; color: #eee; border-color: #6c757d; } /* Adicionado border-color para consistência */
+body.dark .filter-button:hover, body.dark .filter-button.active { background-color: #666; border-color: #787878;}
+body.dark .filter-dropdown { background-color: #444; border-color: #555; } /* Borda dark mode mantida */
+body.dark .filter-dropdown a { color: #ccc; border-bottom-color: #555; } /* Borda dark mode mantida */
+body.dark .filter-dropdown a:hover { background-color: #555; }
+body.dark footer.footer {
+    background-color: #333;
+    border-top-color: #444; /* Borda dark mode mantida */
+    color: #ccc;
+}
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.footer-text {
+    margin: 0;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.switch { position: relative; display: inline-block; width: 40px; height: 20px; cursor: pointer; vertical-align: middle; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--switch-bg-unchecked); border-radius: 20px; transition: background-color 0.3s; }
+.slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: var(--switch-slider-color); border-radius: 50%; transition: transform 0.3s; }
+input:checked + .slider { background-color: var(--switch-bg-checked); }
+input:checked + .slider:before { transform: translateX(20px); }
+.no-transitions * { transition: none !important; }
+main.table-container table th, main.table-container table td { white-space: normal !important; word-wrap: break-word; vertical-align: middle; }
+main.table-container table th:nth-child(1), main.table-container table td:nth-child(1) { white-space: nowrap !important; width: 5%; max-width: 50px; text-align: center; }
+main.table-container table th:nth-child(5), main.table-container table td:nth-child(5) { white-space: nowrap !important; min-width: 120px; }
+main.table-container th:nth-child(8), main.table-container td:nth-child(8) { white-space: nowrap !important; min-width: 180px; }
+
+.navbar-right-controls {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+}
+
+.dark-mode-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.dark-mode-toggle-wrapper i {
+    font-size: 1.4rem;
+    line-height: 1;
+    vertical-align: middle;
+    cursor: pointer;
+    color: var(--white, #FFFFFF);
+    transition: color 0.3s;
+}
+body.dark .dark-mode-toggle-wrapper i { color: #f0f0f0; }
+#icon-sun { display: inline-block; } #icon-moon { display: none; }
+body.dark #icon-sun { display: none; } body.dark #icon-moon { display: inline-block; }
+.dark-mode-toggle-wrapper .switch { margin: 0; }
+
+.navbar-logout-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white, #FFFFFF);
+    font-size: 1.4rem;
+    text-decoration: none;
+    opacity: 0.85;
+    transition: opacity 0.2s ease-in-out, color 0.2s ease-in-out;
+    cursor: pointer;
+    margin-left: 1rem;
+}
+.navbar-logout-button:hover {
+    opacity: 1;
+}
+body.dark .navbar-logout-button {
+    color: #f0f0f0;
+}
+body.dark .navbar-logout-button:hover {
+    color: #ffffff;
+}
+
+body.dark {
+    --custom-modal-bg: #3a3a3a; --custom-modal-text-color: #eeeeee; --custom-modal-header-border: #555555; /* Borda dark mode mantida */
+    --custom-modal-box-shadow: rgba(0, 0, 0, 0.3); --custom-toast-text-color: #ffffff; --custom-toast-success-bg: #388E3C;
+    --custom-toast-error-bg: #C62828; --custom-toast-warning-bg: #FFA000; --custom-toast-warning-text: #222222;
+    --custom-toast-info-bg: #105A7F; --custom-toast-box-shadow: rgba(255,255,255,0.1);
+    --tooltip-default-bg: #444;
+}
+.custom-modal { display: none; position: fixed; z-index: 1050; left: 0; top: 0; width: 100%; height: 100%; overflow-x: hidden; overflow-y: auto; outline: 0; background-color: rgba(0, 0, 0, 0.6); align-items: center; justify-content: center; }
+.custom-modal.show { display: flex; }
+.custom-modal-content {
+    position: relative; display: flex; flex-direction: column; width: 90%; max-width: 500px; pointer-events: auto;
+    background-color: var(--custom-modal-bg); background-clip: padding-box;
+    border: 1px solid var(--custom-modal-header-border); /* Usa a variável já modificada em :root para tema claro, e sobrescrita em body.dark */
+    border-radius: 0.5rem; box-shadow: 0 0.5rem 1rem var(--custom-modal-box-shadow);
+    color: var(--custom-modal-text-color); animation: fadeInModal 0.3s ease-out;
+}
+@keyframes fadeInModal { from { opacity: 0; transform: scale(0.95) translateY(-10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.custom-modal-header {
+    display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--custom-modal-header-border); /* Usa a variável */
+    border-top-left-radius: calc(0.5rem - 1px); border-top-right-radius: calc(0.5rem - 1px);
+}
+.custom-modal-title { margin-bottom: 0; line-height: 1.5; font-size: 1.2rem; font-weight: 500; color: var(--primary); }
+body.dark .custom-modal-title { color: #5cb9f0; }
+.custom-modal-close { padding: 0.25rem 0.5rem; margin: -0.5rem -0.75rem -0.5rem auto; background-color: transparent; border: 0; font-size: 1.75rem; font-weight: 700; line-height: 1; color: var(--custom-modal-text-color); opacity: .5; cursor: pointer; transition: opacity 0.15s ease-in-out; }
+body.dark .custom-modal-close { color: var(--custom-modal-text-color); }
+.custom-modal-close:hover { opacity: .85; }
+.custom-modal-body { position: relative; flex: 1 1 auto; padding: 1.25rem; font-size: 0.95rem; line-height: 1.6; }
+.custom-modal-body p { margin-bottom: 0; color: var(--custom-modal-text-color); }
+body.dark .custom-modal-body p { color: var(--custom-modal-text-color); }
+.custom-modal-footer {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 0.5rem; padding: 1rem 1.25rem;
+    background-color: transparent;
+    border-top: 1px solid var(--custom-modal-header-border); /* Usa a variável */
+    border-bottom-right-radius: calc(0.5rem - 1px); border-bottom-left-radius: calc(0.5rem - 1px);
+}
+.custom-btn {
+    display: inline-block; font-weight: 500; text-align: center; vertical-align: middle; cursor: pointer; user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent; /* Mantido transparente por padrão, específico abaixo */
+    padding: 0.5rem 1rem; font-size: 0.9rem; line-height: 1.5; border-radius: 0.3rem;
+    transition: all .15s ease-in-out;
+}
+.custom-btn-primary {
+    color: #fff; background-color: var(--primary);
+    border-color: var(--primary); /* MODIFICADO de var(--primary) - Isso mudará a cor da borda do botão! */
+}
+.custom-btn-primary:hover { background-color: #083864; border-color: #083864; /* Mantém a borda cinza no hover também */ }
+
+.custom-btn-secondary {
+    color: var(--primary); background-color: var(--gray-200, #e9ecef);
+    border-color: var(--gray-500); /* MODIFICADO de var(--gray-300, #dee2e6) */
+}
+.custom-btn-secondary:hover { background-color: var(--gray-300, #dee2e6); border-color: #a8adb1; /* Ou var(--gray-500) */ }
+body.dark .custom-btn-secondary { color: var(--custom-modal-text-color); background-color: #5a5a5a; border-color: #6c757d; } /* Borda dark mode mantida */
+body.dark .custom-btn-secondary:hover { background-color: #656565; border-color: #787878; }
+
+.custom-btn-danger {
+    color: #fff; background-color: var(--danger, #F44336);
+    border-color: var(--gray-500); /* MODIFICADO de var(--danger, #F44336) - Isso mudará a cor da borda! */
+}
+.custom-btn-danger:hover { background-color: #D32F2F; border-color: var(--gray-500); }
+
+.custom-btn-warning {
+    color: #212529; background-color: var(--warning, #FFC107);
+    border-color: var(--gray-500); /* MODIFICADO de var(--warning, #FFC107) - Isso mudará a cor da borda! */
+}
+.custom-btn-warning:hover { background-color: #e0a800; border-color: var(--gray-500); }
+body.dark .custom-btn-warning { color: var(--custom-toast-warning-text); background-color: var(--custom-toast-warning-bg); border-color: var(--custom-toast-warning-bg); } /* Borda dark mode mantida */
+body.dark .custom-btn-warning:hover { background-color: #df8c00; border-color: #d39e00; }
+
+.custom-toast-container { position: fixed; top: 80px; right: 20px; z-index: 1055; width: auto; max-width: 380px; }
+.custom-toast {
+    color: var(--custom-toast-text-color); padding: 0.85rem 1.35rem; margin-bottom: 1rem;
+    border: none; /* Sem borda para toasts */
+    border-radius: 0.3rem; box-shadow: 0 0.35rem 0.85rem var(--custom-toast-box-shadow);
+    opacity: 0; transform: translateX(110%); transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+    display: flex; align-items: center; font-size: 0.9rem; line-height: 1.4;
+}
+.custom-toast.show { opacity: 1; transform: translateX(0); }
+.custom-toast-icon { margin-right: var(--custom-toast-icon-spacing); font-size: 1.3em; line-height: 1; }
+.custom-toast-success { background-color: var(--custom-toast-success-bg); }
+.custom-toast-error { background-color: var(--custom-toast-error-bg); }
+.custom-toast-warning { background-color: var(--custom-toast-warning-bg); color: var(--custom-toast-warning-text); }
+.custom-toast-info { background-color: var(--custom-toast-info-bg); }
+.custom-btn-success {
+    background-color:var(--primary);
+    color: #FFFFFF;
+    /* Se precisar de borda, adicione: border-color: var(--gray-500); */
+}
+.custom-tooltip-popup {
+    position: absolute;
+    padding: 8px 12px;
+    background-color: var(--tooltip-default-bg, #555);
+    color: white;
+    border-radius: 5px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+    z-index: 1070;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out, visibility 0.2s ease-in-out, transform 0.15s ease-out;
+    pointer-events: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    white-space: nowrap;
+    transform: translateY(5px);
+    /* Se tooltips tiverem borda visível no tema claro, adicione:
+    border: 1px solid var(--gray-500);
+    Mas geralmente são apenas background.
+    */
+}
+
+.custom-tooltip-popup.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.custom-tooltip-popup::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--tooltip-arrow-color, var(--tooltip-default-bg, #555)) transparent transparent transparent;
+}
+
+.custom-tooltip-popup.arrow-bottom::after {
+    top: auto;
+    bottom: 100%;
+    border-color: transparent transparent var(--tooltip-arrow-color, var(--tooltip-default-bg, #555)) transparent;
+}
+
+.custom-tooltip-popup.type-primary { background-color: var(--primary); --tooltip-arrow-color: var(--primary); }
+.custom-tooltip-popup.type-danger  { background-color: var(--danger);  --tooltip-arrow-color: var(--danger); }
+.custom-tooltip-popup.type-warning { background-color: var(--warning); color: #212529; --tooltip-arrow-color: var(--warning); }
+.custom-tooltip-popup.type-secondary{ background-color: var(--gray-200);color: #333; --tooltip-arrow-color: var(--gray-200); }
+.custom-tooltip-popup.type-success { background-color: var(--success); --tooltip-arrow-color: var(--success); }
+.custom-tooltip-popup.type-info    { background-color: var(--secondary); --tooltip-arrow-color: var(--secondary); }
+.custom-tooltip-popup.type-default { background-color: var(--tooltip-default-bg, #555); --tooltip-arrow-color: var(--tooltip-default-bg, #555); }
+
+body.dark .custom-tooltip-popup.type-primary { background-color: var(--primary); --tooltip-arrow-color: var(--primary); }
+body.dark .custom-tooltip-popup.type-danger  { background-color: var(--danger);  --tooltip-arrow-color: var(--danger); }
+body.dark .custom-tooltip-popup.type-warning { background-color: var(--custom-toast-warning-bg, #FFA000); color: var(--custom-toast-warning-text, #222); --tooltip-arrow-color: var(--custom-toast-warning-bg, #FFA000); }
+body.dark .custom-tooltip-popup.type-secondary{ background-color: #5a5a5a; color: var(--custom-modal-text-color, #eee); --tooltip-arrow-color: #5a5a5a; }
+body.dark .custom-tooltip-popup.type-success { background-color: var(--custom-toast-success-bg, #388E3C); --tooltip-arrow-color: var(--custom-toast-success-bg, #388E3C); }
+body.dark .custom-tooltip-popup.type-info    { background-color: var(--custom-toast-info-bg, #105A7F); --tooltip-arrow-color: var(--custom-toast-info-bg, #105A7F); }
+body.dark .custom-tooltip-popup.type-default { background-color: var(--tooltip-default-bg, #444); --tooltip-arrow-color: var(--tooltip-default-bg, #444); }
+
+/* ================================================ */
+/* ADIÇÃO FINAL: Footer com borda no tema claro     */
+/* ================================================ */
+footer.footer { /* Adicionando regra para footer no tema claro se necessário */
+    padding: 1rem 0; /* Exemplo de padding */
+    border-top: 1px solid var(--primary); /* MODIFICADO/ADICIONADO */
+    background-color: var(--primary); /* Exemplo de cor de fundo para tema claro */
+    color: #333; /* Exemplo de cor de texto para tema claro */
+}

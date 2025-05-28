@@ -1,0 +1,315 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0A4275, #1575A3, #D9E6F2);
+    padding: 1rem;
+}
+
+.container {
+    width: 90%;
+    max-width: 950px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 2rem;
+}
+
+.title {
+    font-size: 2rem;
+    color: #0A4275;
+    font-family: 'Audiowide', sans-serif;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.form-container {
+    width: 100%;
+}
+
+.form-container h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.form-container form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem 1.5rem;
+    /* align-items: start; <-- Still removed */
+}
+
+.input-group {
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center; /* Keep: Centers the label block and input block */
+    /* text-align: center; <-- Removed: Don't center label text */
+}
+
+/* Specific grid placements (no changes here) */
+.input-group.nome-completo { grid-column: 1 / -1; grid-row: 1; }
+.input-group.data-nascimento { grid-column: 1 / 2; grid-row: 2; }
+.input-group.curso { grid-column: 2 / 3; grid-row: 2; position: relative; }
+.input-group.turno { grid-column: 1 / 2; grid-row: 3; }
+.input-group.turma { grid-column: 2 / 3; grid-row: 3; }
+.input-group.telefone { grid-column: 1 / 2; grid-row: 4; }
+.input-group.responsavel { grid-column: 2 / 3; grid-row: 4; }
+.input-group.instituicao { grid-column: 1 / 2; grid-row: 5; }
+.input-group.motivos { grid-column: 2 / 3; grid-row: 5; position: relative; }
+.input-group.arquivo { grid-column: 1 / -1; grid-row: 6; }
+.form-actions { grid-column: 1 / -1; grid-row: 7; align-self: center; }
+
+.input-group label {
+    font-weight: bold;
+    color: #0A4275;
+    margin-bottom: 0.3rem;
+    width: 100%;       /* Takes full width of its container */
+    max-width: 350px; /* Matches input max-width for alignment */
+    text-align: left; /* Explicitly align text to the left */
+    /* display: block; <-- Not needed with flex */
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select {
+    width: 100%;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #F7F9FC;
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.4;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    /* Apply max-width directly here */
+    max-width: 350px;
+    /* text-align: left; <-- Already default for inputs */
+}
+
+/* Override max-width for specific elements if needed */
+.input-group.nome-completo label, /* Also adjust label max-width if input is wider */
+.input-group.nome-completo input,
+.input-group.arquivo label,    /* Also adjust label max-width if input is wider */
+.input-group.arquivo input,
+.input-group textarea {
+    max-width: none; /* Allow these to be wider */
+}
+
+/* If you want the file input widget itself centered, uncomment max-width */
+/* .input-group input[type="file"] {
+    max-width: 350px;
+} */
+
+
+.input-group textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
+    outline: none;
+    border-color: #1575A3;
+    box-shadow: 0 0 0 2px rgba(21, 117, 163, 0.2);
+}
+
+.input-group.laudo, .input-group.email{
+    margin-left: 40px;
+}
+
+
+#outroCursoInput,
+    #outroMotivoInput {
+      display: none;
+      margin-top: 10px;
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      max-width: 350px; 
+    }
+
+.hidden-by-default {
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none !important;
+    overflow: hidden !important;
+    visibility: hidden !important;
+}
+
+#outroCursoInput:focus,
+#outroMotivoInput:focus {
+   outline: none;
+   border-color: #1575A3;
+   box-shadow: 0 0 0 2px rgba(21, 117, 163, 0.2);
+}
+
+
+
+    /* Classe para esconder campos condicionalmente por padrão */
+    .conditional-field {
+      display: none;
+    }
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e0e0e0;
+    width: 100%;
+    max-width: calc(350px * 2 + 1.5rem); /* Approx match centered content width */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.btn-primary {
+    padding: 0.7rem 1.5rem;
+    background-color: #1575A3;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    order: 2;
+    line-height: 1.4;
+    text-align: center;
+    width: auto;
+    min-width: 180px;
+}
+
+.btn-primary:hover {
+    background-color: #0A4275;
+}
+
+.forgot-password {
+    margin-top: 0;
+    /* text-align: left; <-- Let content align link */
+    order: 1;
+}
+
+.forgot-password a {
+    padding: 0.7rem 1.5rem;
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid #1575A3;
+    border-radius: 5px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    display: inline-block;
+    line-height: 1.4;
+    font-size: 1rem;
+    background-color: #1575A3;
+    min-width: 180px;
+    text-align: center;
+}
+
+
+.forgot-password a:hover {
+    text-decoration: none;
+    background-color: #0A4275;
+    color: #fff;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        padding: 1.5rem;
+        max-width: 100%;
+    }
+
+    .form-container form {
+        grid-template-columns: 1fr;
+        gap: 0.8rem;
+    }
+
+    .input-group,
+    .form-actions {
+        grid-column: auto;
+        grid-row: auto;
+        position: static !important;
+    }
+
+    /* Reset alignment for mobile */
+    .input-group {
+       align-items: stretch; /* Back to default stretch */
+       /* text-align: left; <-- Not needed on group */
+    }
+
+    .input-group label {
+        max-width: none; /* Allow label to fill width */
+        text-align: left; /* Ensure text is left-aligned */
+    }
+
+    .input-group input,
+    .input-group textarea,
+    .input-group select {
+         max-width: none; /* Inputs fill width */
+         font-size: 0.9rem;
+         padding: 0.5rem 0.8rem;
+    }
+
+    .input-group.laudo, .input-group.email{
+    margin-left: 0px;
+    }
+
+    /* Adjust 'outro' inputs as well */
+    #outroCursoInput,
+    #outroMotivoInput {
+        max-width: none;
+    }
+
+
+    .form-container h2 {
+        font-size: 1.3rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 1rem;
+        border-top: none;
+        padding-top: 1rem;
+        margin-top: 1rem;
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .btn-primary,
+    .forgot-password a {
+        width: 100%;
+        min-width: auto;
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+
+    .forgot-password {
+        width: 100%;
+        text-align: center;
+        order: 2;
+    }
+
+    .btn-primary {
+        order: 1;
+    }
+
+}

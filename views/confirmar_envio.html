@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação - EDUCA MENTE</title>
+    <link rel="shortcut icon" href="img/faviconeducamente.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="css/confirmacao.css">
+    <!-- Link para a fonte Audiowide -->
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="confirmation-box">
+            <h1>✅ Envio Confirmado!</h1>
+            <p>Recebemos seu formulário com sucesso! Fique tranquilo(a), em breve entraremos em contato com você por e-mail.</p>
+            <p class="educa-mente">Agradecemos por utilizar o <span>EDUCA MENTE</span>.</p>
+            <a href="#" class="btn-primary" onclick="voltar()">Até logo! 😄</a>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    function getTipoUsuario() {
+        const match = document.cookie.match(/tipoUsuario=([^;]+)/);
+        return match ? decodeURIComponent(match[1]) : null;
+    }
+
+    function voltar() {
+        const tipo = getTipoUsuario();
+
+        if (tipo === 'psicopedagoga') {
+            window.location.href = "/painel";
+        } else {
+            window.location.href = "/";
+        }
+    }
+
+    console.log(document.cookie);
+console.log(getTipoUsuario());
+</script>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detalhes da Solicitação - EDUCA MENTE</title>
+  <link rel="shortcut icon" href="img/faviconeducamente.ico" type="image/x-icon">
+
+  <link rel="stylesheet" href="/css/detalhes.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Detalhes da Solicitação</h1>
+      <a href="/solicitacoes" class="btn-primary">Voltar à Lista</a>
+    </header>
+
+    <main class="details-container">
+      <section class="details" id="info-aluno">
+        <h2>Informações do Aluno</h2>
+        <p><strong>Nome Completo:</strong> <span id="nome"></span></p>
+        <p><strong>Idade:</strong> <span id="idade"></span> anos</p>
+        <p><strong>Curso:</strong> <span id="curso"></span></p>
+        <p><strong>Telefone:</strong> <span id="telefone"></span></p>
+        <p><strong>Responsável:</strong> <span id="responsavel"></span></p>
+        <p><strong>Instituição:</strong> <span id="instituicao"></span></p>
+      </section>
+
+      <section class="details">
+        <h2>Motivos / Observações</h2>
+        <p id="observacoes"></p>
+      </section>
+
+      <section class="details" id="laudo-section" style="display: none;">
+        <h2>Laudo Médico</h2>
+        <p>
+          <a id="link-laudo" class="btn-secondary" target="_blank">📄 Visualizar Laudo Médico</a>
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    async function carregarDetalhes() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      if (!id) return alert("Solicitação não encontrada.");
+
+      try {
+        const resposta = await fetch(`/api/solicitacoes/${id}`);
+        if (!resposta.ok) throw new Error("Erro ao buscar solicitação.");
+        const dados = await resposta.json();
+
+        document.getElementById("nome").textContent = dados.nome;
+        document.getElementById("idade").textContent = calcularIdade(new Date(dados.data_nascimento));
+        document.getElementById("curso").textContent = dados.curso;
+        document.getElementById("telefone").textContent = dados.telefone || "Não informado";
+        document.getElementById("responsavel").textContent = dados.responsavel || "Não informado";
+        document.getElementById("instituicao").textContent = dados.instituicao;
+        document.getElementById("observacoes").textContent = dados.obser;
+
+        if (dados.laudo && dados.imagem) {
+          document.getElementById("laudo-section").style.display = "block";
+          document.getElementById("link-laudo").href = `/uploads/${dados.imagem}`;
+        }
+
+      } catch (err) {
+        console.error(err);
+        alert("Erro ao carregar os dados da solicitação.");
+      }
+    }
+
+    function calcularIdade(dataNasc) {
+      const hoje = new Date();
+      const nascimento = new Date(dataNasc);
+      let idade = hoje.getFullYear() - nascimento.getFullYear();
+      const m = hoje.getMonth() - nascimento.getMonth();
+      if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
+        idade--;
+      }
+      return idade;
+    }
+
+    document.addEventListener("DOMContentLoaded", carregarDetalhes);
+  </script>
+</body>
+</html>
