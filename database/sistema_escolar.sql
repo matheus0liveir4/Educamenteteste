@@ -29,7 +29,7 @@ CREATE TABLE solicitacoes (
     status ENUM('Pendente', 'Agendado', 'Rejeitado', 'Finalizado') DEFAULT 'Pendente',
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id) 
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) 
 );
 
 CREATE TABLE agendamentos (
@@ -39,7 +39,7 @@ CREATE TABLE agendamentos (
     horario TIME NOT NULL,
     obser_agendamento TEXT,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (solicitacoes_id) REFERENCES Solicitacoes(id) 
+    FOREIGN KEY (solicitacoes_id) REFERENCES solicitacoes(id) 
 );
 
 CREATE TABLE observacoes (
