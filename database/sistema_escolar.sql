@@ -23,6 +23,7 @@ CREATE TABLE solicitacoes (
     responsavel VARCHAR(100),
     instituicao VARCHAR(100),
     obser TEXT,
+    email_aluno_contato VARCHAR(100),
     laudo BOOLEAN DEFAULT FALSE,
 	imagem VARCHAR(255),
     status ENUM('Pendente', 'Agendado', 'Rejeitado', 'Finalizado') DEFAULT 'Pendente',

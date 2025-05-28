@@ -578,39 +578,73 @@ app.get('/api/usuario-logado', requireLogin(), (req, res) => {
 
 // Rota de Enviar Solicitação
 app.post('/enviar_solicitacao', requireLogin(['aluno', 'psicopedagoga', 'professor']), upload.single('file'), async (req, res) => {
-    const { name, age, course, shift, classroom, phone, responsible, institution, observations, outro_motivo, outro_curso} = req.body;
+    const { name, age, course, shift, classroom, email, phone, responsible, institution, observations, outro_motivo, outro_curso} = req.body;
     if (!name || !age || !course || !shift || !classroom) return res.status(400).send("Campos obrigatórios não preenchidos.");
     try {
-        const novaSolicitacao = await Solicitacao.create({
-            nome: name.trim(), data_nascimento: age, curso: (course === 'Outro' && outro_curso) ? outro_curso.trim() : course,
-            turno: shift, turma: classroom, telefone: phone || null, responsavel: responsible || null,
-            instituicao: institution || null, obser: (outro_motivo || observations || '').trim() || null,
-            laudo: !!req.file, imagem: req.file ? req.file.filename : null,
-            usuario_id: req.session.usuarioId, status: 'Pendente',
-        });
-        console.log(`[SOLICITACAO SUCCESS] ID: ${novaSolicitacao.id} por User ID: ${req.session.usuarioId}`);
-        
+        const dadosParaCriarSolicitacao = {
+            nome: name.trim(),
+            data_nascimento: age,
+            curso: (course === 'Outro' && outro_curso) ? outro_curso.trim() : course,
+            turno: shift,
+            turma: classroom,
+            telefone: phone || null,
+            responsavel: responsible || null,
+            instituicao: institution || null,
+            obser: (outro_motivo || observations || '').trim() || null,
+            laudo: !!req.file,
+            imagem: req.file ? req.file.filename : null,
+            usuario_id: req.session.usuarioId,
+            status: 'Pendente',
+        };
+
+        // Adicionar email_aluno_contato SE aplicável
+        if (req.session.tipoUsuario === 'psicopedagoga' && email && /\S+@\S+\.\S+/.test(email)) {
+            dadosParaCriarSolicitacao.email_aluno_contato = email.trim();
+            console.log(`[SOLICITACAO INFO] Psicopedagoga enviando. E-mail do aluno para contato: ${email.trim()}`);
+        } else if (req.session.tipoUsuario === 'psicopedagoga' && email) {
+            console.warn(`[SOLICITACAO WARN] Psicopedagoga forneceu e-mail inválido para o aluno: '${email}'. Não será salvo.`);
+        }
+
+
+        // Criar a solicitação com todos os dados de uma vez
+        const novaSolicitacao = await Solicitacao.create(dadosParaCriarSolicitacao);
+
+        console.log(`[SOLICITACAO SUCCESS] ID: ${novaSolicitacao.id} por User ID: ${req.session.usuarioId}. Dados salvos:`, novaSolicitacao.toJSON());
+
         // Buscar e-mail do usuário que fez a solicitação
-        const usuarioSolicitante = await Usuario.findByPk(req.session.usuarioId, { attributes: ['email', 'nome'] });
+        const usuarioSolicitante = await Usuario.findByPk(req.session.usuarioId, { attributes: ['email', 'nome', 'tipo'] });
         if (usuarioSolicitante && usuarioSolicitante.email) {
             enviarEmailConfirmacaoEnvioSolicitacao(
                 usuarioSolicitante.email,
                 usuarioSolicitante.nome,
-                novaSolicitacao.nome, // Nome do aluno na solicitação
+                novaSolicitacao.nome,
                 novaSolicitacao.id
             ).catch(err => console.error("[ENVIAR_SOLICITACAO EMAIL_USER_ERROR]", err));
         }
+        if (usuarioSolicitante.tipo === 'psicopedagoga' && novaSolicitacao.email_aluno_contato) {
+            console.log(`[EMAIL LOGIC] Psicopedagoga (${usuarioSolicitante.nome}) submeteu para aluno ${novaSolicitacao.nome}. Notificando aluno em: ${novaSolicitacao.email_aluno_contato}`);
+            enviarEmailConfirmacaoEnvioSolicitacao(
+                novaSolicitacao.email_aluno_contato,
+                novaSolicitacao.nome,
+                novaSolicitacao.nome,
+                novaSolicitacao.id
+            ).catch(err => console.error("[ENVIAR_SOLICITACAO EMAIL_ALUNO_BY_PSICO_ERROR]", err));
+        }
 
         // Notificar todas as psicopedagogas
-        const psicopedagogas = await Usuario.findAll({ where: { tipo: 'psicopedagoga' }, attributes: ['email'] });
+        const psicopedagogas = await Usuario.findAll({ where: { tipo: 'psicopedagoga' }, attributes: ['email', 'nome'] }); // Adicionado nome
         psicopedagogas.forEach(psico => {
             if (psico.email) {
-                enviarEmailNotificacaoNovaSolicitacaoPsico(
-                    psico.email,
-                    novaSolicitacao.nome, // Nome do aluno na solicitação
-                    novaSolicitacao.id,
-                    usuarioSolicitante ? usuarioSolicitante.nome : "Usuário da plataforma" // Nome de quem enviou
-                ).catch(err => console.error("[ENVIAR_SOLICITACAO EMAIL_PSICO_ERROR]", err));
+                if (usuarioSolicitante && psico.email === usuarioSolicitante.email && psicopedagogas.length > 1 && usuarioSolicitante.tipo === 'psicopedagoga') {
+                    console.log(`[EMAIL LOGIC] Não notificando a psicopedagoga ${psico.nome} sobre a própria solicitação que ela criou (já recebeu como solicitante).`);
+                } else {
+                    enviarEmailNotificacaoNovaSolicitacaoPsico(
+                        psico.email,
+                        novaSolicitacao.nome,
+                        novaSolicitacao.id,
+                        usuarioSolicitante ? usuarioSolicitante.nome : "Usuário da plataforma"
+                    ).catch(err => console.error(`[ENVIAR_SOLICITACAO EMAIL_PSICO_ERROR] Falha ao notificar ${psico.email}:`, err));
+                }
             }
         });
 
@@ -701,12 +735,13 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
 
     try {
         const solicitacao = await Solicitacao.findByPk(id, {
-            include: [{
-                model: Usuario,
-                as: 'usuario', 
-                attributes: ['email', 'nome']
+        include: [{
+            model: Usuario,
+            as: 'usuario',
+            attributes: ['email', 'nome']
             }]
         });
+
         if (!solicitacao) return res.status(404).json({ message: 'Solicitação não encontrada.' });
         const statusAntigo = solicitacao.status;
         if (statusAntigo === novoStatus) return res.status(200).json({ message: `Status já é ${novoStatus}` });
@@ -723,6 +758,14 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
             console.log(`[STATUS CHANGE] ${id}: ${statusAntigo} -> ${novoStatus}. User: ${req.session.usuarioId}`);
         }
 
+        // Determinar o e-mail do destinatário principal
+        let emailDestinatarioParaStatus = null;
+        if (solicitacao.email_aluno_contato) {
+            emailDestinatarioParaStatus = solicitacao.email_aluno_contato;
+        } else if (solicitacao.usuario && solicitacao.usuario.email) {
+            emailDestinatarioParaStatus = solicitacao.usuario.email;
+        }
+
         if (solicitacao.usuario && solicitacao.usuario.email && novoStatus !== 'Agendado') {
             let obsAdicionalParaEmail = "";
             if (novoStatus === 'Rejeitado' && observacao_rejeicao) { // Agora 'observacao_rejeicao' estará definida
@@ -730,7 +773,7 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
             }
 
             enviarEmailAtualizacaoStatusSolicitacao(
-                solicitacao.usuario.email,
+                emailDestinatarioParaStatus,
                 solicitacao.nome,
                 novoStatus,
                 solicitacao.id,
@@ -772,6 +815,11 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
             return res.status(409).json({ message: `Horário ocupado por ${solicitacaoConflito?.nome || 'outro aluno'}.` });
         }
 
+        let emailDestinatarioPrincipal = solicitacaoParaAgendar.usuario.email; // Default: quem submeteu
+        if (solicitacaoParaAgendar.email_aluno_contato) {
+            emailDestinatarioPrincipal = solicitacaoParaAgendar.email_aluno_contato;
+        }
+
         const resultado = await sequelize.transaction(async (t) => {
             const novoAgendamento = await Agendamento.create({
                 solicitacoes_id: solicitacaoIdNum, data_agendamento: dataAgendamento, horario: horarioCompleto,
@@ -784,9 +832,14 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
             return { novoAgendamento };
         });
 
-        const usr = solicitacaoParaAgendar.usuario;
-        if (usr && usr.email) {
-            enviarEmailConfirmacaoAgendamento(usr.email, solicitacaoParaAgendar.nome, dataAgendamento, horaForm, req.session.nomeUsuario || "Equipe Educa Mente");
+        if (emailDestinatarioPrincipal) { // Verifica se temos um e-mail para enviar
+            enviarEmailConfirmacaoAgendamento(
+                emailDestinatarioPrincipal,
+                solicitacaoParaAgendar.nome, // Nome do aluno na solicitação
+                dataAgendamento,
+                horaForm,
+                req.session.nomeUsuario || "Equipe Educa Mente"
+            );
         }
         res.status(201).json({ message: 'Agendamento confirmado!', agendamento: resultado.novoAgendamento });
     } catch (error) {
