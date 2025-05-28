@@ -23,12 +23,13 @@ CREATE TABLE solicitacoes (
     responsavel VARCHAR(100),
     instituicao VARCHAR(100),
     obser TEXT,
+    email_aluno_contato VARCHAR(100),
     laudo BOOLEAN DEFAULT FALSE,
 	imagem VARCHAR(255),
     status ENUM('Pendente', 'Agendado', 'Rejeitado', 'Finalizado') DEFAULT 'Pendente',
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) 
+    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id) 
 );
 
 CREATE TABLE agendamentos (
@@ -38,7 +39,7 @@ CREATE TABLE agendamentos (
     horario TIME NOT NULL,
     obser_agendamento TEXT,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (solicitacoes_id) REFERENCES solicitacoes(id) 
+    FOREIGN KEY (solicitacoes_id) REFERENCES Solicitacoes(id) 
 );
 
 CREATE TABLE observacoes (
