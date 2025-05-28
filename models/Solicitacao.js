@@ -1,11 +1,10 @@
-// Arquivo: models/Solicitacao.js (ou onde você define seus modelos Sequelize)
-
 module.exports = (sequelize, DataTypes) => {
-  const Solicitacao = sequelize.define('solicitacao', {
+  const Solicitacao = sequelize.define('Solicitacao', {
     // Seus campos da tabela Solicitacoes
     usuario_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: { model: 'Usuarios', key: 'id' }
     },
     nome: {
       type: DataTypes.STRING,
@@ -43,6 +42,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
+    email_aluno_contato: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      validate: {
+        isEmail: true,
+      }
+    },
     imagem: {
       type: DataTypes.STRING
     },
@@ -54,26 +60,22 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DATE,
     }
   }, {
-    tableName: 'solicitacoes',
+    tableName: 'Solicitacoes',
     timestamps: true, // HABILITA os timestamps
     createdAt: 'criado_em', // Mapeia createdAt para a coluna 'criado_em'
     updatedAt: 'atualizado_em' // Mapeia updatedAt para uma coluna 'atualizado_em' (VOCÊ PRECISA CRIAR ESSA COLUNA NO BANCO)
    });
 
-  Solicitacao.associate = models => {
-   
-    // Associação com Usuario: 
-    Solicitacao.belongsTo(models.Usuario, {
-      foreignKey: 'usuario_id', 
-      as: 'usuario'             
-    });
-    
-    // Associação com Agendamento: 
-    Solicitacao.hasMany(models.Agendamento, {
-      foreignKey: 'solicitacoes_id', 
-      as: 'agendamentos'            
-    });
-  };
+Solicitacao.associate = models => {
+  Solicitacao.belongsTo(models.Usuario, {
+    foreignKey: 'usuario_id',
+    as: 'usuario'
+  });
+  Solicitacao.hasMany(models.Agendamento, {
+    foreignKey: 'solicitacoes_id',
+    as: 'agendamentos'
+  });
+};
 
   return Solicitacao;
 };
