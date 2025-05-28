@@ -1,5 +1,5 @@
-CREATE DATABASE sistema_escolar;
-USE sistema_escolar;
+CREATE DATABASE defaultdb;
+USE defaultdb;
 
 -- Tabela para armazenar usuários genéricos
 CREATE TABLE usuarios (
