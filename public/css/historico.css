@@ -25,7 +25,7 @@
     --gray-100: #f8f9fa;
     --gray-200: #e9ecef;
     --gray-300: #dee2e6;
-    --gray-500: #bdbebe;
+    --gray-500: #aeb1b1; /* ATUALIZADO */
     --gray-dark: #808088;
 
     /* --- Primary Variations --- */
@@ -95,6 +95,10 @@ body.dark {
 /* ============================================= */
 /* ===== 2. BASE & RESET STYLES ===== */
 /* ============================================= */
+html {
+    font-size: 18px;
+}
+
 body {
     margin: 0;
     font-family: 'Roboto', sans-serif;
@@ -102,12 +106,14 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    color: var(--text-dark); /* Default text color for light mode */
+    color: var(--text-dark);
+    font-size: 1rem;
+    line-height: 1.6;
 }
 
 main.main-content {
     flex-grow: 1;
-    padding-top: 84px; /* Espaço para navbar fixa (64px height + 20px potential buffer or for box-shadow room) */
+    padding-top: 84px; 
 }
 
 .container {
@@ -122,10 +128,10 @@ main.main-content {
 /* ============================================= */
 .text-center { text-align: center; }
 .py-12 { padding-top: 3rem; padding-bottom: 3rem; }
-.text-gray-500 { color: #6b7280; } /* Consider using a var if this color is theme-dependent */
-.text-light { color: var(--text-light); } /* Uses theme variable */
-.font-medium { font-weight: 500; } /* Color is handled by context or direct var(--text-dark) */
-.text-sm { font-size: 0.875rem; }
+.text-gray-500 { color: #6b7280; } 
+.text-light { color: var(--text-light); } 
+.font-medium { font-weight: 500; } 
+.text-sm { font-size: 0.9rem; }
 
 /* Spacing */
 .mt-1 { margin-top: 0.25rem; }
@@ -198,56 +204,58 @@ input:checked + .slider:before {
     display: inline-block;
     font-weight: 400;
     line-height: 1.5;
-    color: var(--white); /* Default for primary button, override for others */
+    color: var(--white); 
     text-align: center;
     text-decoration: none;
     vertical-align: middle;
     cursor: pointer;
     user-select: none;
     background-color: transparent;
-    border: 1px solid transparent;
-    padding: .375rem .75rem;
-    font-size: 1rem;
+    border: 2px solid transparent; /* AJUSTADO - Base para 2px */
+    padding: .425rem .85rem; 
+    font-size: 1rem; 
     border-radius: .25rem;
     transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
 .btn-sm {
-    padding: .25rem .5rem;
-    font-size: .875rem;
+    padding: .3rem .6rem; 
+    font-size: .9rem; 
     border-radius: .2rem;
+    /* border-width: 2px; Herda de .btn se necessário, ou pode ser específico */
 }
 .btn-primary {
     color: var(--white);
-    background-color: var(--primary); /* Using theme variable */
-    border-color: var(--primary);
+    background-color: var(--primary); 
+    border-color: var(--primary); /* Mantém cor da borda primária */
 }
 .btn-primary:hover {
     color: var(--white);
-    background-color: var(--primary-dark); /* Using theme variable */
-    border-color: #0a58ca; /* Slightly darker than primary-dark var */
+    background-color: var(--primary-dark); 
+    border-color: #0a58ca; 
 }
-a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
+a.btn { 
     display: inline-flex;
     align-items: center;
 }
-.btn.disabled, .btn:disabled { /* General disabled state for buttons */
+.btn.disabled, .btn:disabled { 
     cursor: default;
     opacity: 0.65;
 }
 .btn-outline-secondary{
   color: #073055;
-  border: #073055;
+  border: 2px solid #073055; /* AJUSTADO */
 }
 .btn-secondary{
   color: white;
   background-color:#073055;
+  border-color: #073055; /* Consistência com .btn-primary */
 }
 /* --- Loading Spinner --- */
 .loading-spinner {
     width: 40px;
     height: 40px;
-    border: 4px solid #f3f3f3; /* Light grey track */
-    border-top: 4px solid var(--primary); /* Spinner color */
+    border: 4px solid #f3f3f3; 
+    border-top: 4px solid var(--primary); 
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 2rem auto;
@@ -268,7 +276,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     right: 0;
     z-index: 1000;
     height: 64px;
-    border-bottom: 1px solid var(--primary); /* Or a slightly darker shade if preferred */
+    border-bottom: 2px solid var(--primary); /* AJUSTADO - Mantendo cor primária, mas com 2px */
 }
 .navbar-container {
     display: flex;
@@ -281,8 +289,8 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 }
 .navbar-brand {
     font-family: 'Audiowide', sans-serif;
-    font-size: 1.6rem;
-    color: var(--white) !important; /* Important to override potential global link styles */
+    font-size: 1.6rem; 
+    color: var(--white) !important; 
     text-decoration: none;
     font-weight: normal;
     padding: 0.25rem 0;
@@ -309,12 +317,12 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     cursor: pointer;
     transition: color 0.2s, opacity 0.2s;
     opacity: 0.85;
-    font-size: 0.9rem;
+    font-size: 0.95rem; 
 }
 .navbar-link:after {
     content: '';
     position: absolute;
-    bottom: -2px; /* Adjust if navbar border is thicker */
+    bottom: -2px; /* Manter, pois a borda da navbar é 2px */
     left: 0;
     width: 0;
     height: 2px;
@@ -348,37 +356,37 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 .navbar-right-controls {
     display: flex;
     align-items: center;
-    margin-left: auto; /* Pushes controls to the right */
+    margin-left: auto; 
 }
 .dark-mode-toggle-wrapper {
     display: flex;
     align-items: center;
     gap: 0.6rem;
 }
-.dark-mode-toggle-wrapper i { /* Sun/Moon icons */
-    font-size: 1.4rem; /* Adjusted from 1.1rem to match solicitacoes */
+.dark-mode-toggle-wrapper i { 
+    font-size: 1.4rem; 
     line-height: 1;
     vertical-align: middle;
-    cursor: default; /* Icons themselves are not clickable, switch is */
+    cursor: default; 
     color: var(--white);
     transition: color 0.3s;
 }
 #icon-sun { display: inline-block; }
 #icon-moon { display: none; }
 .dark-mode-toggle-wrapper .switch {
-    margin: 0; /* Remove any default margin from switch if it's inside wrapper */
+    margin: 0; 
 }
 .navbar-logout-button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     color: var(--white);
-    font-size: 1.4rem;
+    font-size: 1.4rem; 
     text-decoration: none;
     opacity: 0.85;
     transition: opacity 0.2s ease-in-out, color 0.2s ease-in-out;
     cursor: pointer;
-    margin-left: 1rem; /* Space from dark mode toggle */
+    margin-left: 1rem; 
 }
 .navbar-logout-button:hover {
     opacity: 1;
@@ -388,8 +396,8 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 .footer {
     background-color: var(--primary);
     padding: 20px 0;
-    border-top: 1px solid var(--gray-500); /* Consider a var if this color needs to change with primary */
-    margin-top: 40px; /* Or auto if main content pushes it down */
+    border-top: 2px solid var(--gray-500); /* AJUSTADO */
+    margin-top: 40px; 
 }
 .footer-content {
     display: flex;
@@ -401,7 +409,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 }
 .footer-text {
     color: var(--text-white);
-    font-size: 14px;
+    font-size: 0.9rem; 
     margin: 0;
 }
 
@@ -415,21 +423,21 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     margin-bottom: 2rem;
 }
 .page-title {
-    font-size: 1.8rem;
+    font-size: 2rem; 
     font-weight: 500;
     margin: 0 0 0.25rem 0;
-    color: var(--text-dark); /* Explicitly set */
+    color: var(--text-dark); 
 }
 .page-subtitle {
-    font-size: 1rem;
-    color: var(--text-light); /* Using theme variable */
+    font-size: 1.1rem; 
+    color: var(--text-light); 
     margin: 0;
 }
 
 /* --- Generic Card --- */
 .card {
     background-color: var(--white);
-    border: 1px solid var(--gray-500); 
+    border: 2px solid var(--gray-500); /* AJUSTADO */
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -439,20 +447,20 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 }
 .card-header {
     padding: 1rem 1.25rem;
-    border-bottom: 1px solid var(--gray-500);
+    border-bottom: 2px solid var(--gray-500); /* AJUSTADO */
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
 }
 .card-title {
-    font-size: 1.1rem;
+    font-size: 1.25rem; 
     font-weight: 500;
     margin: 0 0.5rem 0 0;
-    color: var(--text-dark); /* Explicitly set */
+    color: var(--text-dark); 
 }
 .card-subtitle {
-    font-size: 0.9rem;
+    font-size: 1rem; 
     color: var(--text-light);
     margin-top: 0.25rem;
 }
@@ -460,11 +468,11 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     padding: 1.25rem;
     flex-grow: 1;
     position: relative;
-    overflow-x: clip; /* Prevents horizontal scroll within card body */
+    overflow-x: clip; 
 }
 .card-footer {
     padding: 1rem 1.25rem;
-    border-top: 1px solid var(--gray-500);
+    border-top: 2px solid var(--gray-500); /* AJUSTADO */
     background-color: var(--gray-100);
 }
 
@@ -474,19 +482,18 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     grid-template-columns: repeat(auto-fill, minmax(345px, 1fr));
     gap: 1rem;
     padding-top: 1rem;
-    align-items: stretch; /* Makes cards in the same row equal height if content differs */
+    align-items: stretch; 
 }
 
 /* --- Appointment Card (Specific card type) --- */
 .appointment-card {
-    border: 1px solid var(--gray-500);
+    border: 2px solid var(--gray-500); /* AJUSTADO */
     border-radius: 8px;
     padding: 1rem 1.25rem;
     background-color: var(--white);
     box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     display: flex;
     flex-direction: column; 
-    /* justify-content: space-between; Ensures footer sticks to bottom */
 }
 .appointment-card-header {
     display: flex;
@@ -496,6 +503,8 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     gap: 1rem;
     flex-wrap: wrap;
     margin-bottom: 0.75rem;
+    /* border-bottom será herdado do card se a estrutura for .card > .appointment-card-header */
+    /* Se for um elemento separado, adicionar: border-bottom: 2px solid var(--gray-500); */
 }
 .appointment-card-student-info {
     flex-grow: 1;
@@ -505,45 +514,45 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 }
 .appointment-card-student-info h3 {
     margin-bottom: 0.2rem;
-    font-size: 1.05rem;
-    color: var(--text-dark); /* Explicitly set */
+    font-size: 1.15rem; 
+    color: var(--text-dark); 
 }
 .appointment-card-body-condensed {
-    padding: 0.5rem 0; /* Minimal padding as it's inside appointment-card's padding */
+    padding: 0.5rem 0; 
 }
 .appointment-card-body-condensed p {
     margin: 0 0 0.2rem 0;
     display: flex;
-    align-items: flex-start; /* Align icon and text to top */
+    align-items: flex-start; 
     gap: 0.5rem;
-    min-height: 1.3em; /* Ensure consistent line height appearance */
-    font-size: 0.875rem;
+    min-height: 1.3em; 
+    font-size: 0.95rem; 
     color: var(--text-light);
 }
 .appointment-card-body-condensed i.fa-book,
-.appointment-card-body-condensed i.fa-building { /* Icons in appointment card details */
+.appointment-card-body-condensed i.fa-building { 
     display: inline-block;
     width: 1.3em;
     text-align: center;
     flex-shrink: 0;
-    color: #6c757d; /* Or var(--text-light) or a specific icon color var */
-    font-size: 0.9em;
-    margin-top: 0.1em; /* Fine-tune vertical alignment with text */
-    line-height: 1.3; /* Match text line-height */
+    color: #6c757d; 
+    font-size: 0.9em; 
+    margin-top: 0.1em; 
+    line-height: 1.3; 
 }
-.appointment-card-body-condensed span { /* Text next to icon */
+.appointment-card-body-condensed span { 
     line-height: 1.3;
     word-break: break-word;
     color: var(--text-dark-secondary);
-    font-size: 0.9rem;
+    font-size: 1rem; 
 }
 .appointment-card-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid #eee; /* Lighter border, consider var(--gray-200) */
+    border-top: 2px solid var(--gray-200); /* AJUSTADO para var(--gray-200) e 2px, pode ser var(--gray-500) se preferir mais forte */
     padding-top: 0.75rem;
-    margin-top: auto; /* Pushes footer to bottom if card content is short */
+    margin-top: auto; 
 }
 .appointment-card-footer .footer-buttons {
     display: flex;
@@ -551,11 +560,11 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     align-items: center;
 }
 .appointment-card-footer .type {
-    font-size: 0.85rem;
+    font-size: 0.95rem; 
     color: var(--text-light);
 }
 .appointment-card-footer .btn,
-.appointment-card-footer a.btn { /* Ensure buttons in footer align icons correctly */
+.appointment-card-footer a.btn { 
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
@@ -564,17 +573,18 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 /* --- Tabs --- */
 .tabs {
     display: flex;
-    border-bottom: 1px solid var(--gray-500);
+    border-bottom: 2px solid var(--gray-500); /* AJUSTADO */
     margin-bottom: 1.5rem;
 }
 .tab {
-    padding: 0.8rem 1rem;
+    padding: 0.9rem 1.1rem; 
     cursor: pointer;
     color: var(--text-light);
     font-weight: 500;
     border-bottom: 3px solid transparent;
     transition: color 0.2s, border-color 0.2s;
-    margin-right: 0.5rem; /* Space between tabs */
+    margin-right: 0.5rem; 
+    font-size: 1rem; 
 }
 .tab:hover {
     color: var(--primary);
@@ -595,27 +605,27 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 .search-filter-section {
     padding: 1rem 1.5rem;
     background-color: var(--white);
-    border-bottom: 1px solid var(--gray-500); /* Using accent color */
+    border-bottom: 2px solid var(--gray-500); /* AJUSTADO */
     margin-bottom: 1.5rem;
 }
 .search-bar-container {
     display: flex;
     align-items: center;
     background-color: #f1f3f4;
-    border: 1px solid var(--gray-500);
-    border-radius: 24px; /* Pill shape */
+    border: 2px solid var(--gray-500); /* AJUSTADO */
+    border-radius: 24px; 
     padding: 0.65rem 1rem;
     margin-bottom: 1rem;
     transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 .search-bar-container:focus-within {
     background-color: var(--white);
-    border-color: var(--gray-500); /* Light border on focus */
+    border-color: var(--gray-500); 
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 .search-bar-container i.fa-search {
-    color: #5F6368; /* Mid-gray icon color */
-    font-size: 1rem;
+    color: #5F6368; 
+    font-size: 1.05rem; 
     margin-right: 0.75rem;
 }
 .search-bar-container input[type="text"] {
@@ -623,18 +633,18 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     border: none;
     outline: none;
     background: transparent;
-    font-size: 1rem;
+    font-size: 1rem; 
     color: var(--text-dark);
 }
 .search-bar-container input[type="text"]::placeholder {
-    color: #5F6368; /* Placeholder color */
+    color: #5F6368; 
 }
 .filter-buttons-container {
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
 }
-.filter-button-wrapper { /* For positioning dropdown */
+.filter-button-wrapper { 
     position: relative;
     display: inline-block;
 }
@@ -642,26 +652,27 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background-color: #f1f3f4; /* Matches search bar */
-    border: 1px solid transparent;
-    border-radius: 16px; /* Rounded pill */
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
+    background-color: #f1f3f4; 
+    border: 2px solid transparent; /* AJUSTADO - Deixar transparente por padrão, hover/active pode ter borda */
+    border-radius: 16px; 
+    padding: 0.6rem 1.1rem; 
+    font-size: 0.9rem; 
     color: var(--text-dark);
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
 }
 .filter-button:hover,
 .filter-button.active {
-    background-color: #e3edf7; /* Lighter blueish on hover/active */
+    background-color: #e3edf7; 
+    border-color: var(--gray-500); /* Adicionar borda no hover/active */
 }
-.filter-button i { /* Icons inside filter button */
+.filter-button i { 
     color: #5F6368;
-    font-size: 0.9rem;
+    font-size: 0.95rem; 
 }
-.filter-button i.fa-caret-down { /* Dropdown arrow */
+.filter-button i.fa-caret-down { 
     margin-left: 0.3rem;
-    font-size: 0.7rem;
+    font-size: 0.8rem; 
 }
 .filter-dropdown {
     display: none;
@@ -669,31 +680,31 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     background-color: var(--white);
     min-width: 200px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.15);
-    z-index: 10; /* Above other content */
+    z-index: 10; 
     border-radius: 4px;
-    border: 1px solid var(--gray-500);
-    margin-top: 5px; /* Space from button */
+    border: 2px solid var(--gray-500); /* AJUSTADO */
+    margin-top: 5px; 
     max-height: 250px;
     overflow-y: auto;
 }
 .filter-dropdown.active {
     display: block;
 }
-.filter-dropdown a { /* Dropdown items */
+.filter-dropdown a { 
     color: var(--text-dark);
     padding: 10px 15px;
     text-decoration: none;
     display: block;
-    font-size: 0.875rem;
+    font-size: 0.9rem; 
     white-space: nowrap;
-    border-bottom: 1px solid var(--gray-500); /* Very light separator */
+    border-bottom: 2px solid var(--gray-200); /* AJUSTADO para var(--gray-200) e 2px */
     transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 .filter-dropdown a:last-child {
     border-bottom: none;
 }
 .filter-dropdown a:hover {
-    background-color: #E3EDF7; /* Matches button hover */
+    background-color: #E3EDF7; 
 }
 
 
@@ -708,7 +719,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     background-color: var(--tooltip-default-bg);
     color: var(--white);
     border-radius: 5px;
-    font-size: 0.875rem;
+    font-size: 0.9rem; 
     line-height: 1.4;
     z-index: 1070;
     opacity: 0;
@@ -717,24 +728,25 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     pointer-events: none;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     white-space: nowrap;
-    transform: translateY(5px); /* Initial hidden position */
+    transform: translateY(5px); 
+    /* border: 2px solid var(--tooltip-default-bg); Se tooltips devem ter borda */
 }
 .custom-tooltip-popup.visible {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
-.custom-tooltip-popup::after { /* Arrow */
+.custom-tooltip-popup::after { 
     content: '';
     position: absolute;
     left: 50%;
-    top: 100%; /* Arrow at bottom by default */
+    top: 100%; 
     transform: translateX(-50%);
     border-width: 6px;
     border-style: solid;
     border-color: var(--tooltip-arrow-color) transparent transparent transparent;
 }
-.custom-tooltip-popup.arrow-bottom::after { /* For arrow at top */
+.custom-tooltip-popup.arrow-bottom::after { 
     top: auto;
     bottom: 100%;
     border-color: transparent transparent var(--tooltip-arrow-color) transparent;
@@ -751,7 +763,7 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 
 /* --- Custom Modal --- */
 .custom-modal {
-    display: none; /* Hidden by default */
+    display: none; 
     position: fixed;
     z-index: 1050;
     left: 0;
@@ -761,22 +773,24 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     overflow-x: hidden;
     overflow-y: auto;
     outline: 0;
-    background-color: rgba(0, 0, 0, 0.6); /* Backdrop */
-    align-items: center; /* Vertical centering */
-    justify-content: center; /* Horizontal centering */
+    background-color: rgba(0, 0, 0, 0.6); 
+    align-items: center; 
+    justify-content: center; 
 }
 .custom-modal.show {
-    display: flex; /* Use flex for centering */
+    display: flex; 
 }
 .custom-modal-content {
     position: relative;
     display: flex;
     flex-direction: column;
-    width: 90%; /* Responsive width */
-    max-width: 500px; /* Max width */
+    width: 90%; 
+    max-width: 500px; 
     pointer-events: auto;
     background-color: var(--custom-modal-bg);
     background-clip: padding-box;
+    border: 2px solid var(--custom-modal-header-border); /* AJUSTADO */
+    border-radius: 0.5rem;
     box-shadow: 0 0.5rem 1rem var(--custom-modal-box-shadow);
     color: var(--custom-modal-text-color);
     animation: fadeInModal 0.3s ease-out;
@@ -786,23 +800,23 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1.25rem;
-    border-bottom: 1px solid var(--gray-500);
-    border-top-left-radius: calc(0.5rem - 1px); /* Match content radius */
-    border-top-right-radius: calc(0.5rem - 1px);
+    border-bottom: 2px solid var(--custom-modal-header-border); /* AJUSTADO */
+    border-top-left-radius: calc(0.5rem - 2px); /* Ajustar para espessura da borda */
+    border-top-right-radius: calc(0.5rem - 2px);
 }
 .custom-modal-title {
     margin-bottom: 0;
     line-height: 1.5;
-    font-size: 1.2rem;
+    font-size: 1.25rem; 
     font-weight: 500;
-    color: var(--primary); /* Modal title often uses primary color */
+    color: var(--primary); 
 }
 .custom-modal-close {
     padding: 0.25rem 0.5rem;
-    margin: -0.5rem -0.75rem -0.5rem auto; /* Positioning */
+    margin: -0.5rem -0.75rem -0.5rem auto; 
     background-color: transparent;
     border: 0;
-    font-size: 1.75rem;
+    font-size: 1.8rem; 
     font-weight: 700;
     line-height: 1;
     color: var(--custom-modal-text-color);
@@ -815,29 +829,29 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 }
 .custom-modal-body {
     position: relative;
-    flex: 1 1 auto; /* Allows body to grow */
+    flex: 1 1 auto; 
     padding: 1.25rem;
-    font-size: 0.95rem;
+    font-size: 1rem; 
     line-height: 1.6;
 }
 .custom-modal-body p {
-    margin-bottom: 0; /* If only one p, or handle spacing elsewhere */
+    margin-bottom: 0; 
     color: var(--custom-modal-text-color);
 }
 .custom-modal-footer {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-end; /* Buttons to the right */
+    justify-content: flex-end; 
     gap: 0.5rem;
     padding: 1rem 1.25rem;
-    background-color: transparent; /* Or a very light bg */
-    border-top: 1px solid var(--gray-500);
-    border-bottom-right-radius: calc(0.5rem - 1px);
-    border-bottom-left-radius: calc(0.5rem - 1px);
+    background-color: transparent; 
+    border-top: 2px solid var(--custom-modal-header-border); /* AJUSTADO */
+    border-bottom-right-radius: calc(0.5rem - 2px); /* Ajustar para espessura da borda */
+    border-bottom-left-radius: calc(0.5rem - 2px);
 }
 /* Modal Buttons (re-using .custom-btn for consistency) */
-.custom-btn { /* Base style for modal buttons */
+.custom-btn { 
     display: inline-block;
     font-weight: 500;
     text-align: center;
@@ -845,9 +859,9 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     cursor: pointer;
     user-select: none;
     background-color: transparent;
-    border: 1px solid transparent;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+    border: 2px solid transparent; /* AJUSTADO - Base para 2px */
+    padding: 0.6rem 1.1rem; 
+    font-size: 0.95rem; 
     line-height: 1.5;
     border-radius: 0.3rem;
     transition: all .15s ease-in-out;
@@ -858,17 +872,17 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     border-color: var(--primary);
 }
 .custom-btn-primary:hover {
-    background-color: #083864; /* Darker primary */
+    background-color: #083864; 
     border-color: #073055;
 }
 .custom-btn-secondary {
-    color: var(--primary); /* Text color for secondary button */
+    color: var(--primary); 
     background-color: var(--gray-200);
-    border-color: var(--gray-500);
+    border-color: var(--gray-500); /* Usa a cor de borda principal */
 }
 .custom-btn-secondary:hover {
     background-color: var(--gray-300);
-    border-color: var(--gray-500);
+    border-color: var(--gray-500); /* Ou #a8adb1 do arquivo anterior */
 }
 .custom-btn-danger {
     color: var(--white);
@@ -876,51 +890,51 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
     border-color: var(--danger);
 }
 .custom-btn-danger:hover {
-    background-color: #D32F2F; /* Darker danger */
+    background-color: #D32F2F; 
     border-color: #c82333;
 }
 .custom-btn-warning {
-    color: var(--text-dark); /* Dark text on warning yellow */
+    color: var(--text-dark); 
     background-color: var(--warning);
     border-color: var(--warning);
 }
 .custom-btn-warning:hover {
-    background-color: #e0a800; /* Darker warning */
+    background-color: #e0a800; 
     border-color: #d39e00;
 }
 
 /* --- Custom Toast Notifications --- */
 .custom-toast-container {
     position: fixed;
-    top: 80px; /* Below navbar */
+    top: 80px; 
     right: 20px;
     z-index: 1055;
-    width: auto; /* Shrink to content */
+    width: auto; 
     max-width: 380px;
 }
 .custom-toast {
     color: var(--custom-toast-text-color);
     padding: 0.85rem 1.35rem;
     margin-bottom: 1rem;
-    border: none;
+    border: none; /* Toasts geralmente não têm borda visível */
     border-radius: 0.3rem;
     box-shadow: 0 0.35rem 0.85rem var(--custom-toast-box-shadow);
     opacity: 0;
-    transform: translateX(110%); /* Start off-screen */
+    transform: translateX(110%); 
     transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
     display: flex;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 0.95rem; 
     line-height: 1.4;
 }
 .custom-toast.show {
     opacity: 1;
-    transform: translateX(0); /* Slide in */
+    transform: translateX(0); 
 }
 .custom-toast-icon {
     margin-right: var(--custom-toast-icon-spacing);
-    font-size: 1.3em;
-    line-height: 1; /* Ensure icon aligns well */
+    font-size: 1.3em; 
+    line-height: 1; 
 }
 .custom-toast-success { background-color: var(--custom-toast-success-bg); }
 .custom-toast-error   { background-color: var(--custom-toast-error-bg); }
@@ -933,15 +947,12 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 /* ============================================= */
 .sub-atendimentos-container {
     padding: 10px;
-    border-top: 1px solid var(--gray-500); /* This color might need adjustment for light mode if it's too dark */
-    /* Light mode adjustment: */
-    /* border-top: 1px solid var(--gray-300); */
+    border-top: 2px solid var(--gray-500); /* AJUSTADO */
 }
 .sub-atendimento {
     padding: 8px 0;
-    border-bottom: 1px dashed #555; /* This color might need adjustment for light mode */
-    /* Light mode adjustment: */
-    /* border-bottom: 1px dashed var(--gray-300); */
+    border-bottom: 2px dashed var(--gray-300); /* AJUSTADO para var(--gray-300) e 2px, pode ser --gray-500 se preferir */
+    font-size: 0.9rem; 
 }
 .sub-atendimento:last-child {
     border-bottom: none;
@@ -954,24 +965,25 @@ a.btn { /* Ensure anchor buttons behave like flex items for icon alignment */
 /* ============================================= */
 body.dark {
     /* Base */
-    background-color: #222; /* Variable already set */
-    color: #eee; /* Variable already set */
+    background-color: #222; 
+    color: #eee; 
 }
 body.dark main.main-content {
-    background-color: #222; /* Or inherit from body.dark */
+    background-color: #222; 
 }
 
 /* Navbar */
 body.dark .navbar {
     background-color: #333;
-    border-bottom-color: #444 !important; /* Important if inline style or high specificity conflicts */
+    border-bottom-color: #444 !important; 
+    border-bottom-width: 2px; /* AJUSTADO */
 }
 body.dark .navbar-brand {
-    color: var(--white) !important; /* Stays white */
-    text-shadow: none; /* Ensure no light mode text shadow */
+    color: var(--white) !important; 
+    text-shadow: none; 
 }
 body.dark .navbar-link {
-    color: #ccc; /* Lighter than default dark text, but not full white */
+    color: #ccc; 
     opacity: 0.9;
 }
 body.dark .navbar-link.active,
@@ -981,10 +993,10 @@ body.dark .navbar-link:hover {
 }
 body.dark .navbar-icon svg,
 body.dark .navbar-icon i {
-    color: var(--white); /* Icons stay white */
+    color: var(--white); 
 }
-body.dark .dark-mode-toggle-wrapper i { /* Sun/Moon icons */
-    color: #f0f0f0; /* Bright, but not pure white */
+body.dark .dark-mode-toggle-wrapper i { 
+    color: #f0f0f0; 
 }
 body.dark #icon-sun { display: none; }
 body.dark #icon-moon { display: inline-block; }
@@ -996,11 +1008,11 @@ body.dark .navbar-logout-button:hover {
 }
 
 /* Switch */
-body.dark .switch .slider { /* Unchecked state in dark mode */
+body.dark .switch .slider { 
     background-color: #555;
 }
-body.dark .switch input:checked + .slider { /* Checked state in dark mode */
-    background-color: var(--secondary); /* Keep brand color for checked */
+body.dark .switch input:checked + .slider { 
+    background-color: var(--secondary); 
 }
 
 /* Page Header */
@@ -1011,72 +1023,90 @@ body.dark .page-subtitle { color: #bbb; }
 body.dark .card {
     background-color: #333;
     border-color: #444 !important;
+    border-width: 2px; /* AJUSTADO */
 }
 body.dark .card-header {
     border-bottom-color: #444 !important;
+    border-bottom-width: 2px; /* AJUSTADO */
 }
 body.dark .card-title {
-    color: var(--primary-light); /* Use light primary for titles in dark mode */
+    color: var(--primary-light); 
 }
 body.dark .card-footer {
     background-color: #2a2a2a;
     border-top-color: #444 !important;
+    border-top-width: 2px; /* AJUSTADO */
 }
 
 /* Appointment Card */
 body.dark .appointment-card {
     background-color: #444;
     border-color: #555 !important;
+    border-width: 2px; /* AJUSTADO */
 }
 body.dark .appointment-card-student-info h3 {
-    color: var(--primary-light); /* Or just #eee if primary-light is too vibrant */
+    color: var(--primary-light); 
 }
 body.dark .appointment-card .card-body-condensed i.fa-book,
 body.dark .appointment-card .card-body-condensed i.fa-building {
-    color: #aaa; /* Lighter icon color */
+    color: #aaa; 
 }
 body.dark .appointment-card .card-body-condensed span {
-    color: var(--text-dark-secondary); /* Uses the dark mode var */
+    color: var(--text-dark-secondary); 
 }
 body.dark .appointment-card-footer {
     border-top-color: #555 !important;
+    border-top-width: 2px; /* AJUSTADO */
 }
 
 /* Buttons */
 body.dark .btn-primary {
-    background-color: var(--primary-dark); /* Darker primary for dark mode actions */
-    border-color: #0a58ca; /* Matching border */
+    background-color: var(--primary-dark); 
+    border-color: #0a58ca; 
 }
-/* Example for an outline button if you add one */
+
 body.dark .btn-outline-secondary {
     color: #ccc;
     border-color: #666;
+    border-width: 2px; /* AJUSTADO */
 }
 body.dark .btn-outline-secondary:hover {
     background-color: #555;
     border-color: #777;
     color: var(--white);
 }
+body.dark .btn-secondary { 
+    color: var(--custom-modal-text-color, #eee); 
+    background-color: #5a5a5a;
+    border-color: #6c757d;
+    border-width: 2px; /* AJUSTADO */
+}
+body.dark .btn-secondary:hover {
+    background-color: #656565;
+    border-color: #787878;
+}
+
 
 /* Text Utilities */
-body.dark .text-light { color: #aaa; } /* Variable already handles this */
-body.dark .text-gray-500 { color: #888; } /* If not using var */
-body.dark .font-medium { color: #eee; } /* If color is not inherited */
+body.dark .text-light { color: #aaa; } 
+body.dark .text-gray-500 { color: #888; } 
+body.dark .font-medium { color: #eee; } 
 
 
 /* Footer */
 body.dark .footer {
     background-color: #333;
-    border-top: 1px solid #444 !important;
-    color: #ccc; /* For .footer-text if not using var(--text-white) */
+    border-top: 2px solid #444 !important; /* AJUSTADO */
+    color: #ccc; 
 }
 body.dark .footer-text {
-    color: #ccc; /* Overrides var(--text-white) from light mode */
+    color: #ccc; 
 }
 
 /* Tabs */
 body.dark .tabs {
     border-bottom-color: #444 !important;
+    border-bottom-width: 2px; /* AJUSTADO */
 }
 body.dark .tab {
     color: #aaa;
@@ -1087,16 +1117,19 @@ body.dark .tab:hover {
 body.dark .tab.active {
     color: var(--primary-light);
     border-bottom-color: var(--primary-light) !important;
+    /* border-bottom-width: 3px; - Mantido do light mode */
 }
 
 /* Search & Filter */
 body.dark .search-filter-section {
     background-color: #3a3a3a;
     border-bottom-color: #555 !important;
+    border-bottom-width: 2px; /* AJUSTADO */
 }
 body.dark .search-bar-container {
     background-color: #4a4a4a;
-    border-color: #555; /* Or transparent if preferred */
+    border-color: #555; 
+    border-width: 2px; /* AJUSTADO */
 }
 body.dark .search-bar-container:focus-within {
     background-color: #555;
@@ -1114,73 +1147,76 @@ body.dark .search-bar-container input[type="text"]::placeholder {
 body.dark .filter-button {
     background-color: #4a4a4a;
     color: #eee;
-    border-color: #555; /* Or transparent */
+    border-color: #555; /* Ou transparent, se preferir */
+    border-width: 2px; /* AJUSTADO */
 }
 body.dark .filter-button:hover,
 body.dark .filter-button.active {
     background-color: #555;
+    border-color: #777; /* Borda no hover/active */
 }
 body.dark .filter-dropdown {
     background-color: #333;
     border-color: #555;
+    border-width: 2px; /* AJUSTADO */
 }
 body.dark .filter-dropdown a {
     color: #ccc;
     border-bottom-color: #444;
+    border-bottom-width: 2px; /* AJUSTADO */
 }
 body.dark .filter-dropdown a:hover {
     background-color: #4a4a4a;
 }
 
 /* Tooltip (Dark Mode Type Variations) */
-body.dark .custom-tooltip-popup.type-primary   { background-color: var(--primary); --tooltip-arrow-color: var(--primary); } /* Keeps primary color */
+body.dark .custom-tooltip-popup.type-primary   { background-color: var(--primary); --tooltip-arrow-color: var(--primary); } 
 body.dark .custom-tooltip-popup.type-secondary { background-color: #5a5a5a; color: var(--custom-modal-text-color); --tooltip-arrow-color: #5a5a5a; }
 body.dark .custom-tooltip-popup.type-success   { background-color: var(--custom-toast-success-bg); --tooltip-arrow-color: var(--custom-toast-success-bg); }
-body.dark .custom-tooltip-popup.type-danger    { background-color: var(--danger); --tooltip-arrow-color: var(--danger); } /* Keeps danger color */
+body.dark .custom-tooltip-popup.type-danger    { background-color: var(--danger); --tooltip-arrow-color: var(--danger); } 
 body.dark .custom-tooltip-popup.type-warning   { background-color: var(--custom-toast-warning-bg); color: var(--custom-toast-warning-text); --tooltip-arrow-color: var(--custom-toast-warning-bg); }
 body.dark .custom-tooltip-popup.type-info      { background-color: var(--custom-toast-info-bg); --tooltip-arrow-color: var(--custom-toast-info-bg); }
-body.dark .custom-tooltip-popup.type-default   { background-color: var(--tooltip-default-bg); --tooltip-arrow-color: var(--tooltip-default-bg); } /* Uses dark mode default bg */
+body.dark .custom-tooltip-popup.type-default   { background-color: var(--tooltip-default-bg); --tooltip-arrow-color: var(--tooltip-default-bg); } 
 
 /* Modal (Dark Mode Title & Buttons) */
 body.dark .custom-modal-title {
-    color: #5cb9f0; /* Lighter, friendly blue for dark mode titles */
+    color: #5cb9f0; 
 }
 body.dark .custom-modal-close {
-    color: var(--custom-modal-text-color); /* Uses dark mode text color */
+    color: var(--custom-modal-text-color); 
 }
 body.dark .custom-modal-body p {
-    color: var(--custom-modal-text-color); /* Uses dark mode text color */
+    color: var(--custom-modal-text-color); 
 }
-body.dark .custom-btn-secondary { /* Modal secondary button */
+body.dark .custom-btn-secondary { 
     color: var(--custom-modal-text-color);
     background-color: #5a5a5a;
     border-color: #6c757d;
-}
-body.dark .btn-secondary { /* Modal secondary button */
-    color: var(--custom-modal-text-color);
-    background-color: #5a5a5a;
-    border-color: #6c757d;
+    border-width: 2px; /* AJUSTADO */
 }
 body.dark .custom-btn-secondary:hover {
     background-color: #656565;
     border-color: #787878;
 }
-body.dark .custom-btn-warning { /* Modal warning button */
-    color: var(--custom-toast-warning-text); /* From variable */
+body.dark .custom-btn-warning { 
+    color: var(--custom-toast-warning-text); 
     background-color: var(--custom-toast-warning-bg);
     border-color: var(--custom-toast-warning-bg);
+    border-width: 2px; /* AJUSTADO */
 }
 body.dark .custom-btn-warning:hover {
-    background-color: #df8c00; /* Slightly darker warning */
+    background-color: #df8c00; 
     border-color: #d39e00;
 }
 
 /* Sub-atendimentos specific dark mode if needed */
 body.dark .sub-atendimentos-container {
-    border-top-color: #444; /* Original value, seems fine for dark */
+    border-top-color: #444; 
+    border-top-width: 2px; /* AJUSTADO */
 }
 body.dark .sub-atendimento {
-    border-bottom-color: #555; /* Original value, seems fine for dark */
+    border-bottom-color: #555; 
+    border-bottom-width: 2px; /* AJUSTADO */
 }
 
 
@@ -1208,15 +1244,6 @@ body.dark .sub-atendimento {
 /* ============================================= */
 
 /* --- Prevent Flash on Theme Change --- */
-/* Apply .no-transitions class to body via JS before theme switch, remove after */
 .no-transitions * {
     transition: none !important;
 }
-
-/* --- Disabled Button Cursor --- */
-/* Already handled in .btn.disabled, .btn:disabled above, but keeping for reference if used elsewhere */
-/*
-.btn.disabled {
-  cursor: default;
-}
-*/
