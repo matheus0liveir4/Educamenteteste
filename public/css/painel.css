@@ -25,7 +25,7 @@
     --gray-100: #f8f9fa;
     --gray-200: #e9ecef;
     --gray-300: #dee2e6;
-    --gray-500: #aeb1b1;
+    --gray-500: #bdbebe;
     --gray-dark: #808088;
 
     /* Componente Switch */
@@ -339,7 +339,7 @@ input:checked + .slider:before {
 /* --- Card Base --- */
 .card {
     background-color: var(--white);
-    border: 2px solid  var(--gray-500);
+    border: 1px solid  var(--gray-500);
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.03);
@@ -349,17 +349,17 @@ input:checked + .slider:before {
 }
 .card-header {
     padding: 1rem 1.25rem;
-    border-bottom: 2px solid  var(--gray-500);
+    border-bottom: 1px solid  var(--gray-500);
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
 }
 .card-title {
-    font-size: 1rem;
-    font-weight: 600;
+    font-size: 1.1rem;
+    font-weight: 500;
     margin: 0;
-    margin-right: 0.3rem;
+    margin-right: 0.5rem;
 }
 .card-subtitle {
     font-size: 0.9rem;
@@ -375,7 +375,7 @@ input:checked + .slider:before {
 }
 .card-footer {
     padding: 1rem 1.25rem;
-    border-top: 2px solid  var(--gray-500);
+    border-top: 1px solid  var(--gray-500);
     background-color: var(--gray-100);
 }
 
@@ -502,7 +502,7 @@ input:checked + .slider:before {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 2px solid var(--gray-500); /* Usando var para consistência */
+    border-bottom: 1px solid var(--gray-500); /* Usando var para consistência */
     padding: 1rem 1.25rem;
 }
 .modal-title {
@@ -529,7 +529,7 @@ input:checked + .slider:before {
     overflow-y: auto;
 }
 .modal-body p { margin-bottom: 0.8rem; line-height: 1.6; }
-.modal-body hr { margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 2px solid var(--gray-300); }
+.modal-body hr { margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 1px solid var(--gray-300); }
 .modal-body h4 { margin-top: 0.5rem; margin-bottom: 0.5rem; font-weight: 500; }
 .modal-body a.laudo-link { color: var(--primary); text-decoration: none; }
 .modal-body a.laudo-link:hover { text-decoration: underline; }
@@ -539,7 +539,7 @@ input:checked + .slider:before {
     justify-content: flex-end;
     gap: 0.5rem;
     padding: 1rem 1.25rem;
-    border-top: 2px solid var(--gray-500); /* Usando var para consistência */
+    border-top: 1px solid var(--gray-500); /* Usando var para consistência */
     background-color: var(--gray-100);
 }
 #agendar-atendimento-modal-btn { order: -1; }
@@ -548,13 +548,13 @@ input:checked + .slider:before {
 .detail-group { margin-bottom: 1.25rem; }
 .detail-group-title {
     font-weight: 500;
-    font-size: 1rem;
+    font-size: 0.7rem;
     color: var(--text-light);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 0.75rem;
     padding-bottom: 0.3rem;
-    border-bottom: 2px solid var(--gray-500);
+    border-bottom: 1px solid var(--gray-500);
 }
 .detail-row {
     display: flex;
@@ -577,7 +577,7 @@ input:checked + .slider:before {
 .detail-label {
     font-weight: normal;
     color: var(--text-light);
-    font-size: 1rem;
+    font-size: 0.75rem;
     display: block;
     margin-bottom: 0.1rem;
 }
@@ -598,7 +598,7 @@ input:checked + .slider:before {
     font-size: 0.85rem;
 }
 .detail-value .badge {
-    font-size: 1em;
+    font-size: 0.7em;
     vertical-align: middle;
     margin-left: 0.25rem;
     padding: .25em .5em;
@@ -650,7 +650,7 @@ input:checked + .slider:before {
     pointer-events: auto;
     background-color: var(--custom-modal-bg);
     background-clip: padding-box;
-    border: 2px solid var(--custom-modal-header-border);
+    border: 1px solid var(--custom-modal-header-border);
     border-radius: 0.5rem;
     box-shadow: 0 0.5rem 1rem var(--custom-modal-box-shadow);
     color: var(--custom-modal-text-color);
@@ -665,7 +665,7 @@ input:checked + .slider:before {
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1.25rem;
-    border-bottom: 2px solid var(--custom-modal-header-border);
+    border-bottom: 1px solid var(--custom-modal-header-border);
     border-top-left-radius: calc(0.5rem - 1px);
     border-top-right-radius: calc(0.5rem - 1px);
 }
@@ -709,7 +709,7 @@ input:checked + .slider:before {
     gap: 0.5rem;
     padding: 1rem 1.25rem;
     background-color: transparent;
-    border-top: 2px solid var(--custom-modal-header-border);
+    border-top: 1px solid var(--custom-modal-header-border);
     border-bottom-right-radius: calc(0.5rem - 1px);
     border-bottom-left-radius: calc(0.5rem - 1px);
 }
@@ -723,7 +723,7 @@ input:checked + .slider:before {
     cursor: pointer;
     user-select: none;
     background-color: transparent;
-    border: 2px solid transparent;
+    border: 1px solid transparent;
     padding: 0.5rem 1rem;
     font-size: 0.9rem;
     line-height: 1.5;
@@ -856,7 +856,7 @@ input:checked + .slider:before {
 .footer {
     background-color: var(--primary);
     padding: 1rem 0;
-    border-top: 2px solid var(--gray-500);
+    border-top: 1px solid var(--gray-500);
     margin-top: auto;
 }
 .footer-content {
@@ -884,7 +884,7 @@ input:checked + .slider:before {
 .grid-column:not(#calendar) > .card:nth-child(2) { /* Card "Resumo do Dia" */
     flex-grow: 1; /* Ocupa 1 parte do espaço disponível na coluna esquerda */
     flex-basis: 0;
-    min-height: 270px; /* << VALOR AUMENTADO (era 180px) - Para garantir espaço para "Novas Solicitações" */
+    min-height: 235px; /* << VALOR AUMENTADO (era 180px) - Para garantir espaço para "Novas Solicitações" */
 }
 .grid-column:not(#calendar) > .card:nth-child(1) > .card-body { /* card-body de Solicitações */
     overflow: hidden; /* Para conter a lista de solicitações com scroll */
@@ -967,7 +967,7 @@ input:checked + .slider:before {
 #next-appointment-details .btn-outline { margin-top: 1rem; float: right; }
 .request-item-dashboard {
     display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0;
-    border-bottom: 2px solid var(--gray-500); transition: background-color 0.2s;
+    border-bottom: 1px solid var(--gray-500); transition: background-color 0.2s;
 }
 .request-item-dashboard:last-child { border-bottom: none; padding-bottom: 0; }
 .request-item-dashboard:hover { background-color: var(--gray-100); }
@@ -984,7 +984,7 @@ input:checked + .slider:before {
 #pending-requests.card-body { padding-bottom: 0.5rem; }
 .clickable-student-item {
     display: flex; align-items: center; justify-content: center; text-align: center;
-    padding: 10px 12px; cursor: pointer; border-bottom: 2px solid var(--gray-500);
+    padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--gray-500);
     transition: background-color 0.15s ease-in-out;
 }
 .clickable-student-item:last-child { border-bottom: none; }
@@ -1002,7 +1002,7 @@ input:checked + .slider:before {
 #requests-count-summary .pending-value { font-weight: bold; margin-left: 5px; flex-shrink: 0; }
 .summary-item {
     display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0;
-    border-bottom: 2px solid var(--gray-500);
+    border-bottom: 1px solid var(--gray-500);
 }
 .summary-item:last-child { border-bottom: none; padding-bottom: 0; }
 .summary-icon { color: var(--secondary); flex-shrink: 0; width: 1.2em; text-align: center; }
@@ -1025,17 +1025,17 @@ input:checked + .slider:before {
 }
 .calendar-days {
     display: flex; justify-content: space-around; margin-bottom: 1rem;
-    padding-bottom: 0.75rem; border-bottom: 2px solid var(--gray-500);
+    padding-bottom: 0.75rem; border-bottom: 1px solid var(--gray-500);
     overflow-x: auto; -webkit-overflow-scrolling: touch;
 }
 .day-item {
-    background: none; border: 2px solid transparent; padding: 0.4rem;
+    background: none; border: 1px solid transparent; padding: 0.4rem;
     text-align: center; cursor: pointer; border-radius: 50%;
     width: 40px; height: 40px; display: flex; flex-direction: column;
     justify-content: center; align-items: center;
     transition: all 0.2s; position: relative;
 }
-.day-item.today { border: 2px dashed var(--secondary); }
+.day-item.today { border: 1px dashed var(--secondary); }
 .day-item.has-appointments::after {
     content: ''; position: absolute; bottom: 4px; left: 50%;
     transform: translateX(-50%); width: 5px; height: 5px;
@@ -1051,7 +1051,7 @@ input:checked + .slider:before {
 .compact-appointment-item {
     display: flex; align-items: center; padding: 0.7rem 0.8rem;
     margin-bottom: 0.6rem; background-color: var(--gray-100);
-    border: 2px solid var(--gray-500); border-radius: 6px;
+    border: 1px solid var(--gray-500); border-radius: 6px;
     transition: all 0.2s; gap: 0.75rem; cursor: pointer;
     box-shadow: 0 1px 2px rgba(0,0,0,0.03);
 }

@@ -15,7 +15,7 @@
   --gray-200: #e9ecef;
   --gray-300: #dee2e6;
   --gray-dark: #808088;
-  --gray-500: #aeb1b1;
+  --gray-500: #bdbebe;
   --gray-600: #aeafaf;
 }
 
@@ -24,16 +24,15 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  
 }
 
-html {
-  font-size: 18px; /* NOVA BASE - 1rem = 18px */
-}
+
 
 body {
   font-family: 'Roboto', Arial, sans-serif;
-  font-size: 1rem; /* AJUSTADO - Agora 18px */
-  line-height: 1.6; /* MANTIDO - Bom para leitura */
+  font-size: 16px;
+  line-height: 1.5;
   color: var(--text-dark);
   background-color: #FAF9F6;
   height: 100%;
@@ -54,21 +53,27 @@ body.dark {
   border-bottom: 1px solid #7f8083;
 }
 body.dark .card {
-  background-color:rgb(78, 78, 78);
+  background-color:rgb(78, 78, 78); /* tom mais escuro */
   color: var(--text-white);
   box-shadow: 0 2px 4px rgba(255,255,255,0.05);
   border: none;
 }
 body.dark .card-title {
+  /* tom mais escuro */
   color: var(--text-white);
+
 }
 
 body.dark .welcome-name {
+   /* tom mais escuro */
   color: var(--text-white);
+
 }
 
 body.dark h1 {
+ /* tom mais escuro */
   color: var(--text-white);
+
 }
 
 body.dark p {
@@ -80,7 +85,7 @@ body.dark .tab {
   color: var(--text-white);
   font-weight: 500;
   border-bottom: 2px solid transparent;
-  font-size: 1rem; /* AJUSTADO - Corresponde a .tab no historico.css (18px) */
+  
 }
 body.dark .tab.active {
   color:#27b5f7 ;
@@ -113,11 +118,13 @@ body.dark .tabs {
 body.dark .card-header {
   padding: 16px 20px;
   border-bottom: 1px solid var(--gray-dark);
+
 }
 
 body.dark .card-footer {
   padding: 16px 20px;
   border-top: 1px solid var(--gray-dark);
+
 }
 
 body.dark .day-name {
@@ -174,8 +181,8 @@ input:checked + .slider {
 }
 
 /* Texto */
-.label-text { /* Não tem correspondente direto, ajustar para uma boa leitura */
-  font-size: 1.1rem; /* AJUSTADO de 22px (base 24px) -> 19.8px (base 18px) */
+.label-text {
+  font-size: 14px;
   color: var(--text-white);
 }
 
@@ -212,7 +219,7 @@ input:checked + .slider {
 }
 
 .navbar-logo {
-  width: 180px; /* Manter tamanho do logo */
+  width: 180px;
 }
 
 .navbar-menu {
@@ -220,6 +227,7 @@ input:checked + .slider {
   list-style: none;
   justify-content: center;
   padding: 10px;
+
   margin: 0 auto;
   max-width: 800px;
   border-radius: 8px;
@@ -234,7 +242,6 @@ input:checked + .slider {
   color: var(--text-white);
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.95rem; /* AJUSTADO - Corresponde a .navbar-link no historico.css (17.1px) */
   display: flex;
   align-items: center;
   gap: 4px;
@@ -264,16 +271,16 @@ input:checked + .slider {
 }
 
 .navbar-icon {
-  width: 20px; /* AJUSTADO para 20px como no historico.css */
-  height: 20px; /* AJUSTADO para 20px como no historico.css */
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .navbar-icon svg {
-  width: 18px; /* AJUSTADO para 18px como no historico.css */
-  height: 18px; /* AJUSTADO para 18px como no historico.css */
+  width: 20px;
+  height: 20px;
   color: var(--white);
 }
 
@@ -284,14 +291,14 @@ input:checked + .slider {
 }
 
 .page-title {
-  font-size: 2rem; /* AJUSTADO de 36px (base 24px) -> 36px (base 18px) */
-  font-weight: 700; /* Pode ser ajustado para 500 se quiser corresponder ao .page-title do historico.css */
+  font-size: 28px;
+  font-weight: 700;
   color: var(--text-dark);
   margin-bottom: 4px;
 }
 
 .page-subtitle {
-  font-size: 1.1rem; /* AJUSTADO de 24px (base 24px) -> 19.8px (base 18px) */
+  font-size: 16px;
   color: var(--text-light);
 }
 
@@ -300,23 +307,23 @@ input:checked + .slider {
   background-color: var(--white);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border: 2px solid var(--gray-500);
+  border: 1px solid var(--gray-500);
   margin-bottom: 24px;
 }
 
 .card-header {
   padding: 16px 20px;
-  border-bottom: 2px solid var(--gray-500);
+  border-bottom: 1px solid var(--gray-500);
 }
 
 .card-title {
-  font-size: 1.25rem; /* AJUSTADO de 24px (base 24px) -> 22.5px (base 18px) */
-  font-weight: 600; /* Pode ser ajustado para 500 se quiser corresponder ao .card-title do historico.css */
+  font-size: 18px;
+  font-weight: 600;
   color: var(--primary);
 }
 
 .card-subtitle {
-  font-size: 1rem; /* AJUSTADO de 20px (base 24px) -> 18px (base 18px) */
+  font-size: 14px;
   color: var(--text-light);
   margin-top: 4px;
 }
@@ -327,7 +334,7 @@ input:checked + .slider {
 
 .card-footer {
   padding: 16px 20px;
-  border-top: 2px solid var(--gray-500);
+  border-top: 1px solid var(--gray-500);
 }
 
 /* Grid */
@@ -355,7 +362,7 @@ input:checked + .slider {
   display: inline-block;
   padding: 4px 8px;
   border-radius: 16px;
-  font-size: 0.9rem; /* AJUSTADO de 18px (base 24px) -> 16.2px (base 18px), próximo ao .status no historico.css */
+  font-size: 12px;
   font-weight: 500;
 }
 
@@ -373,10 +380,9 @@ input:checked + .slider {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: .425rem .85rem; /* AJUSTADO para corresponder ao .btn no historico.css */
+  padding: 8px 16px;
   border-radius: 4px;
-  font-weight: 500; /* Pode ser 400 para corresponder ao .btn no historico.css */
-  font-size: 1rem; /* AJUSTADO - Corresponde ao .btn no historico.css (18px) */
+  font-weight: 500;
   text-decoration: none;
   cursor: pointer;
   border: none;
@@ -395,12 +401,14 @@ input:checked + .slider {
 .btn-secondary {
   background-color: var(--secondary);
   color: var(--white);
-  /* cursor: none; Removido para comportamento padrão de botão */
+  cursor: none;
 }
+
+
 
 .btn-outline {
   background-color: transparent;
-  border: 2px solid var(--secondary); /* Manter 2px para este estilo específico */
+  border: 1px solid var(--secondary);
   color: var(--secondary);
 }
 
@@ -410,8 +418,8 @@ input:checked + .slider {
 }
 
 .btn-sm {
-  padding: .3rem .6rem; /* AJUSTADO para corresponder ao .btn-sm no historico.css */
-  font-size: 0.9rem; /* AJUSTADO de 18px (base 24px) -> 16.2px (base 18px) */
+  padding: 4px 12px;
+  font-size: 14px;
 }
 
 .text-center {
@@ -419,7 +427,7 @@ input:checked + .slider {
 }
 
 .mt-4 {
-  margin-top: 16px; /* Equivalente a 1rem se não houver outra regra de margem base */
+  margin-top: 16px;
 }
 
 .flex {
@@ -435,7 +443,7 @@ input:checked + .slider {
 }
 
 .gap-2 {
-  gap: 8px; /* Pode ser .5rem */
+  gap: 8px;
 }
 
 /* Estilos específicos para o Dashboard */
@@ -444,29 +452,27 @@ input:checked + .slider {
 }
 
 .welcome-name {
-  font-size: 2rem; /* AJUSTADO de 36px (base 24px) -> 36px (base 18px), corresponde ao .page-title */
+  font-size: 28px;
   font-weight: 700;
   color: var(--text-dark);
 }
 
 .welcome-date {
   color: var(--text-light);
-  font-size: 1.1rem; /* AJUSTADO de 20px (base 24px) -> 19.8px (base 18px), corresponde ao .page-subtitle */
   margin-top: 4px;
 }
 
-.appointment-card { /* Este é um card específico, tentar alinhar com .appointment-card do historico.css */
-  padding: 1rem 1.25rem; /* AJUSTADO para corresponder ao .appointment-card no historico.css */
+.appointment-card {
+  padding: 16px;
   border-radius: 8px;
   background-color: var(--white);
-  border: 1px solid var(--gray-500); /* AJUSTADO para 1px como no historico.css */
-  box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* AJUSTADO como no historico.css */
-  margin-bottom: 1.5rem; /* AJUSTADO como no historico.css */
+  border: 1px solid var(--gray-500);
+  margin-bottom: 16px;
   transition: all 0.3s;
 }
 
 .appointment-card:hover {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Pode ser mantido, ou ajustado se necessário */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   border-color: var(--gray-500);
 }
 
@@ -485,11 +491,11 @@ input:checked + .slider {
 }
 
 .day-item {
-  min-width: 70px; /* REAVALIAR - Pode ser ajustado para acomodar texto menor */
+  min-width: 70px;
   text-align: center;
-  padding: 8px; /* REAVALIAR */
+  padding: 8px;
   margin-right: 4px;
-  border: 2px solid #cacbcc;
+  border: 1px solid #cacbcc;
   border-radius: 3px;
   cursor: pointer;
 }
@@ -499,12 +505,12 @@ input:checked + .slider {
 }
 
 .day-name {
-  font-size: 0.8rem; /* AJUSTADO de 16px (base 24px) -> 14.4px (base 18px) */
+  font-size: 12px;
   color: var(--text-light);
 }
 
 .day-number {
-  font-size: 1rem; /* AJUSTADO de 20px (base 24px) -> 18px (base 18px) */
+  font-size: 16px;
   font-weight: 500;
   color: var(--text-dark);
 }
@@ -518,12 +524,12 @@ input:checked + .slider {
   display: flex;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 2px solid var(--gray-300);
+  border-bottom: 1px solid var(--gray-300);
 }
 
 .time-label {
-  width: 80px; /* REAVALIAR */
-  font-size: 0.9rem; /* AJUSTADO de 18px (base 24px) -> 16.2px (base 18px) */
+  width: 80px;
+  font-size: 14px;
   color: var(--text-light);
 }
 
@@ -540,7 +546,7 @@ input:checked + .slider {
 }
 
 .slot-content.empty {
-  border: 2px dashed var(--gray-500);
+  border: 1px dashed var(--gray-500);
   cursor: pointer;
 }
 
@@ -564,10 +570,10 @@ input:checked + .slider {
   100% { transform: rotate(360deg); }
 }
 
-/* Estilos para a página de histórico e solicitações (se este arquivo for usado para isso também) */
+/* Estilos para a página de histórico e solicitações */
 .request-item {
   padding: 16px;
-  border-bottom: 2px solid var(--gray-500);
+  border-bottom: 1px solid var(--gray-500);
 }
 
 .request-item:last-child {
@@ -581,18 +587,18 @@ input:checked + .slider {
   margin-bottom: 8px;
 }
 
-.request-name { /* Usará font-size do body (1rem / 18px) ou de seu container */
+.request-name {
   font-weight: 500;
 }
 
 .request-date {
-  font-size: 0.9rem; /* AJUSTADO de 18px (base 24px) -> 16.2px (base 18px) */
+  font-size: 14px;
   color: var(--text-light);
 }
 
 .request-type {
-  font-size: 0.9rem; /* AJUSTADO de 16px (base 24px) -> 16.2px (base 18px) */
-  padding: 3px 10px; /* Manter padding se visualmente ok */
+  font-size: 12px;
+  padding: 2px 8px;
   border-radius: 4px;
   background-color: var(--accent);
   color: var(--primary);
@@ -603,7 +609,7 @@ input:checked + .slider {
 .footer {
   background-color: var(--primary);
   padding: 20px 0;
-  border-top: 1px solid var(--gray-500); /* AJUSTADO para 1px como no historico.css */
+  border-top: 1px solid var(--gray-500);
   margin-top: 40px;
   align-items: center;
 }
@@ -616,23 +622,22 @@ input:checked + .slider {
 
 .footer-text {
   color: var(--text-white);
-  font-size: 0.9rem; /* AJUSTADO de 18px (base 24px) -> 16.2px (base 18px) */
+  font-size: 14px;
 }
 
 /* Tabs */
 .tabs {
   display: flex;
-  border-bottom: 1px solid var(--gray-500); /* AJUSTADO para 1px como no historico.css */
+  border-bottom: 1px solid var(--gray-500);
   margin-bottom: 16px;
 }
 
 .tab {
-  padding: 0.9rem 1.1rem; /* AJUSTADO para corresponder ao .tab no historico.css */
+  padding: 12px 16px;
   cursor: pointer;
   color: var(--text-light);
   font-weight: 500;
-  font-size: 1rem; /* AJUSTADO - Corresponde ao .tab no historico.css (18px) */
-  border-bottom: 3px solid transparent; /* AJUSTADO para 3px como no historico.css */
+  border-bottom: 2px solid transparent;
 }
 
 .tab.active {
@@ -717,12 +722,12 @@ input:checked + .slider {
 
 .modal-content {
   background-color: var(--white);
-  border-radius: 0.5rem; /* AJUSTADO para 0.5rem como no historico.css */
+  border-radius: 8px;
   width: 90%;
   max-width: 500px;
   max-height: 90vh;
   overflow: auto;
-  box-shadow: 0 0.5rem 1rem var(--custom-modal-box-shadow); /* AJUSTADO como no historico.css */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
 }
@@ -731,13 +736,13 @@ input:checked + .slider {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.25rem; /* AJUSTADO como no historico.css */
-  border-bottom: 1px solid var(--gray-500); /* AJUSTADO para 1px como no historico.css */
+  padding: 1rem;
+  border-bottom: 1px solid var(--gray-500);
 }
 
 .modal-title {
-  font-size: 1.25rem; /* AJUSTADO de 1.5rem (base 24px) -> 22.5px (base 18px) */
-  font-weight: 600; /* Pode ser 500 para corresponder ao historico.css */
+  font-size: 1.25rem;
+  font-weight: 600;
   color: var(--primary);
   margin: 0;
 }
@@ -745,29 +750,24 @@ input:checked + .slider {
 .modal-close {
   background: none;
   border: none;
-  font-size: 1.8rem; /* AJUSTADO de 1.75rem (base 24px) -> ~32.4px (base 18px) */
+  font-size: 1.5rem;
   cursor: pointer;
   color: var(--text-light);
   line-height: 1;
-  opacity: .5; /* Adicionado como no historico.css */
-}
-.modal-close:hover {
-  opacity: .85; /* Adicionado como no historico.css */
 }
 
 .modal-body {
-  padding: 1.25rem; /* AJUSTADO como no historico.css */
+  padding: 1rem;
   flex: 1;
   overflow: auto;
-  font-size: 1rem; /* AJUSTADO para 18px (base 18px) */
 }
 
 .modal-footer {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
-  padding: 1rem 1.25rem; /* AJUSTADO como no historico.css */
-  border-top: 1px solid var(--gray-500); /* AJUSTADO para 1px como no historico.css */
+  padding: 1rem;
+  border-top: 1px solid var(--gray-500);
 }
 
 .detail-row {
@@ -777,11 +777,12 @@ input:checked + .slider {
 .detail-label {
   font-weight: 600;
   color: var(--text-light);
-  font-size: 0.9rem; /* AJUSTADO de 1rem (base 24px) -> 16.2px (base 18px) */
+  font-size: 0.875rem;
   margin-bottom: 0.25rem;
 }
 
 .detail-value {
   color: var(--text-dark);
-  font-size: 1rem; /* AJUSTADO de 1.125rem (base 24px) -> 18px (base 18px) */
+  font-size: 1rem;
 }
+
