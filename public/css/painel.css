@@ -910,7 +910,7 @@ input:checked + .slider:before {
     flex-grow: 1; /* Permite que o card cresça para preencher a coluna */
     display: flex; /* Torna o card um flex container */
     flex-direction: column; /* Para que o .card-body possa usar flex-grow */
-    max-height: 580px; 
+    max-height: 570px; 
 }
 .grid-column#calendar > .card > .card-body {
     flex-grow: 1;
