@@ -144,7 +144,14 @@ async function initializeEmailTransporter() {
 }
 initializeEmailTransporter().catch(err => console.error("[EMAIL INIT FAIL]", err));
 
-async function enviarEmailConfirmacaoAgendamento(emailDestinatario, nomeAluno, dataAgendamento, horaAgendamento, nomePsicopedagoga = "Educa Mente") {
+async function enviarEmailConfirmacaoAgendamento(
+    emailDestinatario,
+    nomeAluno,
+    dataAgendamento,
+    horaAgendamento,
+    nomePsicopedagoga = "Educa Mente",
+    observacoesAgendamento = ""
+) {
     if (!emailDestinatario || !/\S+@\S+\.\S+/.test(emailDestinatario)) {
          console.error(`[EMAIL SEND REJECT] E-mail do destinatário inválido/não fornecido: ${emailDestinatario}`);
          return;
@@ -160,14 +167,37 @@ async function enviarEmailConfirmacaoAgendamento(emailDestinatario, nomeAluno, d
         const dataFormatada = !isNaN(dataObj.getTime()) ? dataObj.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: 'long', year: 'numeric' }) : 'Data inválida';
         const horaFormatada = !isNaN(dataObj.getTime()) ? dataObj.toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo', hour: '2-digit', minute: '2-digit' }) : 'Hora inválida';
 
+        // Constrói a seção de observações apenas se houver observações
+        let secaoObservacoesTexto = "";
+        let secaoObservacoesHtml = "";
+        if (observacoesAgendamento && observacoesAgendamento.trim() !== "") {
+            secaoObservacoesTexto = `\nObservações Adicionais:\n${observacoesAgendamento.trim()}\n`;
+            secaoObservacoesHtml = `<div style="margin-top:15px;padding:10px;border-left:3px solid #f0ad4e;background-color:#fff8e7;">
+                                        <p style="margin:5px 0"><strong>Observações Adicionais:</strong></p>
+                                        <p style="margin:5px 0; white-space: pre-wrap;">${observacoesAgendamento.trim()}</p>
+                                     </div>`;
+        }
+
         const mailOptions = {
-            from: `"Educa Mente Agendamentos" <${remetenteEmail}>`, to: emailDestinatario,
+            from: `"Educa Mente Agendamentos" <${remetenteEmail}>`,
+            to: emailDestinatario,
             subject: 'Confirmação de Agendamento - Educa Mente ✔',
-            text: `Olá ${nomeAluno || 'Aluno(a)'},\n\nSeu agendamento com ${nomePsicopedagoga} foi confirmado!\n\nData: ${dataFormatada}\nHorário: ${horaFormatada}\n\nAtenciosamente,\nEquipe Educa Mente`,
-            html: `<div style="font-family:Arial,sans-serif;line-height:1.6;color:#333"><h2 style="color:#0A4275">Confirmação de Agendamento</h2><p>Olá <strong>${nomeAluno||'Aluno(a)'}</strong>,</p><p>Seu agendamento com <strong>${nomePsicopedagoga}</strong> foi confirmado!</p><br><div style="padding:15px;border-left:4px solid #1575A3;background-color:#f4f8fa;margin-bottom:15px"><p style="margin:5px 0"><strong>Data:</strong> ${dataFormatada}</p><p style="margin:5px 0"><strong>Horário:</strong> ${horaFormatada}</p></div><p>Atenciosamente,<br><strong>Equipe Educa Mente</strong></p></div>`
+            text: `Olá ${nomeAluno || 'Aluno(a)'},\n\nSeu agendamento com ${nomePsicopedagoga} foi confirmado!\n\nData: ${dataFormatada}\nHorário: ${horaFormatada}\n${secaoObservacoesTexto}\nAtenciosamente,\nEquipe Educa Mente`,
+            html: `<div style="font-family:Arial,sans-serif;line-height:1.6;color:#333">
+                     <h2 style="color:#0A4275">Confirmação de Agendamento</h2>
+                     <p>Olá <strong>${nomeAluno||'Aluno(a)'}</strong>,</p>
+                     <p>Seu agendamento com <strong>${nomePsicopedagoga}</strong> foi confirmado!</p>
+                     <br>
+                     <div style="padding:15px;border-left:4px solid #1575A3;background-color:#f4f8fa;margin-bottom:15px">
+                       <p style="margin:5px 0"><strong>Data:</strong> ${dataFormatada}</p>
+                       <p style="margin:5px 0"><strong>Horário:</strong> ${horaFormatada}</p>
+                     </div>
+                     ${secaoObservacoesHtml}
+                     <p style="margin-top:15px;">Atenciosamente,<br><strong>Equipe Educa Mente</strong></p>
+                   </div>`
         };
         let info = await transporter.sendMail(mailOptions);
-        console.log(`[EMAIL SEND SUCCESS] Para ${emailDestinatario}. ID: ${info.messageId}`);
+        console.log(`[EMAIL SEND SUCCESS] Para ${emailDestinatario}. ID: ${info.messageId}. Observações incluídas: ${!!(observacoesAgendamento && observacoesAgendamento.trim() !== "")}`);
         if (nodemailer.getTestMessageUrl && nodemailer.getTestMessageUrl(info)) {
             console.log('[EMAIL PREVIEW URL (Ethereal)]:', nodemailer.getTestMessageUrl(info));
         }
@@ -833,8 +863,9 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
                 solicitacaoParaAgendar.nome, // Nome do aluno na solicitação
                 dataAgendamento,
                 horaForm,
-                req.session.nomeUsuario || "Equipe Educa Mente"
-            );
+                req.session.nomeUsuario || "Equipe Educa Mente",
+                observacoesForm 
+            ).catch(err => console.error(`[EMAIL AGENDAMENTO ERROR] Falha ao notificar ${emailDestinatarioPrincipal}:`, err)); 
         }
         res.status(201).json({ message: 'Agendamento confirmado!', agendamento: resultado.novoAgendamento });
     } catch (error) {
