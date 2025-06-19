@@ -1,79 +1,3 @@
--- Esquema atualizado do banco de dados com as modificações
--- Sistema de Gerenciamento de Agendamento - Psicopedagogia
-
-CREATE TABLE usuarios (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    senha VARCHAR(255) NOT NULL,
-    tipo ENUM('aluno', 'professor', 'psicopedagoga') NOT NULL,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE solicitacoes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario_id INT NOT NULL,
-    nome VARCHAR(100) NOT NULL,
-    data_nascimento DATE NOT NULL,
-    curso VARCHAR(100) NOT NULL,
-    turno ENUM('Matutino', 'Vespertino', 'Noturno') NOT NULL,
-    turma VARCHAR(20) NOT NULL,
-    telefone VARCHAR(20),
-    responsavel VARCHAR(100),
-    instituicao VARCHAR(100),
-    obser TEXT,
-    email_aluno_contato VARCHAR(100),
-    laudo BOOLEAN DEFAULT FALSE,
-    imagem VARCHAR(255),
-    status ENUM('Pendente', 'Agendado', 'Rejeitado', 'Finalizado') DEFAULT 'Pendente',
-    psicopedagoga_responsavel_id INT NULL COMMENT 'ID da psicopedagoga responsável por aceitar/rejeitar a solicitação',
-    motivo_decisao TEXT NULL COMMENT 'Motivo da aceitação ou rejeição da solicitação',
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
-    FOREIGN KEY (psicopedagoga_responsavel_id) REFERENCES usuarios(id)
-);
-
-CREATE TABLE agendamentos (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    solicitacoes_id INT NOT NULL,
-    data_agendamento DATE NOT NULL,
-    horario TIME NOT NULL,
-    obser_agendamento TEXT,
-    psicopedagoga_id INT NULL COMMENT 'ID da psicopedagoga que criou o agendamento',
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (solicitacoes_id) REFERENCES solicitacoes(id),
-    FOREIGN KEY (psicopedagoga_id) REFERENCES usuarios(id)
-);
-
-CREATE TABLE observacoes (
-    id SERIAL PRIMARY KEY,
-    agendamentos_id INTEGER NOT NULL REFERENCES agendamentos(id) ON DELETE CASCADE,
-    texto TEXT NOT NULL,
-    psicopedagoga_id INT NULL COMMENT 'ID da psicopedagoga que criou/modificou a observação',
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (psicopedagoga_id) REFERENCES usuarios(id)
-);
-
--- Índices para melhorar performance
-CREATE INDEX idx_solicitacoes_psicopedagoga ON solicitacoes(psicopedagoga_responsavel_id);
-CREATE INDEX idx_agendamentos_psicopedagoga ON agendamentos(psicopedagoga_id);
-CREATE INDEX idx_observacoes_psicopedagoga ON observacoes(psicopedagoga_id);
-CREATE INDEX idx_usuarios_tipo ON usuarios(tipo);
-CREATE INDEX idx_solicitacoes_status ON solicitacoes(status);
-
-
-
-
-
-
-
-
-
-
-
-
 CREATE DATABASE sistema_escolar;
 USE sistema_escolar;
 
@@ -103,9 +27,12 @@ CREATE TABLE solicitacoes (
     laudo BOOLEAN DEFAULT FALSE,
 	imagem VARCHAR(255),
     status ENUM('Pendente', 'Agendado', 'Rejeitado', 'Finalizado') DEFAULT 'Pendente',
+    observacao_rejeicao TEXT,
+	modificado_por_usuario_id INT NULL, 
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) 
+    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id),
+    FOREIGN KEY (modificado_por_usuario_id) REFERENCES usuarios(id)
 );
 
 CREATE TABLE agendamentos (
@@ -115,7 +42,7 @@ CREATE TABLE agendamentos (
     horario TIME NOT NULL,
     obser_agendamento TEXT,
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (solicitacoes_id) REFERENCES solicitacoes(id) 
+    FOREIGN KEY (solicitacoes_id) REFERENCES Solicitacoes(id) 
 );
 
 CREATE TABLE observacoes (

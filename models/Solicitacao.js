@@ -56,6 +56,18 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.ENUM('Pendente', 'Agendado', 'Rejeitado', 'Finalizado'),
       defaultValue: 'Pendente'
     },
+    observacao_rejeicao: {
+      type: DataTypes.TEXT, // Usamos TEXT para observações mais longas
+      allowNull: true       // Pode ser nulo se a solicitação não for rejeitada
+    },
+    modificado_por_usuario_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'Usuarios', // Nome da tabela de usuários
+        key: 'id'
+      }
+    },
     criado_em: {
       type: DataTypes.DATE,
     }
@@ -70,6 +82,10 @@ Solicitacao.associate = models => {
   Solicitacao.belongsTo(models.Usuario, {
     foreignKey: 'usuario_id',
     as: 'usuario'
+  });
+  Solicitacao.belongsTo(models.Usuario, {
+    foreignKey: 'modificado_por_usuario_id',
+    as: 'modificado_por'
   });
   Solicitacao.hasMany(models.Agendamento, {
     foreignKey: 'solicitacoes_id',

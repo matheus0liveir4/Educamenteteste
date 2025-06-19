@@ -691,6 +691,10 @@ app.get('/api/solicitacoes', requireLogin(['psicopedagoga']), async (req, res) =
                 required: false,
                 attributes: ['id', 'data_agendamento', 'horario', 'obser_agendamento'],
                 order: [['data_agendamento', 'ASC'], ['horario', 'ASC']]
+            }, {
+                model: Usuario,
+                as: 'modificado_por',
+                attributes: ['nome']
             }]
         });
         const solicitacoes = solicitacoesData.map(s => {
@@ -755,35 +759,55 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
     const id = parseInt(req.params.id);
     const { status: novoStatus, observacao_rejeicao } = req.body;
     const validStatus = ['Pendente', 'Agendado', 'Rejeitado', 'Finalizado'];
+
     if (isNaN(id)) return res.status(400).json({ error: 'ID inválido.' });
     if (!novoStatus || !validStatus.includes(novoStatus)) return res.status(400).json({ error: `Status inválido. Válidos: ${validStatus.join(', ')}` });
 
     try {
         const solicitacao = await Solicitacao.findByPk(id, {
-        include: [{
-            model: Usuario,
-            as: 'usuario',
-            attributes: ['email', 'nome']
+            include: [{
+                model: Usuario,
+                as: 'usuario',
+                attributes: ['email', 'nome']
             }]
         });
 
         if (!solicitacao) return res.status(404).json({ message: 'Solicitação não encontrada.' });
+        
         const statusAntigo = solicitacao.status;
         if (statusAntigo === novoStatus) return res.status(200).json({ message: `Status já é ${novoStatus}` });
+
+        if (novoStatus === 'Rejeitado' && statusAntigo !== 'Pendente') {
+            console.warn(`[REJEITAR BLOCK] Tentativa de rejeitar solicitação ${id} com status "${statusAntigo}". Ação bloqueada por UserID: ${req.session.usuarioId}`);
+            return res.status(409).json({ // 409 Conflict é o código HTTP ideal para este caso
+                message: `Ação bloqueada. Só é possível rejeitar uma solicitação que esteja "Pendente". O status atual é "${statusAntigo}".`
+            });
+        }
+
+        const dadosUpdate = {
+            status: novoStatus,
+            modificado_por_usuario_id: req.session.usuarioId // <-- REGISTRO DE AUDITORIA
+        };
+        
+        if (novoStatus === 'Rejeitado' && observacao_rejeicao) {
+            dadosUpdate.observacao_rejeicao = observacao_rejeicao.trim();
+        } else if (novoStatus !== 'Rejeitado') {
+            dadosUpdate.observacao_rejeicao = null;
+        }
 
         let agendamentosRemovidos = 0;
         if (statusAntigo === 'Agendado' && ['Aprovado', 'Pendente', 'Rejeitado'].includes(novoStatus)) {
              await sequelize.transaction(async (t) => {
                  agendamentosRemovidos = await Agendamento.destroy({ where: { solicitacoes_id: id }, transaction: t });
-                 await Solicitacao.update({ status: novoStatus }, { where: { id }, transaction: t });
+                 await Solicitacao.update(dadosUpdate, { where: { id }, transaction: t });
              });
-             console.log(`[STATUS CHANGE] ${id}: ${statusAntigo} -> ${novoStatus}. Agendamentos removidos: ${agendamentosRemovidos}. User: ${req.session.usuarioId}`);
         } else {
-            await Solicitacao.update({ status: novoStatus }, { where: { id } });
-            console.log(`[STATUS CHANGE] ${id}: ${statusAntigo} -> ${novoStatus}. User: ${req.session.usuarioId}`);
+            await Solicitacao.update(dadosUpdate, { where: { id } });
         }
+        
+        console.log(`[STATUS CHANGE] ID ${id}: ${statusAntigo} -> ${novoStatus}. Por UserID: ${req.session.usuarioId}. Agendamentos removidos: ${agendamentosRemovidos}.`);
 
-        // Determinar o e-mail do destinatário principal
+
         let emailDestinatarioParaStatus = null;
         if (solicitacao.email_aluno_contato) {
             emailDestinatarioParaStatus = solicitacao.email_aluno_contato;
@@ -791,10 +815,10 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
             emailDestinatarioParaStatus = solicitacao.usuario.email;
         }
 
-        if (solicitacao.usuario && solicitacao.usuario.email && novoStatus !== 'Agendado') {
+        if (emailDestinatarioParaStatus && novoStatus !== 'Agendado') {
             let obsAdicionalParaEmail = "";
-            if (novoStatus === 'Rejeitado' && observacao_rejeicao) { // Agora 'observacao_rejeicao' estará definida
-                obsAdicionalParaEmail = observacao_rejeicao;
+            if (novoStatus === 'Rejeitado' && observacao_rejeicao) {
+                obsAdicionalParaEmail = observacao_rejeicao.trim();
             }
 
             enviarEmailAtualizacaoStatusSolicitacao(
@@ -804,13 +828,15 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
                 solicitacao.id,
                 req.session.nomeUsuario || "Equipe Educa Mente",
                 obsAdicionalParaEmail
-        ).catch(err => console.error("[STATUS_CHANGE EMAIL_ERROR]", err));
+            ).catch(err => console.error("[STATUS_CHANGE EMAIL_ERROR]", err));
         }
 
         res.status(200).json({ message: `Status atualizado para ${novoStatus}`, agendamentosRemovidos });
+
     } catch (error) {
         console.error(`[API STATUS CHANGE CRITICAL] ID ${id}:`, error);
-        res.status(500).json({ message: 'Erro ao atualizar status.' });
+        const isConflictError = error.message && error.message.includes('Ação bloqueada');
+        res.status(isConflictError ? 409 : 500).json({ message: isConflictError ? error.message : 'Erro interno ao atualizar status.' });
     }
 });
 
@@ -828,6 +854,14 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
     try {
         const solicitacaoParaAgendar = await Solicitacao.findByPk(solicitacaoIdNum, { include: [{ model: Usuario, as: 'usuario', attributes: ['email', 'nome'] }] });
         if (!solicitacaoParaAgendar) return res.status(404).json({ message: 'Solicitação não encontrada.' });
+
+        if (solicitacaoParaAgendar.status !== 'Pendente') {
+            const statusAtual = solicitacaoParaAgendar.status;
+            console.warn(`[AGENDAR BLOCK] Tentativa de agendar solicitação ${solicitacaoIdNum} com status "${statusAtual}". Ação bloqueada.`);
+            return res.status(409).json({ // 409 Conflict é o status ideal para isso
+                message: `Ação bloqueada. Esta solicitação não está mais "Pendente" (status atual: ${statusAtual}).` 
+            });
+        }
 
         const statusPermitidosParaAgendar = ['Pendente', 'Agendado', 'Finalizado'];
         if (!statusPermitidosParaAgendar.includes(solicitacaoParaAgendar.status)) {
@@ -850,8 +884,15 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
                 solicitacoes_id: solicitacaoIdNum, data_agendamento: dataAgendamento, horario: horarioCompleto,
                 obser_agendamento: observacoesForm ? observacoesForm.trim() : null
             }, { transaction: t });
-            const [updatedRows] = await Solicitacao.update({ status: 'Agendado' }, { where: { id: solicitacaoIdNum }, transaction: t });
-            if (updatedRows === 0 && solicitacaoParaAgendar.status !== 'Agendado') {
+            const [updatedRows] = await Solicitacao.update({ 
+                status: 'Agendado',
+                modificado_por_usuario_id: req.session.usuarioId // Salva quem agendou
+            }, { 
+                where: { id: solicitacaoIdNum }, 
+                transaction: t 
+            });
+
+            if (updatedRows === 0) {
                 throw new Error(`Falha ao atualizar status para Agendado para solicitação ${solicitacaoIdNum}.`);
             }
             return { novoAgendamento };
