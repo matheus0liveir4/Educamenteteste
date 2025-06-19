@@ -4,7 +4,7 @@
     --primary: #0A4275;
     --secondary: #1575A3;
     --accent: #D9E6F2;
-    --primary-dark: #0a58ca;
+    --primary-dark: #0a4275;
     --primary-light: #58a6ff;
 
     /* Cores de Texto */
@@ -218,7 +218,7 @@ input:checked + .slider:before { transform: translateX(20px); }
     color: var(--white); background-color: #0d6efd; /* Cor Bootstrap, pode ser var(--primary) */
     border-color: #0d6efd;
 }
-.btn-primary:hover { color: var(--white); background-color: #0b5ed7; border-color: #0a58ca; }
+.btn-primary:hover { color: var(--white); background-color: #0A4275; border-color: #0A58CA; }
 .btn-secondary {
     color: var(--white); background-color: #6c757d; border-color: #6c757d;
 }
@@ -604,6 +604,8 @@ body.dark .card { background-color: #333; border-color: #444; }
 body.dark .card-header { border-bottom-color: #444; }
 body.dark .card-title { color: var(--text-dark); }
 body.dark .card-footer { background-color: var(--gray-100); border-top-color: #444; }
+body.dark .footer { background-color: var(--gray-100); border-top-color: #444; }
+
 
 body.dark .font-medium { color: var(--text-dark); } /* Classe utilitária */
 body.dark .text-light { color: var(--text-light); } /* Classe utilitária */

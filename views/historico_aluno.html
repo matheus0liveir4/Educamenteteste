@@ -15,6 +15,103 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/historico_aluno.css"> 
     
+    <style>
+        /* Estilos para o novo layout do cabeçalho */
+        .page-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .page-header-left {
+            flex: 1;
+        }
+        
+        .page-header-right {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        
+        .btn-historico {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background:  #0a4275;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+            cursor: pointer;
+        }
+        
+        .btn-historico:hover {
+            background:  #0a4275;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+            color: white;
+        }
+        
+        .btn-historico:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+        }
+        
+        .btn-historico i {
+            font-size: 1rem;
+        }
+        
+        /* Responsividade para dispositivos móveis */
+        @media (max-width: 768px) {
+            .page-header-content {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .page-header-right {
+                justify-content: flex-end;
+                margin-top: 0;
+            }
+            
+            .btn-historico {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Modo escuro */
+        [data-theme="dark"] .btn-historico {
+            background:  #0a4275;
+            box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);
+        }
+        
+        [data-theme="dark"] .btn-historico:hover {
+            background:  #0a4275;
+            box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+        }
+        
+        /* Centralização do footer */
+        .footer .container.footer-content {
+            text-align: center !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+        
+        .footer .footer-text {
+            text-align: center !important;
+            margin: 0 !important;
+            width: 100% !important;
+        }
+    </style> 
+    
     <script src="js/utils.js"></script>
     <script src="js/icons.js"></script>
     
@@ -67,7 +164,21 @@
 
     <main class="main-content">
         <div class="container">
-             <div class="page-header"> <h1 class="page-title" id="page-title">Histórico do Aluno</h1> <p class="page-subtitle" id="page-subtitle">Carregando...</p> </div>
+             <div class="page-header"> 
+                 <div class="page-header-content">
+                     <div class="page-header-left">
+                         <h1 class="page-title" id="page-title">Histórico do Aluno</h1> 
+                         <p class="page-subtitle" id="page-subtitle">Carregando...</p>
+                     </div>
+                     <div class="page-header-right">
+                         <button class="btn btn-primary btn-historico" id="btn-ir-historico" 
+                                 data-tooltip="Ir para a tela de histórico geral" 
+                                 data-tooltip-type="info">
+                             <i class="fas fa-arrow-left"></i> Voltar
+                         </button>
+                     </div>
+                 </div>
+             </div>
              <div class="card" id="student-info-card" style="display: none;">
                  <div class="card-header"> <h2 class="card-title">Informações do Aluno</h2> </div>
                  <div class="card-body"> <div class="student-info-grid"> <div class="info-item"> <span class="info-item-label">Nome</span> <span class="info-item-value" id="student-name"><i class="fas fa-user"></i><span>-</span></span> </div> <div class="info-item"> <span class="info-item-label">Idade</span> <span class="info-item-value" id="student-age"><i class="fas fa-birthday-cake"></i><span>-</span></span> </div> <div class="info-item"> <span class="info-item-label">Turma</span> <span class="info-item-value" id="student-grade"><i class="fas fa-graduation-cap"></i><span>-</span></span> </div> <div class="info-item"> <span class="info-item-label">Curso</span> <span class="info-item-value" id="student-course"><i class="fas fa-book"></i><span>-</span></span> </div> <div class="info-item"> <span class="info-item-label">Unidade</span> <span class="info-item-value" id="student-unit"><i class="fas fa-building"></i><span>-</span></span> </div> <div class="info-item"> <span class="info-item-label">Telefone</span> <span class="info-item-value" id="student-phone"><i class="fas fa-phone"></i><span>-</span></span> </div> </div> </div>
@@ -86,7 +197,7 @@
     </main>
 
     <footer class="footer">
-        <div class="container footer-content"><p class="footer-text">© 2025 Educa Mente</p></div>
+        <div class="container footer-content"><p class="footer-text">© 2025 Educa Mente - Sistema de Gestão para Psicopedagogos</p></div>
     </footer>
 
     <div class="modal-overlay" id="appointment-details-modal-overlay">
@@ -105,6 +216,18 @@
         let modalOverlay, modalContent, modalTitle, modalBody, modalCloseBtn; 
         window.historicoAlunoData = null; 
 
+        // Função para configurar o botão de histórico
+        function setupHistoricoButton() {
+            const btnHistorico = document.getElementById('btn-ir-historico');
+            if (btnHistorico) {
+                btnHistorico.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Redireciona para a página de histórico geral
+                    window.location.href = '/historico';
+                });
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
           try {
             console.log("DEBUG: DOMContentLoaded - Iniciando setup historico_aluno...");
@@ -114,6 +237,7 @@
             setupNavbarIcons(); 
             setupDarkModeToggle(); 
             setupLogoutButton(); // Adicionado para configurar o botão de logout
+            setupHistoricoButton(); // Configurar o botão de histórico
             
             if (!setupModalElements()) { throw new Error("Falha ao configurar modal."); }
             if (!setupCardActionListeners()) { throw new Error("Falha ao configurar listeners dos cards."); }
