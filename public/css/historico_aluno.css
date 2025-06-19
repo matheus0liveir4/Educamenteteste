@@ -567,9 +567,7 @@ body.dark {
     background-color: #222; /* Fundo principal dark */
     color: var(--text-dark);  /* Texto principal dark, já definido por variáveis */
 }
-body.dark .main-content { /* Se houver algum ajuste específico para o main-content no dark mode */
-    /* Exemplo: background-color: var(--gray-100); */
-}
+
 
 /* 5.2. Componentes Padronizados (Navbar, Switch, Botões .btn, etc.) */
 body.dark .navbar { background-color: #333; border-bottom-color: #444 !important; } /* Idealmente evitar !important */
@@ -671,6 +669,100 @@ body.dark .custom-btn-secondary:hover { background-color: #656565; border-color:
 body.dark .custom-btn-warning { color: var(--custom-toast-warning-text); background-color: var(--custom-toast-warning-bg); border-color: var(--custom-toast-warning-bg); }
 body.dark .custom-btn-warning:hover { background-color: #df8c00; border-color: #d39e00; }
 
+/* Estilos para o novo layout do cabeçalho */
+        .page-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .page-header-left {
+            flex: 1;
+        }
+        
+        .page-header-right {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        
+        .btn-historico {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background:  #0a4275;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+            cursor: pointer;
+        }
+        
+        .btn-historico:hover {
+            background:  #0a4275;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+            color: white;
+        }
+        
+        .btn-historico:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+        }
+        
+        .btn-historico i {
+            font-size: 1rem;
+        }
+        
+        /* Responsividade para dispositivos móveis */
+        @media (max-width: 768px) {
+            .page-header-content {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 1rem;
+            }
+            
+            .page-header-right {
+                justify-content: flex-end;
+                margin-top: 0;
+            }
+            
+            .btn-historico {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.85rem;
+            }
+        }
+        
+        /* Modo escuro */
+        [data-theme="dark"] .btn-historico {
+            background:  #0a4275;
+            box-shadow: 0 2px 4px rgba(13, 110, 253, 0.2);
+        }
+        
+        [data-theme="dark"] .btn-historico:hover {
+            background:  #0a4275;
+            box-shadow: 0 4px 8px rgba(13, 110, 253, 0.3);
+        }
+        
+        /* Centralização do footer */
+        .footer .container.footer-content {
+            text-align: center !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+        }
+        
+        .footer .footer-text {
+            text-align: center !important;
+            margin: 0 !important;
+            width: 100% !important;
+        }
 
 /* ==========================================================================
    6. HELPERS
