@@ -59,7 +59,9 @@ values ("matheus", "matheus@gmail.com", 123456, 'aluno');
 
 -- VALOR TESTE PARA PSICOPEDAGOGA
 insert into usuarios (nome, email, senha, tipo) 
-values ("psicopedagoga", "psico@teste.com", 123456, 'psicopedagoga');
+values ("Maria", "psico@teste.com", 123456, 'psicopedagoga');
+insert into usuarios (nome, email, senha, tipo) 
+values ("Ana", "ana@teste.com", 123456, 'psicopedagoga');
 
 -- VALOR TESTE PARA PROFESSOR
 insert into usuarios (nome, email, senha, tipo) 
