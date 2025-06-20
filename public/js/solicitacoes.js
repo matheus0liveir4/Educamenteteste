@@ -146,6 +146,73 @@
         return filters;
     }
 
+    function showRejectionModal(solicitacao) {
+    const modal = document.getElementById('rejectionModal');
+    const alunoNomeEl = document.getElementById('rejectionModalAlunoNome');
+    const observacaoTextarea = document.getElementById('rejectionObservacao');
+    const confirmBtn = document.getElementById('confirmRejectionBtn');
+    const closeBtns = modal.querySelectorAll('[data-dismiss="rejectionModal"]');
+
+    alunoNomeEl.textContent = solicitacao.nome || 'aluno(a)';
+    observacaoTextarea.value = ''; // Limpa o campo
+    modal.classList.add('show');
+
+    const hideModal = () => modal.classList.remove('show');
+
+    closeBtns.forEach(btn => btn.onclick = hideModal);
+    modal.onclick = (e) => { if(e.target === modal) hideModal(); };
+
+    // Remove event listener antigo para evitar múltiplos disparos
+    const newConfirmBtn = confirmBtn.cloneNode(true);
+    confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+
+    newConfirmBtn.onclick = async () => {
+        const observacao = observacaoTextarea.value.trim();
+        const nomeAluno = solicitacao.nome ? `"${solicitacao.nome}"` : 'esta solicitação';
+
+        // Desabilita o botão para evitar cliques duplos
+        newConfirmBtn.disabled = true;
+        newConfirmBtn.textContent = 'Rejeitando...';
+        
+        try {
+            const res = await fetch(`/api/solicitacoes/${solicitacao.id}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                // 👇 ENVIANDO A OBSERVAÇÃO PARA O BACKEND 👇
+                body: JSON.stringify({ 
+                    status: 'Rejeitado',
+                    observacao_rejeicao: observacao 
+                })
+            });
+
+            if (res.ok) {
+                let successMessage = `Solicitação de ${nomeAluno} foi rejeitada.`;
+                window.showToast(successMessage, 'warning');
+                
+                hideModal();
+                await initializeSolicitacoes(); // Recarrega os dados
+
+                // Foca na aba de rejeitados após a ação
+                sessionStorage.setItem('focusTabOnLoad', 'rejected');
+                const rejectedTab = document.querySelector('.tab[data-tab="rejected"]');
+                if (rejectedTab) rejectedTab.click();
+
+            } else {
+                const errorData = await res.json().catch(() => ({ message: `Erro HTTP ${res.status}` }));
+                window.showToast(`Erro ao rejeitar solicitação: ${errorData.message}`, 'error');
+            }
+
+        } catch (err) {
+            console.error('[JS] Erro de rede em showRejectionModal:', err);
+            window.showToast('Erro de comunicação ao tentar rejeitar. Tente novamente.', 'error');
+        } finally {
+            // Reabilita o botão
+            newConfirmBtn.disabled = false;
+            newConfirmBtn.textContent = 'Confirmar Rejeição';
+        }
+    };
+}
+
     function filterAndSearchRows() {
         const solicitacoesParaFiltrar = Array.isArray(window.globalAllSolicitacoes) ? window.globalAllSolicitacoes : [];
         const term = searchInput?.value.toLowerCase().trim() ?? '';
@@ -370,7 +437,7 @@
                     );
 
                 } else if (button.classList.contains('btn-reject')) {
-                    alterarStatusComConfirmacao(id, 'Rejeitado', solicitacao);
+                    showRejectionModal(solicitacao);
                 }
             });
         }

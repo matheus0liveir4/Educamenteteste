@@ -784,14 +784,14 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
             });
         }
 
-        const dadosUpdate = {
+       const dadosUpdate = {
             status: novoStatus,
-            modificado_por_usuario_id: req.session.usuarioId // <-- REGISTRO DE AUDITORIA
+            modificado_por_usuario_id: req.session.usuarioId // <-- ESTA LINHA FOI ADICIONADA
         };
-        
         if (novoStatus === 'Rejeitado' && observacao_rejeicao) {
             dadosUpdate.observacao_rejeicao = observacao_rejeicao.trim();
         } else if (novoStatus !== 'Rejeitado') {
+            // Limpa a observação se o status mudar para algo que não seja 'Rejeitado'
             dadosUpdate.observacao_rejeicao = null;
         }
 

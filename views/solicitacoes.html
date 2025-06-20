@@ -116,6 +116,24 @@
     <script src="js/utils.js"></script>
     <script src="js/solicitacoes.js"></script>
     <script src="js/solicitacoes_card.js"></script>
-    
+
+  <div id="rejectionModal" class="custom-modal" aria-modal="true" role="dialog">
+    <div class="custom-modal-content">
+        <div class="custom-modal-header">
+            <h5 class="custom-modal-title">Rejeitar Solicitação</h5>
+            <button type="button" class="custom-modal-close" data-dismiss="rejectionModal" aria-label="Fechar">×</button>
+        </div>
+        <div class="custom-modal-body">
+            <p>Por favor, informe o motivo da rejeição para a solicitação de <strong id="rejectionModalAlunoNome"></strong>. Esta observação será registrada.</p>
+            <textarea id="rejectionObservacao" class="form-control" rows="4" placeholder="Ex: Documentação incompleta, dados inconsistentes, etc. (Opcional)"></textarea>
+            <small id="rejectionError" class="text-danger" style="display:none;"></small>
+        </div>
+        <div class="custom-modal-footer">
+            <button type="button" class="custom-btn custom-btn-secondary" data-dismiss="rejectionModal">Cancelar</button>
+            <button type="button" class="custom-btn custom-btn-danger" id="confirmRejectionBtn">Confirmar Rejeição</button>
+        </div>
+    </div>
+  </div>
+
 </body>
 </html>

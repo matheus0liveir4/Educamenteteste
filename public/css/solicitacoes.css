@@ -841,6 +841,27 @@ body.dark .custom-tooltip-popup.type-success { background-color: var(--custom-to
 body.dark .custom-tooltip-popup.type-info    { background-color: var(--custom-toast-info-bg, #105A7F); --tooltip-arrow-color: var(--custom-toast-info-bg, #105A7F); }
 body.dark .custom-tooltip-popup.type-default { background-color: var(--tooltip-default-bg, #444); --tooltip-arrow-color: var(--tooltip-default-bg, #444); }
 
+.rejection-reason {
+    margin-top: 10px;
+    padding: 8px 12px;
+    background-color: var(--warning-light, #fff8e1);
+    border-left: 3px solid var(--warning, #ffab40);
+    border-radius: 4px;
+}
+
+.rejection-reason p {
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--text-color);
+}
+
+.rejection-reason .reason-text {
+    display: block;
+    margin-top: 4px;
+    padding-left: 20px; /* Para alinhar com o texto 'Motivo' */
+    white-space: pre-wrap; /* Para respeitar quebras de linha */
+}
+
 /* ================================================ */
 /* ADIÇÃO FINAL: Footer com borda no tema claro     */
 /* ================================================ */
