@@ -27,6 +27,13 @@ if (dotenvResult.error) {
   console.warn("---------------------------------------------------------");
 }
 
+console.log("------------------[DEBUG DB VARS]------------------");
+console.log("DB_HOST lido pelo Node:", process.env.DB_HOST);
+console.log("DB_PORT lido pelo Node:", process.env.DB_PORT);
+console.log("DB_NAME lido pelo Node:", process.env.DB_NAME);
+console.log("DB_USER lido pelo Node:", process.env.DB_USER);
+console.log("---------------------------------------------------");
+
 // Suas outras requires:
 const mysql = require('mysql2');
 const express = require('express');
