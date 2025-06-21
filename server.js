@@ -28,6 +28,7 @@ if (dotenvResult.error) {
 }
 
 // Suas outras requires:
+const mysql = require('mysql2');
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -56,12 +57,15 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 app.use(bodyParser.json());
 app.use(cookieParser());
+
+
 app.use(expressSession({
+    
   secret: process.env.SESSION_SECRET || 'YOUR_STRONG_SECRET_KEY_fallback_dev',
   resave: false,
   saveUninitialized: false,
   cookie: {
-    secure: process.env.NODE_ENV === 'production',
+    secure: false,
     httpOnly: true,
     sameSite: 'lax',
     maxAge: 24 * 60 * 60 * 1000
@@ -759,7 +763,6 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
     const id = parseInt(req.params.id);
     const { status: novoStatus, observacao_rejeicao } = req.body;
     const validStatus = ['Pendente', 'Agendado', 'Rejeitado', 'Finalizado'];
-
     if (isNaN(id)) return res.status(400).json({ error: 'ID inválido.' });
     if (!novoStatus || !validStatus.includes(novoStatus)) return res.status(400).json({ error: `Status inválido. Válidos: ${validStatus.join(', ')}` });
 
@@ -1224,14 +1227,21 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-    console.error("[500 INTERNAL SERVER ERROR]", { /* ... seu log ... */ });
+    console.error("[500 INTERNAL SERVER ERROR]", {
+        message: err.message, name: err.name, status: err.status || 500,
+        url: req.originalUrl, method: req.method, ip: req.ip,
+        userId: req.session?.usuarioId || 'N/A', userType: req.session?.tipoUsuario || 'N/A'
+        // stack: process.env.NODE_ENV !== 'production' ? err.stack : undefined
+    });
     const errorMessage = process.env.NODE_ENV === 'production' ? 'Erro inesperado.' : `Erro: ${err.message}`;
-    
     if (req.originalUrl.startsWith('/api/')) {
          return res.status(err.status || 500).json({ error: "Erro interno.", details: errorMessage });
     }
-    // Redireciona para a página de erro genérica
-    res.status(err.status || 500).redirect('/erro?tipo=erro_interno');
+    const errorPagePath = path.join(__dirname, 'views', '500.html'); // Tenta enviar 500.html
+    if (fs.existsSync(errorPagePath)) {
+        return res.status(500).sendFile(errorPagePath);
+    }
+    res.status(500).send(`Erro Interno no Servidor: ${errorMessage}`); // Fallback
 });
 
 // Inicialização do Servidor

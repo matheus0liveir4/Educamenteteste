@@ -568,7 +568,6 @@ body.dark {
     color: var(--text-dark);  /* Texto principal dark, já definido por variáveis */
 }
 
-
 /* 5.2. Componentes Padronizados (Navbar, Switch, Botões .btn, etc.) */
 body.dark .navbar { background-color: #333; border-bottom-color: #444 !important; } /* Idealmente evitar !important */
 body.dark .navbar-brand { color: var(--white, #FFFFFF) !important; }

@@ -26,4 +26,3 @@ module.exports = db;
 Object.values(db).forEach(model => {
   if (model.associate) model.associate(db);
 });
-
