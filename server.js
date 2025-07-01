@@ -917,7 +917,7 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
         const solicitacaoParaAgendar = await Solicitacao.findByPk(solicitacaoIdNum, { include: [{ model: Usuario, as: 'usuario', attributes: ['email', 'nome'] }] });
         if (!solicitacaoParaAgendar) return res.status(404).json({ message: 'Solicitação não encontrada.' });
 
-        if (solicitacaoParaAgendar.status !== 'Pendente') {
+        if (solicitacaoParaAgendar.status !== 'Finalizado' & 'Pendente') {
             const statusAtual = solicitacaoParaAgendar.status;
             console.warn(`[AGENDAR BLOCK] Tentativa de agendar solicitação ${solicitacaoIdNum} com status "${statusAtual}". Ação bloqueada.`);
             return res.status(409).json({ message: `Ação bloqueada. O status atual é "${statusAtual}".` });
