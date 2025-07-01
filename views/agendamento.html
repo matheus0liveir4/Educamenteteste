@@ -336,6 +336,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     if (!dataAgendamento || dataAgendamento === "") { alert('Por favor, selecione uma data no calendário.'); confirmarBtn.disabled = false; confirmarBtn.textContent = originalButtonText; return; }
                     if (!horaAgendamento) { alert('Por favor, preencha a hora do agendamento.'); confirmarBtn.disabled = false; confirmarBtn.textContent = originalButtonText; return; }
 
+                    const agora = new Date();
+                    const dataHoraAgendamento = new Date(`${dataAgendamento}T${horaAgendamento}`);
+
+                    if (dataHoraAgendamento < agora) {
+                        alert('Não é possível agendar um horário que já passou. Por favor, escolha um horário futuro.');
+                        confirmarBtn.disabled = false;
+                        confirmarBtn.textContent = originalButtonText;
+                        timeSelect.focus(); // Foca no campo de hora para correção
+                        return;
+                    }
+
                     const dadosParaBackend = {
                         solicitacaoId: parseInt(solicitacaoIdAtual),
                         data: dataAgendamento,
@@ -345,14 +356,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     console.log('[Agendamento] Enviando dados para o backend:', JSON.stringify(dadosParaBackend));
                     try {
-                        const response = await fetch('/api/agendar', { // URL da API já estava correta
+                        const response = await fetch('/api/agendar', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json', },
                             body: JSON.stringify(dadosParaBackend)
                         });
 
                         if (!response.ok) {
-                            let errorMsg = `Falha ao confirmar o agendamento. Status: ${response.status}`;
+                            let errorMsg = '';
                             let errorDetail = '';
                             try {
                                 const errJson = await response.json();
@@ -360,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             } catch (e) {
                                 errorDetail = await response.text();
                             }
-                            if (errorDetail) errorMsg += ` Detalhe: ${errorDetail.substring(0, 200)}`;
+                            if (errorDetail) errorMsg += errorDetail.substring(0, 200);
                             // Specific check for 409 (Conflict)
                             if (response.status === 409 && errorDetail.toLowerCase().includes("ocupado")) {
                                 errorMsg = `Conflito: ${errorDetail}`; // Usa a mensagem do backend diretamente

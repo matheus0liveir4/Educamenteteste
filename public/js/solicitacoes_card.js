@@ -58,6 +58,26 @@ function createAppointmentCard(item, tabType) {
         }
     }
 
+    let footerInfoHtml = '';
+
+    if (item.modificado_por && item.modificado_por.nome) {
+        let actionText = 'Alterado por:';
+
+        switch (item.status) {
+            case 'Agendado':
+                actionText = 'Agendado por:';
+                break;
+            case 'Rejeitado':
+                actionText = 'Rejeitado por:';
+                break;
+            case 'Finalizado':
+                actionText = 'Finalizado por:';
+                break;
+        }
+        
+        footerInfoHtml = `<small>${actionText} ${item.modificado_por.nome}</small>`;
+    }
+
     card.innerHTML = `
         <div class="appointment-card-header">
             <h3>
@@ -79,7 +99,7 @@ function createAppointmentCard(item, tabType) {
         </div>
         <div class="appointment-card-footer">
             <div class="card-footer-info">
-                ${item.modificado_por ? `<small>Alterado por: ${item.modificado_por.nome}</small>` : ''}
+                ${footerInfoHtml}
             </div>
             ${footerButtonsHTML}
         </div>

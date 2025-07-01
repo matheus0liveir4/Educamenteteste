@@ -26,16 +26,16 @@ return `
             </div>
             <div class="appointment-card-footer">
                 <div class="footer-buttons">            
-                    <a class="btn btn-sm btn-primary" href="/historico_aluno?id=${s.id}">
+                    <a class="btn btn-sm btn-primary" data-tooltip="Ver Histórico do Aluno" data-tooltip-type="historico" href="/historico_aluno?id=${s.id}">
                       <i class="fas fa-history"></i>
                       <span style="margin-left: 4px;">Ver histórico</span>
                     </a>               
-                    <a class="btn btn-sm btn-outline-secondary" href="/agendamento?id=${s.id}">
+                    <a class="btn btn-sm btn-primary btn-accent" data-tooltip="Agendar Outro Atendimento com Aluno" data-tooltip-type="default" href="/agendamento?id=${s.id}">
                         <i class="fas fa-calendar-plus"></i> 
                         <span style="margin-left: 4px;">Novo Agendamento</span>
-                    </a>                    
+                    </a>      
+                    <span class="btn btn-sm btn-secondary disabled">${s.agendamentos.length} atendimento(s)</span>  
                 </div>
-                  <span class="btn btn-sm btn-secondary disabled">${s.agendamentos.length} atendimento(s)</span>
             </div>
         </div>
 `;

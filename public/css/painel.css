@@ -368,11 +368,13 @@ input:checked + .slider:before {
 }
 .card-body {
     padding: 1.25rem;
-    flex-grow: 1; /* Permite que o corpo do card cresça e ocupe espaço */
+    flex-grow: 1; 
     position: relative;
-    display: flex; /* Torna o card-body um flex container */
-    flex-direction: column; /* Empilha os filhos do card-body verticalmente */
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
 }
+
 .card-footer {
     padding: 1rem 1.25rem;
     border-top: 1px solid  var(--gray-500);
@@ -808,7 +810,7 @@ input:checked + .slider:before {
 .custom-tooltip-popup.type-primary  { background-color: var(--primary);   --tooltip-arrow-color: var(--primary); }
 .custom-tooltip-popup.type-danger   { background-color: var(--danger);    --tooltip-arrow-color: var(--danger); }
 .custom-tooltip-popup.type-warning  { background-color: var(--warning);   color: #212529; --tooltip-arrow-color: var(--warning); }
-.custom-tooltip-popup.type-secondary{ background-color: var(--gray-200);  color: #333;    --tooltip-arrow-color: var(--gray-200); }
+/* .custom-tooltip-popup.type-secondary{ background-color: var(--gray-200);  color: #333;    --tooltip-arrow-color: var(--gray-200); } */
 .custom-tooltip-popup.type-success  { background-color: var(--success);   --tooltip-arrow-color: var(--success); }
 .custom-tooltip-popup.type-info     { background-color: var(--secondary); --tooltip-arrow-color: var(--secondary); }
 
@@ -961,9 +963,7 @@ input:checked + .slider:before {
     border: 2px solid var(--gray-200); /* Cria um pequeno espaçamento entre a barra e a trilha */
 }
 
-/* --- Outros Estilos Específicos do Dashboard (já existentes no seu painel.css original) --- */
-/* Próximo Agendamento, Lista de Solicitações, Itens de Resumo, Componente de Calendário, etc. */
-#next-appointment-details .summary-item { }
+
 #next-appointment-details .btn-outline { margin-top: 1rem; float: right; }
 .request-item-dashboard {
     display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 0;
@@ -1260,7 +1260,6 @@ body.dark .custom-btn-warning:hover {
 body.dark .custom-tooltip-popup.type-primary  { background-color: var(--primary);   --tooltip-arrow-color: var(--primary); }
 body.dark .custom-tooltip-popup.type-danger   { background-color: var(--danger);    --tooltip-arrow-color: var(--danger); }
 body.dark .custom-tooltip-popup.type-warning  { background-color: var(--custom-toast-warning-bg); color: var(--custom-toast-warning-text); --tooltip-arrow-color: var(--custom-toast-warning-bg); }
-body.dark .custom-tooltip-popup.type-secondary{ background-color: #5a5a5a; color: var(--custom-modal-text-color); --tooltip-arrow-color: #5a5a5a; }
 body.dark .custom-tooltip-popup.type-success  { background-color: var(--custom-toast-success-bg); --tooltip-arrow-color: var(--custom-toast-success-bg); }
 body.dark .custom-tooltip-popup.type-info     { background-color: var(--custom-toast-info-bg);    --tooltip-arrow-color: var(--custom-toast-info-bg); }
 

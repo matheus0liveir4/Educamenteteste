@@ -8,6 +8,49 @@ const path = require('path');
 const dotenvConfigPath = path.resolve(__dirname, '.env');
 const dotenvResult = require('dotenv').config({ path: dotenvConfigPath });
 
+function showToast(mensagem, tipo = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${tipo}`;
+    toast.textContent = mensagem;
+    document.body.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add('show');
+    }, 100);
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => document.body.removeChild(toast), 300);
+    }, 4000);
+  }
+
+{/* <style>
+  .toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #444;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 9999;
+  }
+
+  .toast.show {
+    opacity: 1;
+  }
+
+  .toast.error {
+    background: #dc3545;
+  }
+
+  .toast.success {
+    background: #28a745;
+  }
+</style> */}
+
 // 3. Bloco de depuração
 if (dotenvResult.error) {
   console.error("---------------------------------------------------------");
@@ -770,6 +813,7 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
     const id = parseInt(req.params.id);
     const { status: novoStatus, observacao_rejeicao } = req.body;
     const validStatus = ['Pendente', 'Agendado', 'Rejeitado', 'Finalizado'];
+
     if (isNaN(id)) return res.status(400).json({ error: 'ID inválido.' });
     if (!novoStatus || !validStatus.includes(novoStatus)) return res.status(400).json({ error: `Status inválido. Válidos: ${validStatus.join(', ')}` });
 
@@ -789,9 +833,9 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
 
         if (novoStatus === 'Rejeitado' && statusAntigo !== 'Pendente') {
             console.warn(`[REJEITAR BLOCK] Tentativa de rejeitar solicitação ${id} com status "${statusAntigo}". Ação bloqueada por UserID: ${req.session.usuarioId}`);
-            return res.status(409).json({ // 409 Conflict é o código HTTP ideal para este caso
-                message: `Ação bloqueada. Só é possível rejeitar uma solicitação que esteja "Pendente". O status atual é "${statusAntigo}".`
-            });
+            // return res.status(409).json({ // 409 Conflict é o código HTTP ideal para este caso
+               showToast(`Ação bloqueada. O status atual é "${statusAntigo}".`)
+        
         }
 
        const dadosUpdate = {
@@ -858,6 +902,14 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
     if (!dataForm || !/^\d{4}-\d{2}-\d{2}$/.test(dataForm)) return res.status(400).json({ message: 'Formato de data inválido (AAAA-MM-DD).' });
     if (!horaForm || !/^\d{2}:\d{2}$/.test(horaForm)) return res.status(400).json({ message: 'Formato de hora inválido (HH:MM).' });
 
+    const dataHoraAgendamento = new Date(`${dataForm}T${horaForm}:00`);
+    const agora = new Date();
+
+    if (dataHoraAgendamento < agora) {
+        console.warn(`[AGENDAR BLOCK] Tentativa de agendar no passado: ${dataHoraAgendamento.toLocaleString('pt-BR')} para solicitação ${solicitacaoIdNum}.`);
+        return res.status(400).json({ message: 'Não é possível fazer um agendamento para uma data ou hora no passado.' });
+    }
+
     const dataAgendamento = dataForm;
     const horarioCompleto = `${horaForm}:00`;
 
@@ -868,9 +920,7 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
         if (solicitacaoParaAgendar.status !== 'Pendente') {
             const statusAtual = solicitacaoParaAgendar.status;
             console.warn(`[AGENDAR BLOCK] Tentativa de agendar solicitação ${solicitacaoIdNum} com status "${statusAtual}". Ação bloqueada.`);
-            return res.status(409).json({ // 409 Conflict é o status ideal para isso
-                message: `Ação bloqueada. Esta solicitação não está mais "Pendente" (status atual: ${statusAtual}).` 
-            });
+            return res.status(409).json({ message: `Ação bloqueada. O status atual é "${statusAtual}".` });
         }
 
         const statusPermitidosParaAgendar = ['Pendente', 'Agendado', 'Finalizado'];
@@ -884,7 +934,7 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
             return res.status(409).json({ message: `Horário ocupado por ${solicitacaoConflito?.nome || 'outro aluno'}.` });
         }
 
-        let emailDestinatarioPrincipal = solicitacaoParaAgendar.usuario.email; // Default: quem submeteu
+        let emailDestinatarioPrincipal = solicitacaoParaAgendar.usuario.email;
         if (solicitacaoParaAgendar.email_aluno_contato) {
             emailDestinatarioPrincipal = solicitacaoParaAgendar.email_aluno_contato;
         }
@@ -896,7 +946,7 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
             }, { transaction: t });
             const [updatedRows] = await Solicitacao.update({ 
                 status: 'Agendado',
-                modificado_por_usuario_id: req.session.usuarioId // Salva quem agendou
+                modificado_por_usuario_id: req.session.usuarioId
             }, { 
                 where: { id: solicitacaoIdNum }, 
                 transaction: t 
@@ -908,10 +958,10 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
             return { novoAgendamento };
         });
 
-        if (emailDestinatarioPrincipal) { // Verifica se temos um e-mail para enviar
+        if (emailDestinatarioPrincipal) {
             enviarEmailConfirmacaoAgendamento(
                 emailDestinatarioPrincipal,
-                solicitacaoParaAgendar.nome, // Nome do aluno na solicitação
+                solicitacaoParaAgendar.nome,
                 dataAgendamento,
                 horaForm,
                 req.session.nomeUsuario || "Equipe Educa Mente",
