@@ -14,6 +14,7 @@ CREATE TABLE usuarios (
 CREATE TABLE solicitacoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
+    modificado_por_usuario_id INT NULL, 
     nome VARCHAR(100) NOT NULL,
     data_nascimento DATE NOT NULL,
     curso VARCHAR(100) NOT NULL,
@@ -28,10 +29,9 @@ CREATE TABLE solicitacoes (
 	imagem VARCHAR(255),
     status ENUM('Pendente', 'Agendado', 'Rejeitado', 'Finalizado') DEFAULT 'Pendente',
     observacao_rejeicao TEXT,
-	modificado_por_usuario_id INT NULL, 
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
     FOREIGN KEY (modificado_por_usuario_id) REFERENCES usuarios(id)
 );
 
@@ -47,19 +47,24 @@ CREATE TABLE agendamentos (
 
 CREATE TABLE observacoes (
   id SERIAL PRIMARY KEY,
-  agendamentos_id INTEGER NOT NULL REFERENCES agendamentos(id) ON DELETE CASCADE,
+  agendamentos_id INTEGER NOT NULL,
   texto TEXT NOT NULL,
   criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  foreign key (agendamentos_id) REFERENCES agendamentos(id) ON DELETE CASCADE
 );
 
 -- VALOR TESTE PARA PSICOPEDAGOGA
 insert into usuarios (nome, email, senha, tipo) 
-values ('psicopedagoga', 'tcceducamente@gmail.com', 'educamenteTCC', 'psicopedagoga');
+values ('Maria', 'mariaeducamente@gmail.com', 'educamenteTCC', 'psicopedagoga');
+
+insert into usuarios (nome, email, senha, tipo) 
+values ('Ana', 'anaeducamente@gmail.com', 'educamenteTCC', 'psicopedagoga');
 
 -- VALOR TESTE PARA PROFESSOR
 insert into usuarios (nome, email, senha, tipo) 
 values ('professor', 'professor@teste.com', 'educamentePROFESSOR', 'professor');
+
 
 SELECT * FROM usuarios;
 SELECT * FROM solicitacoes;
