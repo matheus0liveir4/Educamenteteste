@@ -30,7 +30,7 @@ return `
                       <i class="fas fa-history"></i>
                       <span style="margin-left: 4px;">Ver histórico</span>
                     </a>               
-                    <a class="btn btn-sm btn-primary btn-accent" data-tooltip="Agendar Outro Atendimento com Aluno" data-tooltip-type="default" href="/agendamento?id=${s.id}">
+                    <a class="btn btn-sm btn-primary btn-accent" data-tooltip="Agendar Outro Atendimento com Aluno" data-tooltip-type="accent" href="/agendamento?id=${s.id}">
                         <i class="fas fa-calendar-plus"></i> 
                         <span style="margin-left: 4px;">Novo Agendamento</span>
                     </a>      

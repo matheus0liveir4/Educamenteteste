@@ -24,16 +24,16 @@ function createAppointmentCard(item, tabType) {
     let footerButtonsHTML = '';
     if (tabType === 'upcoming') { // Próximos Atendimentos (Status "Agendado")
         footerButtonsHTML = `
-            <button class="custom-btn btn-card-action custom-btn-warning btn-sm" data-action="return" data-id="${item.id}" data-tooltip="Retornar para Pendente (cancela agendamento)" data-tooltip-type="warning"><i class="fas fa-undo-alt"></i> Desfazer</button>
+            <button class="custom-btn btn-card-action custom-btn-warning btn-sm" data-action="return" data-id="${item.id}" data-tooltip="Reverter para Pendente (cancela Agendamento)" data-tooltip-type="warning"><i class="fas fa-undo-alt"></i> Reverter</button>
             <button class="custom-btn btn-card-action custom-btn-primary btn-sm" data-action="finalize" data-id="${item.id}" data-tooltip="Finalizar este atendimento" data-tooltip-type="primary"><i class="fas fa-check-double"></i> Finalizar</button>
         `;
     } else if (tabType === 'rejected') { // Rejeitadas (Status "Rejeitado")
          footerButtonsHTML = `
-            <button class="custom-btn btn-card-action custom-btn-warning btn-sm" data-action="revert-to-pending" data-id="${item.id}" data-tooltip="Reverter para Pendente" data-tooltip-type="warning"><i class="fas fa-history"></i> Reverter</button>
+            <button class="custom-btn btn-card-action custom-btn-warning btn-sm" data-action="revert-to-pending" data-id="${item.id}" data-tooltip="Reverter para Pendente (cancela Rejeição)" data-tooltip-type="warning"><i class="fas fa-history"></i> Reverter</button>
         `;
     } else if (tabType === 'completed') { // Finalizados (Status "Finalizado")
         footerButtonsHTML = `
-            <button class="custom-btn btn-card-action custom-btn-warning btn-sm" data-action="undo-finalize" data-id="${item.id}" data-tooltip="Desfazer finalização (volta para Pendente)" data-tooltip-type="warning"><i class="fas fa-undo"></i> Desfazer</button>
+            <button class="custom-btn btn-card-action custom-btn-warning btn-sm" data-action="undo-finalize" data-id="${item.id}" data-tooltip="Reverter para Pendente (cancela Finalização)" data-tooltip-type="warning"><i class="fas fa-undo"></i> Reverter</button>
         `;
     }
     

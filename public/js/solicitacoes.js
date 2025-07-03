@@ -197,9 +197,14 @@
                 const rejectedTab = document.querySelector('.tab[data-tab="rejected"]');
                 if (rejectedTab) rejectedTab.click();
 
+           // solicitacoes.js (dentro de showRejectionModal)
+
             } else {
-                const errorData = await res.json().catch(() => ({ message: `Erro HTTP ${res.status}` }));
-                window.showToast(`Erro ao rejeitar solicitação: ${errorData.message}`, 'error');
+                // Pega a mensagem de erro específica enviada pelo servidor.
+                const errorData = await res.json().catch(() => ({ message: 'Ocorreu um erro inesperado.' }));
+                
+                // Exibe EXATAMENTE a mensagem que o servidor enviou.
+                window.showToast(errorData.message, 'error');
             }
 
         } catch (err) {
@@ -433,7 +438,7 @@
                             }
                         },
                         'Sim, Agendar',       // Texto do botão de confirmação
-                        'custom-btn-success'  // Classe CSS do botão de confirmação
+                        'custom-btn-primary'  // Classe CSS do botão de confirmação
                     );
 
                 } else if (button.classList.contains('btn-reject')) {
