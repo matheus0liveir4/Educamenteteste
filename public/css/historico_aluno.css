@@ -215,10 +215,10 @@ input:checked + .slider:before { transform: translateX(20px); }
 }
 .btn-sm { padding: .25rem .5rem; font-size: .875rem; border-radius: .2rem; }
 .btn-primary {
-    color: var(--white); background-color: #0d6efd; /* Cor Bootstrap, pode ser var(--primary) */
-    border-color: #0d6efd;
+    color: var(--white); background-color: #0A4275; /* Cor Bootstrap, pode ser var(--primary) */
+    border-color:#0A4275;
 }
-.btn-primary:hover { color: var(--white); background-color: #0A4275; border-color: #0A58CA; }
+.btn-primary:hover { color: var(--white); background-color: #0a58ca; border-color:#0a58ca; }
 .btn-secondary {
     color: var(--white); background-color: #6c757d; border-color: #6c757d;
 }
@@ -310,13 +310,13 @@ input:checked + .slider:before { transform: translateX(20px); }
     border-color: transparent transparent var(--tooltip-arrow-color, var(--tooltip-default-bg)) transparent;
 }
 .custom-tooltip-popup.type-navbar-link { background-color: var(--tooltip-navbar-bg); color: var(--tooltip-navbar-text); --tooltip-arrow-color: var(--tooltip-navbar-bg); }
-.custom-tooltip-popup.type-primary     { background-color: var(--primary);   --tooltip-arrow-color: var(--primary); }
+.custom-tooltip-popup.type-primary     { background-color: #0a58ca;   --tooltip-arrow-color: #0a58ca; }
 .custom-tooltip-popup.type-danger      { background-color: var(--danger);    --tooltip-arrow-color: var(--danger); }
 .custom-tooltip-popup.type-warning     { background-color: var(--warning);   color: #212529; --tooltip-arrow-color: var(--warning); }
-.custom-tooltip-popup.type-secondary   { background-color: var(--gray-200);  color: #333;    --tooltip-arrow-color: var(--gray-200); }
+.custom-tooltip-popup.type-secondary   { background-color: #6c757d;  color: white;    --tooltip-arrow-color: #6c757d; }
 .custom-tooltip-popup.type-success     { background-color: var(--success);   --tooltip-arrow-color: var(--success); }
 .custom-tooltip-popup.type-info        { background-color: var(--secondary); --tooltip-arrow-color: var(--secondary); }
-.custom-tooltip-popup.type-default     { background-color: var(--tooltip-default-bg, #555); --tooltip-arrow-color: var(--tooltip-default-bg, #555); }
+.custom-tooltip-popup.type-default     { background-color: #0A4275; --tooltip-arrow-color:#0A4275; }
 
 /* 2.7. Custom Toast (Reutilizável) */
 .custom-toast-container {
@@ -568,6 +568,7 @@ body.dark {
     color: var(--text-dark);  /* Texto principal dark, já definido por variáveis */
 }
 
+
 /* 5.2. Componentes Padronizados (Navbar, Switch, Botões .btn, etc.) */
 body.dark .navbar { background-color: #333; border-bottom-color: #444 !important; } /* Idealmente evitar !important */
 body.dark .navbar-brand { color: var(--white, #FFFFFF) !important; }
@@ -585,10 +586,10 @@ body.dark #icon-moon { display: inline-block; }
 
 body.dark .btn { color: var(--text-dark); } /* Botão genérico texto dark */
 body.dark .btn-primary {
-    background-color: var(--primary-dark); /* Usando var para botão primário */
-    border-color: var(--primary-dark);
+    background-color: #0a58ca; /* Usando var para botão primário */
+    border-color: #0a58ca;
 }
-body.dark .btn-primary:hover { background-color: #08427e; border-color: #073b6f; }
+body.dark .btn-primary:hover { background-color: #0A4275; border-color: #0A4275; }
 body.dark .btn-secondary { background-color: #5a6268; border-color: #545b62; }
 body.dark .btn-outline-secondary { color: #ccc; border-color: #666; }
 body.dark .btn-outline-secondary:hover { background-color: #555; border-color: #777; color: var(--white); }
@@ -650,13 +651,13 @@ body.dark .notes-content::-webkit-scrollbar-thumb { background-color: #555; }
 
 /* 5.4. Componentes Custom (Modal, Tooltip, Toast - Dark Mode) */
 body.dark .custom-tooltip-popup.type-navbar-link { background-color: var(--tooltip-navbar-bg); color: var(--tooltip-navbar-text); --tooltip-arrow-color: var(--tooltip-navbar-bg); }
-body.dark .custom-tooltip-popup.type-primary    { background-color: var(--primary);   --tooltip-arrow-color: var(--primary); }
+body.dark .custom-tooltip-popup.type-primary    { background-color: #0A4275;   --tooltip-arrow-color:#0A4275; }
 body.dark .custom-tooltip-popup.type-danger     { background-color: var(--danger);    --tooltip-arrow-color: var(--danger); }
 body.dark .custom-tooltip-popup.type-warning    { background-color: var(--custom-toast-warning-bg); color: var(--custom-toast-warning-text); --tooltip-arrow-color: var(--custom-toast-warning-bg); }
 body.dark .custom-tooltip-popup.type-secondary  { background-color: #5a5a5a;         color: var(--custom-modal-text-color); --tooltip-arrow-color: #5a5a5a; }
 body.dark .custom-tooltip-popup.type-success    { background-color: var(--custom-toast-success-bg); --tooltip-arrow-color: var(--custom-toast-success-bg); }
 body.dark .custom-tooltip-popup.type-info       { background-color: var(--custom-toast-info-bg);    --tooltip-arrow-color: var(--custom-toast-info-bg); }
-body.dark .custom-tooltip-popup.type-default    { background-color: var(--tooltip-default-bg);      --tooltip-arrow-color: var(--tooltip-default-bg); }
+/* body.dark .custom-tooltip-popup.type-default    { background-color: #0A4275;      --tooltip-arrow-color:#0A4275; } */
 
 body.dark .custom-modal-title { color: var(--primary-light); } /* Usar cor clara para o título */
 /* --custom-modal-bg, --custom-modal-text-color, etc. já são definidos nas variáveis de body.dark */

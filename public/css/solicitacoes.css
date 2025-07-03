@@ -531,7 +531,7 @@ body.dark .appointment-card-header h3 .view-details-icon:hover {
   text-align: center;
 }
 body.dark .appointment-card-body p {
-  color: #aaa;
+  color: white;
 }
 body.dark .appointment-card-body p i {
   color: #aaa;
@@ -548,6 +548,10 @@ body.dark .appointment-card-body p i {
 }
 body.dark .appointment-card-footer {
   border-top-color: #555;
+}
+
+body.dark .appointment-card-footer p {
+color:white;
 }
 
 .appointment-card-footer .custom-btn.btn-card-action {
@@ -817,7 +821,7 @@ body.dark .page-subtitle {
 body.dark .appointment-card {
   background-color: #444;
   border-color: #555;
-  color: #ddd;
+  color: white;
 } /* Borda dark mode mantida */
 body.dark .text-light {
   color: #aaa;
@@ -1203,13 +1207,10 @@ body.dark .custom-btn-primary:hover {
 .custom-btn-danger {
   color: #fff;
   background-color: var(--danger, #f44336);
-  border-color: var(
-    --gray-500
-  ); /* MODIFICADO de var(--danger, #F44336) - Isso mudará a cor da borda! */
+   /* MODIFICADO de var(--danger, #F44336) - Isso mudará a cor da borda! */
 }
 .custom-btn-danger:hover {
   background-color: #d32f2f;
-  border-color: var(--gray-500);
 }
 
 .custom-btn-warning {
@@ -1228,9 +1229,22 @@ body.dark .custom-btn-warning {
   background-color: var(--custom-toast-warning-bg);
   border-color: var(--custom-toast-warning-bg);
 } /* Borda dark mode mantida */
+
 body.dark .custom-btn-warning:hover {
   background-color: #df8c00;
   border-color: #d39e00;
+}
+
+body.dark .custom-btn-success {
+  background-color: #1575a3;
+  color: #ffffff;
+  /* Se precisar de borda, adicione: border-color: var(--gray-500); */
+}
+
+body.dark .custom-btn-success:hover {
+  background-color: #0A4275;
+  color: #ffffff;
+  /* Se precisar de borda, adicione: border-color: var(--gray-500); */
 }
 
 .custom-toast-container {
@@ -1280,10 +1294,17 @@ body.dark .custom-btn-warning:hover {
   background-color: var(--custom-toast-info-bg);
 }
 .custom-btn-success {
-  background-color: var(--primary);
+  background-color: #0A4275;
   color: #ffffff;
   /* Se precisar de borda, adicione: border-color: var(--gray-500); */
 }
+
+.custom-btn-success:hover {
+  background-color: #1575a3;
+  color: #ffffff;
+  /* Se precisar de borda, adicione: border-color: var(--gray-500); */
+}
+
 .custom-tooltip-popup {
   position: absolute;
   padding: 8px 12px;
@@ -1389,11 +1410,11 @@ body.dark .custom-tooltip-popup.type-info {
   background-color: var(--custom-toast-info-bg, #105a7f);
   --tooltip-arrow-color: var(--custom-toast-info-bg, #105a7f);
 }
-body.dark .custom-tooltip-popup.type-default {
+body.dark c {
   background-color: var(--tooltip-default-bg, #444);
   --tooltip-arrow-color: var(--tooltip-default-bg, #444);
 }
-.custom-toolitp-popup.type-rejection {
+.custom-tooltip-popup.type-rejection {
   background-color: #d32f2f;
 }
 .rejection-reason {

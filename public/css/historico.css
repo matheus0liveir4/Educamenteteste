@@ -267,12 +267,7 @@ a.btn {
   display: inline-flex;
   align-items: center;
 }
-.btn.disabled,
-.btn:disabled {
-  /* General disabled state for buttons */
-  cursor: default;
-  opacity: 0.65;
-}
+
 .btn-outline-secondary {
   color: #fff;
   border: #073055;
@@ -280,7 +275,11 @@ a.btn {
 }
 .btn-secondary {
   color: white;
-  background-color: #073055;
+  background-color: #5e7890;
+}
+body.dark .btn-secondary {
+  color: white;
+  background-color: #5a5a5a;
 }
 /* --- Loading Spinner --- */
 .loading-spinner {
@@ -820,13 +819,19 @@ a.btn {
   color: var(--text-dark);
   --tooltip-arrow-color: var(--warning);
 }
+
 .custom-tooltip-popup.type-info {
   background-color: var(--secondary);
   --tooltip-arrow-color: var(--secondary);
 }
-.custom-tooltip-popup.type-default {
-  background-color: var(--tooltip-default-bg);
-  --tooltip-arrow-color: var(--tooltip-default-bg);
+
+.custom-tooltip-popup.type-accent {
+  background-color:#20b2f8 ;
+  --tooltip-arrow-color: #20b2f8;
+}
+body.dark .custom-tooltip-popup.type-accent {
+  background-color:#1575a3;
+  --tooltip-arrow-color: #1575a3;
 }
 
 /* --- Custom Modal --- */
@@ -935,14 +940,14 @@ a.btn {
 }
 /* Estilo específico para o botão de Novo Agendamento */
 .btn-accent {
-  background-color: #1575a3 !important; /* Cor desejada da imagem */
-  border-color: #1575a3 !important; /* Garante que a borda combine */
+  background-color: #1575a3; /* Cor desejada da imagem */
+  border-color: #1575a3; /* Garante que a borda combine */
 }
 
 /* Opcional: Efeito hover para o novo botão */
 .btn-accent:hover {
-  background-color: #0a58ca !important; /* Um tom um pouco mais escuro para o hover */
-  border-color: #0a58ca !important;
+  background-color: #20b2f8; /* Um tom um pouco mais escuro para o hover */
+  border-color: #20b2f8;
 }
 
 .custom-btn-secondary {
@@ -1148,8 +1153,8 @@ body.dark .appointment-card-footer {
 
 /* Buttons */
 body.dark .btn-primary {
-  background-color: #0a58ca; /* Darker primary for dark mode actions */
-  border-color: #0a58ca; /* Matching border */
+  background-color: #0066ff; /* Darker primary for dark mode actions */
+  border-color: #0066ff; /* Matching border */
 }
 
 body.dark .btn-primary:hover {
@@ -1157,9 +1162,16 @@ body.dark .btn-primary:hover {
   border-color: #0a4275; /* Matching border */
 }
 
+body.dark .btn-accent {
+  background-color: #20b2f8
+; /* Darker primary for dark mode actions */
+  border-color: #20b2f8
+;
+}
+
 body.dark .btn-accent:hover {
-  background-color: #0a4275; /* Darker primary for dark mode actions */
-  border-color: #0a4275;
+  background-color: #1575a3; /* Darker primary for dark mode actions */
+  border-color: #1575a3;
 }
 
 /* Example for an outline button if you add one */
@@ -1176,7 +1188,7 @@ body.dark .btn-outline-secondary:hover {
 
 /* Text Utilities */
 body.dark .text-light {
-  color: #aaa;
+  color: white;
 } /* Variable already handles this */
 body.dark .text-gray-500 {
   color: #888;
@@ -1301,16 +1313,16 @@ body.dark .custom-modal-close {
 }
 body.dark .custom-modal-body p {
   color: var(--custom-modal-text-color); /* Uses dark mode text color */
-}
+} 
 body.dark .custom-btn-secondary {
   /* Modal secondary button */
-  color: var(--custom-modal-text-color);
+  color: white;
   background-color: #5a5a5a;
   border-color: #6c757d;
 }
 body.dark .btn-secondary {
   /* Modal secondary button */
-  color: var(--custom-modal-text-color);
+  color: white;
   background-color: #5a5a5a;
   border-color: #6c757d;
 }
