@@ -832,12 +832,9 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
         if (statusAntigo === novoStatus) return res.status(200).json({ message: `Status já é ${novoStatus}` });
 
         if (novoStatus === 'Rejeitado' && statusAntigo !== 'Pendente') {
-            console.warn(`[REJEITAR BLOCK] Tentativa de rejeitar solicitação ${id} com status "${statusAntigo}". Ação bloqueada por UserID: ${req.session.usuarioId}`);
-            // return res.status(409).json({ // 409 Conflict é o código HTTP ideal para este caso
-               showToast(`Ação bloqueada. O status atual é "${statusAntigo}".`)
-        
-        }
-
+    console.warn(`[REJEITAR BLOCK] ...`);
+    return res.status(409).json({ message: `Ação bloqueada. O status atual é "${statusAntigo}".` });
+}
        const dadosUpdate = {
             status: novoStatus,
             modificado_por_usuario_id: req.session.usuarioId // <-- ESTA LINHA FOI ADICIONADA
@@ -888,10 +885,12 @@ app.put('/api/solicitacoes/:id/status', requireLogin(['psicopedagoga']), async (
         res.status(200).json({ message: `Status atualizado para ${novoStatus}`, agendamentosRemovidos });
 
     } catch (error) {
-        console.error(`[API STATUS CHANGE CRITICAL] ID ${id}:`, error);
-        const isConflictError = error.message && error.message.includes('Ação bloqueada');
-        res.status(isConflictError ? 409 : 500).json({ message: isConflictError ? error.message : 'Erro interno ao atualizar status.' });
-    }
+    console.error(`[API STATUS CHANGE CRITICAL] ID ${id}:`, error);
+    const fallbackMessage = statusAntigo 
+        ? `Erro ao tentar alterar o status de "${statusAntigo}".` 
+        : 'Erro interno ao processar a solicitação.';
+    res.status(500).json({ message: error.message || fallbackMessage });
+}
 });
 
 app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
@@ -917,12 +916,12 @@ app.post('/api/agendar', requireLogin(['psicopedagoga']), async (req, res) => {
         const solicitacaoParaAgendar = await Solicitacao.findByPk(solicitacaoIdNum, { include: [{ model: Usuario, as: 'usuario', attributes: ['email', 'nome'] }] });
         if (!solicitacaoParaAgendar) return res.status(404).json({ message: 'Solicitação não encontrada.' });
 
+
         if (solicitacaoParaAgendar.status !== 'Finalizado' & 'Pendente') {
             const statusAtual = solicitacaoParaAgendar.status;
             console.warn(`[AGENDAR BLOCK] Tentativa de agendar solicitação ${solicitacaoIdNum} com status "${statusAtual}". Ação bloqueada.`);
             return res.status(409).json({ message: `Ação bloqueada. O status atual é "${statusAtual}".` });
         }
-
         const statusPermitidosParaAgendar = ['Pendente', 'Agendado', 'Finalizado'];
         if (!statusPermitidosParaAgendar.includes(solicitacaoParaAgendar.status)) {
              return res.status(409).json({ message: `Não é possível agendar solicitação com status "${solicitacaoParaAgendar.status}".` });
